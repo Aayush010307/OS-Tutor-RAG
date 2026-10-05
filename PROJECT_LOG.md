@@ -2299,3 +2299,17 @@ project.
 - instructor review of the item bank;
 - a pilot;
 - the pre/post study.
+
+### 2026-10-05 — Version control and GitHub
+
+- The project was not a git repository until now. On the owner's instruction it was initialised with git (branch
+  `main`) and pushed to a new **public** repository: https://github.com/Aayush010307/OS-Tutor-RAG
+- On the owner's explicit choice, `Docs/` is included. It is third-party course material; the README notes that
+  rights belong to the original authors.
+- `.gitignore` excludes:
+  - caches and `.DS_Store`;
+  - `.claude/`;
+  - the Qdrant `.lock` file;
+  - `data/tutor_logs/`, because chat transcripts may contain student answers.
+- Added `README.md`, covering what the project is, its results, how to run it and the corpus note.
+- Initial commit: `5f1342c`, 167 files.
