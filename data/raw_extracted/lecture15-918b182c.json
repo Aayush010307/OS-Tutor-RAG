@@ -1,0 +1,392 @@
+{
+  "document_id": "lecture15-918b182c",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Lecture 15: Semaphores",
+      "images": 8,
+      "lines": [
+        {
+          "text": "Lecture 15: Semaphores",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.382,
+          "bottom": 0.474,
+          "x0": 180.0,
+          "cw": 19.6
+        },
+        {
+          "text": "Mythili Vutukuru",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.563,
+          "bottom": 0.63,
+          "x0": 286.3,
+          "cw": 13.71
+        },
+        {
+          "text": "IIT Bombay",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.639,
+          "bottom": 0.705,
+          "x0": 323.5,
+          "cw": 14.48
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "What is a semaphore?",
+      "images": 8,
+      "lines": [
+        {
+          "text": "What is a semaphore?",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 196.9,
+          "cw": 19.9
+        },
+        {
+          "text": "• Synchronization primitive like condition variables",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.22,
+          "bottom": 0.281,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "• Semaphore is a variable with an underlying counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.278,
+          "bottom": 0.339,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "• Two functions on a semaphore variable",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.336,
+          "bottom": 0.397,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "– Up/post increments the counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.395,
+          "bottom": 0.449,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "– Down/wait decrements the counter and blocks the calling",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.446,
+          "bottom": 0.501,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "thread if the resulting value is negative",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.493,
+          "bottom": 0.543,
+          "x0": 137.8,
+          "cw": 9.19
+        },
+        {
+          "text": "• A semaphore with init value 1 acts as a simple lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.541,
+          "bottom": 0.602,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "(binary semaphore = mutex)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.593,
+          "bottom": 0.649,
+          "x0": 106.2,
+          "cw": 11.91
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "Semaphores for ordering",
+      "images": 8,
+      "lines": [
+        {
+          "text": "Semaphores for ordering",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 173.3,
+          "cw": 19.34
+        },
+        {
+          "text": "• Can be used to set order of execution between",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.225,
+          "bottom": 0.288,
+          "x0": 79.2,
+          "cw": 9.79
+        },
+        {
+          "text": "threads like CV",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.285,
+          "bottom": 0.343,
+          "x0": 106.2,
+          "cw": 11.22
+        },
+        {
+          "text": "• Example: parent waiting for child (init = 0)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.346,
+          "bottom": 0.409,
+          "x0": 79.2,
+          "cw": 9.79
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Example: Producer/Consumer (1)",
+      "images": 8,
+      "lines": [
+        {
+          "text": "Example: Producer/Consumer (1)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 98.9,
+          "cw": 19.79
+        },
+        {
+          "text": "• Need two semaphores for signaling",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.214,
+          "bottom": 0.287,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "– One to track empty slots, and make producer wait",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.289,
+          "bottom": 0.352,
+          "x0": 115.2,
+          "cw": 15.55
+        },
+        {
+          "text": "if no more empty slots",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.349,
+          "bottom": 0.407,
+          "x0": 137.8,
+          "cw": 11.6
+        },
+        {
+          "text": "– One to track full slots, and make consumer wait if",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.41,
+          "bottom": 0.473,
+          "x0": 115.2,
+          "cw": 15.55
+        },
+        {
+          "text": "no more full slots",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.47,
+          "bottom": 0.528,
+          "x0": 137.8,
+          "cw": 10.94
+        },
+        {
+          "text": "• One semaphore to act as mutex for buffer",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.531,
+          "bottom": 0.604,
+          "x0": 79.2,
+          "cw": 11.21
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "Example: Producer/Consumer (2)",
+      "images": 8,
+      "lines": [
+        {
+          "text": "Example: Producer/Consumer (2)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.087,
+          "bottom": 0.179,
+          "x0": 98.9,
+          "cw": 19.79
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "Incorrect solution with deadlock",
+      "images": 8,
+      "lines": [
+        {
+          "text": "Incorrect solution with deadlock",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.087,
+          "bottom": 0.179,
+          "x0": 107.4,
+          "cw": 18.01
+        },
+        {
+          "text": "• What if lock is",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.263,
+          "bottom": 0.336,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "acquired before",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.332,
+          "bottom": 0.398,
+          "x0": 106.2,
+          "cw": 13.71
+        },
+        {
+          "text": "signaling?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.395,
+          "bottom": 0.461,
+          "x0": 106.2,
+          "cw": 12.84
+        },
+        {
+          "text": "• Waiting thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.464,
+          "bottom": 0.536,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "sleeps with mutex",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.533,
+          "bottom": 0.599,
+          "x0": 106.2,
+          "cw": 13.83
+        },
+        {
+          "text": "and the signaling",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.595,
+          "bottom": 0.662,
+          "x0": 106.2,
+          "cw": 12.96
+        },
+        {
+          "text": "thread can never",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.658,
+          "bottom": 0.725,
+          "x0": 106.2,
+          "cw": 13.75
+        },
+        {
+          "text": "wake it up",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.721,
+          "bottom": 0.787,
+          "x0": 106.2,
+          "cw": 13.32
+        }
+      ]
+    }
+  ],
+  "page_count": 6,
+  "slide_count": null,
+  "properties": {
+    "creator": "Nitro Pro 7  (7. 4. 1. 4)",
+    "producer": "Nitro Pro 7  (7. 4. 1. 4)",
+    "creationDate": "D:20180410132255Z"
+  },
+  "master_text": []
+}

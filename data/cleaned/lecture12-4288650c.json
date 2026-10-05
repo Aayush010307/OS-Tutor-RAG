@@ -1,0 +1,424 @@
+{
+  "document_id": "lecture12-4288650c",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Lecture 12: Threads and",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Lecture 12: Threads and Concurrency",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Mythili Vutukuru IIT Bombay",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "Single threaded process",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Single threaded process",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "So, far we have studied single threaded programs",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Recap: process execution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "PC points to current",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "PC",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "instruction being run",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "SP points to stack frame of current function call",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A program can also have multiple threads of execution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "What is a thread?",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "SP",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "Multi threaded process",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Multi threaded process",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A thread is like another copy of a process that executes PC1 independently",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Threads shares the same address space (code, heap)",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "PC2",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each thread has separate PC",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each thread may run over different part of the program",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Each thread has separate stack for independent function calls",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "SP2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "SP1",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Process vs. threads",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Process vs. threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parent P forks a child C",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "P and C do not share any memory",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Need complicated IPC mechanisms to communicate",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Extra copies of code, data in memory",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parent P executes two threads T1 and T2",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "T1 and T2 share parts of the address space",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Global variables can be used for communication",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Smaller memory footprint",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Threads are like separate processes, except they share the same address space",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "Why threads?",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Why threads?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parallelism: a single process can effectively utilize multiple CPU cores",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Understand the difference between concurrency and parallelism",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Concurrency: running multiple threads/processes at the same time, even on single CPU core, by interleaving their executions",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parallelism: running multiple threads/processes in parallel over different CPU cores",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Even if no parallelism, concurrency of threads ensures effective use of CPU when one of the threads blocks (e.g., for I/O)",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "Scheduling threads",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Scheduling threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "OS schedules threads that are ready to run independently, much like processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The context of a thread (PC, registers) is saved into/restored from thread control block (TCB)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Every PCB has one or more linked TCBs",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Threads that are scheduled independently by kernel are called kernel threads",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "E.g., Linux pthreads are kernel threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "In contrast, some libraries provide user-level threads",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "User program sees multiple threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Library multiplexes larger number of user threads over a smaller number of kernel threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Low overhead of switching between user threads (no expensive context switch)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "But multiple user threads cannot run in parallel",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": "Creating threads using pthreads API",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Creating threads using pthreads API",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": "Example: threads with shared data",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Example: threads with shared data",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": "Threads with shared data: what happens?",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Threads with shared data: what happens?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "What do we expect? Two threads, each increments counter by 10^7, so 2X10^7",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Sometimes, a lower value. Why?",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": "What is happening?",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "What is happening?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Assembly code of",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "counter = counter + 1",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": "Race conditions and synchronization",
+      "images": 14,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Race conditions and synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "What just happened is called a race condition",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Concurrent execution can lead to different results",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Critical section: portion of code that can lead to race conditions",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "What we need: mutual exclusion",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Only one thread should be executing critical section at any time",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "What we need: atomicity of the critical section",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The critical section should execute like one uninterruptible instruction",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "How is it achieved? Locks (topic of next lecture)",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

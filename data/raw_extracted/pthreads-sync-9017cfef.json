@@ -1,0 +1,2502 @@
+{
+  "document_id": "pthreads-sync-9017cfef",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "Lectures on Operating Systems (Mythili Vutukuru, IIT Bombay)",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.138,
+          "bottom": 0.156,
+          "x0": 119.6,
+          "cw": 6.18
+        },
+        {
+          "text": "Lab: Pthreads Synchronization",
+          "kind": "heading",
+          "level": 1,
+          "para_break": false,
+          "top": 0.168,
+          "bottom": 0.199,
+          "x0": 137.5,
+          "cw": 11.47
+        },
+        {
+          "text": "In this lab, you will learn the basics of multi-threaded programming, and synchronizing multiple",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.258,
+          "bottom": 0.271,
+          "x0": 95.9,
+          "cw": 4.53
+        },
+        {
+          "text": "threads using locks and condition variables. You will use the pthreads (POSIX threads) API in this",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.274,
+          "bottom": 0.289,
+          "x0": 348.0,
+          "cw": 6.17
+        },
+        {
+          "text": "assignment.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.292,
+          "bottom": 0.306,
+          "x0": 79.0,
+          "cw": 4.71
+        },
+        {
+          "text": "Before you begin",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.333,
+          "bottom": 0.351,
+          "x0": 79.0,
+          "cw": 6.41
+        },
+        {
+          "text": "Please familiarize yourself with the pthreads API thoroughly. Many helpful tutorials and sample",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.367,
+          "bottom": 0.381,
+          "x0": 238.2,
+          "cw": 6.26
+        },
+        {
+          "text": "programs are available online. The chapter on pthreads in OSTEP is also an excellent guide. Practice",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.385,
+          "bottom": 0.398,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "writing simple programs with multiple threads, using locks and condition variables for synchronization",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.402,
+          "bottom": 0.416,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "across threads. Remember that you must include the header file <pthread.h> and compile code using",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.418,
+          "bottom": 0.433,
+          "x0": 352.5,
+          "cw": 6.19
+        },
+        {
+          "text": "the -lpthread flag when using this API. For example, below is how you will compile a multi-threaded",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.435,
+          "bottom": 0.45,
+          "x0": 92.3,
+          "cw": 6.12
+        },
+        {
+          "text": "program.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.453,
+          "bottom": 0.467,
+          "x0": 79.0,
+          "cw": 4.96
+        },
+        {
+          "text": "$gcc threads.c -lpthread",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.483,
+          "bottom": 0.497,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$./a.out",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.5,
+          "bottom": 0.514,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "Warm-up exercises",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.542,
+          "bottom": 0.56,
+          "x0": 79.0,
+          "cw": 6.89
+        },
+        {
+          "text": "You may write the following simple programs before you get started with this lab.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.577,
+          "bottom": 0.591,
+          "x0": 79.0,
+          "cw": 4.41
+        },
+        {
+          "text": "1. Write a program that has a counter as a global variable. Spawn 10 threads in the program, and",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.608,
+          "bottom": 0.622,
+          "x0": 92.6,
+          "cw": 4.57
+        },
+        {
+          "text": "let each thread increment the counter 1000 times in a loop. Print the final value of the counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.625,
+          "bottom": 0.639,
+          "x0": 106.3,
+          "cw": 4.43
+        },
+        {
+          "text": "after all the threads finish—the expected value of the counter is 10000. Run this program first",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.642,
+          "bottom": 0.656,
+          "x0": 106.3,
+          "cw": 4.47
+        },
+        {
+          "text": "without using locking across threads, and observe the incorrect updation of the counter due to race",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.659,
+          "bottom": 0.673,
+          "x0": 106.3,
+          "cw": 4.29
+        },
+        {
+          "text": "conditions (the final value will be slightly less than 10000). Next, use locks when accessing the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.676,
+          "bottom": 0.69,
+          "x0": 106.3,
+          "cw": 4.38
+        },
+        {
+          "text": "shared counter and verify that the counter is now updated correctly.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.693,
+          "bottom": 0.707,
+          "x0": 106.3,
+          "cw": 4.32
+        },
+        {
+          "text": "2. Write a program where the main default thread spawns N = 10 threads. Thread i should print",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.721,
+          "bottom": 0.736,
+          "x0": 92.6,
+          "cw": 4.71
+        },
+        {
+          "text": "the message “I am thread i” to screen and exit. The main thread should wait for all N threads to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.739,
+          "bottom": 0.753,
+          "x0": 106.3,
+          "cw": 4.64
+        },
+        {
+          "text": "finish, then print the message “I am the main thread”, and exit.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.756,
+          "bottom": 0.77,
+          "x0": 106.3,
+          "cw": 4.27
+        },
+        {
+          "text": "Note that you must learn how to pass arguments (say, thread number) to the thread start function",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.779,
+          "bottom": 0.792,
+          "x0": 106.3,
+          "cw": 4.43
+        },
+        {
+          "text": "in order to solve this lab. When you pass a variable as an argument, care should be taken to ensure",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.796,
+          "bottom": 0.81,
+          "x0": 106.3,
+          "cw": 4.29
+        },
+        {
+          "text": "that the value of the variable is retained until the thread actually runs. So, you must use different",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.813,
+          "bottom": 0.827,
+          "x0": 106.3,
+          "cw": 4.21
+        },
+        {
+          "text": "variables for different threads, and not reuse the same variable to store different values for different",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.83,
+          "bottom": 0.844,
+          "x0": 106.3,
+          "cw": 4.09
+        },
+        {
+          "text": "threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.847,
+          "bottom": 0.861,
+          "x0": 106.3,
+          "cw": 4.28
+        },
+        {
+          "text": "3. You are given the file sequence.c, which creates N = 3 threads. Each thread i prints the string",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.875,
+          "bottom": 0.889,
+          "x0": 198.1,
+          "cw": 6.17
+        },
+        {
+          "text": "“I am thread i” to the screen in an infinite loop. You must add synchronization between the threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.892,
+          "bottom": 0.906,
+          "x0": 106.3,
+          "cw": 4.48
+        },
+        {
+          "text": "using locks and conditon variables so that the threads print one after the other in the order 0, 1, 2,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.91,
+          "bottom": 0.924,
+          "x0": 106.3,
+          "cw": 4.17
+        },
+        {
+          "text": "1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.955,
+          "bottom": 0.969,
+          "x0": 302.4,
+          "cw": 5.45
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "0, 1, 2, .... and so on. Please note that threads must NOT simply do busy-waiting, but must wait in",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.141,
+          "bottom": 0.155,
+          "x0": 106.3,
+          "cw": 4.29
+        },
+        {
+          "text": "a condition variable queue until their turn to print comes.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.158,
+          "bottom": 0.172,
+          "x0": 106.3,
+          "cw": 4.22
+        },
+        {
+          "text": "A sample execution of the code is shown below.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.18,
+          "bottom": 0.194,
+          "x0": 106.3,
+          "cw": 4.56
+        },
+        {
+          "text": "I am thread 0",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.211,
+          "bottom": 0.225,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.228,
+          "bottom": 0.242,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 2",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.245,
+          "bottom": 0.259,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 0",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.262,
+          "bottom": 0.276,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.279,
+          "bottom": 0.293,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 2",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.297,
+          "bottom": 0.31,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 0",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.314,
+          "bottom": 0.327,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.331,
+          "bottom": 0.345,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "I am thread 2",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.348,
+          "bottom": 0.362,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "...",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.365,
+          "bottom": 0.379,
+          "x0": 106.3,
+          "cw": 6.55
+        },
+        {
+          "text": "You can try to make your code with larger values of N as well. You can also try different ways of",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.397,
+          "bottom": 0.411,
+          "x0": 106.3,
+          "cw": 4.43
+        },
+        {
+          "text": "designing your solution, e.g., using only one CV vs. using multiple CVs.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.415,
+          "bottom": 0.428,
+          "x0": 106.3,
+          "cw": 4.42
+        },
+        {
+          "text": "Part A: Speeding up computation using multi-threading",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.455,
+          "bottom": 0.473,
+          "x0": 79.0,
+          "cw": 6.46
+        },
+        {
+          "text": "We will consider a program with a long computation, and improve its run time by using multi-threading,",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.489,
+          "bottom": 0.503,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "in order to understand how real systems parallelize and speedup compute-intensive code.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.507,
+          "bottom": 0.52,
+          "x0": 79.0,
+          "cw": 4.46
+        },
+        {
+          "text": "You are given a program goldbach.c that verifies the Goldbach conjecture up to N=100K num-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.523,
+          "bottom": 0.537,
+          "x0": 204.2,
+          "cw": 6.22
+        },
+        {
+          "text": "bers (you can try this out for larger values of N as well). The Goldbach conjecture states that every even",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.54,
+          "bottom": 0.555,
+          "x0": 79.0,
+          "cw": 4.1
+        },
+        {
+          "text": "number greater than 2 can be expressed as a sum of two prime numbers. The program given to you does",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.558,
+          "bottom": 0.572,
+          "x0": 79.0,
+          "cw": 4.57
+        },
+        {
+          "text": "the following. It first computes all primes up to N using the “Sieve of Eratosthenes” algorithm, and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.575,
+          "bottom": 0.589,
+          "x0": 79.0,
+          "cw": 4.41
+        },
+        {
+          "text": "stores this information in a boolean array primes. That is, primes[i] is true if i is prime, and false",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.591,
+          "bottom": 0.606,
+          "x0": 259.0,
+          "cw": 6.02
+        },
+        {
+          "text": "otherwise.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.609,
+          "bottom": 0.623,
+          "x0": 79.0,
+          "cw": 4.51
+        },
+        {
+          "text": "Now the program begins its task of verifying the Goldbach conjecture. It iterates over all even",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.626,
+          "bottom": 0.64,
+          "x0": 95.9,
+          "cw": 4.58
+        },
+        {
+          "text": "numbers, and counts the number of “Goldbach pairs”, i.e., primes p1 and p2 that add up to the even",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.643,
+          "bottom": 0.659,
+          "x0": 79.0,
+          "cw": 4.64
+        },
+        {
+          "text": "number. It stores this count in an array gb_count of size N/2. The value of gb_count[i] is the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.66,
+          "bottom": 0.674,
+          "x0": 255.2,
+          "cw": 5.92
+        },
+        {
+          "text": "number of prime pairs that add up to 2i, for even number 2i. The program computes the time taken for",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.677,
+          "bottom": 0.691,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "this calculation of the counts, by recording timestamps at the start and end of this calculation, and prints",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.695,
+          "bottom": 0.709,
+          "x0": 79.0,
+          "cw": 4.19
+        },
+        {
+          "text": "out the total time elapsed. Most systems should take a few seconds to finish this calculation. Finally, the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.712,
+          "bottom": 0.726,
+          "x0": 79.0,
+          "cw": 4.23
+        },
+        {
+          "text": "program writes the values of the number of prime pairs to a file output.txt so that we can verify the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.728,
+          "bottom": 0.743,
+          "x0": 354.1,
+          "cw": 6.19
+        },
+        {
+          "text": "conjecture.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.746,
+          "bottom": 0.76,
+          "x0": 79.0,
+          "cw": 4.38
+        },
+        {
+          "text": "Now, your job is to speed up this calculation of the number of Goldbach pairs for each even number",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.763,
+          "bottom": 0.777,
+          "x0": 95.9,
+          "cw": 4.44
+        },
+        {
+          "text": "using multithreading. Your code must create 10 threads, assign different, disjoint ranges of numbers to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.78,
+          "bottom": 0.794,
+          "x0": 79.0,
+          "cw": 4.39
+        },
+        {
+          "text": "these threads (there are many ways to do this; the choice is left to you), so that the threads can calculate",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.797,
+          "bottom": 0.811,
+          "x0": 79.0,
+          "cw": 4.19
+        },
+        {
+          "text": "the number of Goldbach pairs for different even numbers in parallel. You must create threads after",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.814,
+          "bottom": 0.828,
+          "x0": 79.0,
+          "cw": 4.61
+        },
+        {
+          "text": "we have recorded the starting timestamp, and the threads must finish their calculation and join before",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.832,
+          "bottom": 0.845,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "we record the ending timestamp. In this way, we can measure the amount of time taken to compute",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.849,
+          "bottom": 0.862,
+          "x0": 79.0,
+          "cw": 4.76
+        },
+        {
+          "text": "the number of Goldbach pairs in parallel across 10 threads, and compare it with the time taken in the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.866,
+          "bottom": 0.88,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "single-threaded program.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.883,
+          "bottom": 0.897,
+          "x0": 79.0,
+          "cw": 4.57
+        },
+        {
+          "text": "The calculation of the number of Goldbach pairs for each even number should be done by exactly one",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.9,
+          "bottom": 0.914,
+          "x0": 95.9,
+          "cw": 4.44
+        },
+        {
+          "text": "thread. You can distribute the work between the threads in any way you see fit. You must only parallelize",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.917,
+          "bottom": 0.931,
+          "x0": 79.0,
+          "cw": 4.31
+        },
+        {
+          "text": "2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.955,
+          "bottom": 0.969,
+          "x0": 302.4,
+          "cw": 5.45
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "the filling up of the gb_count array, and you need not parallelize the calculation of the primes itself",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.14,
+          "bottom": 0.155,
+          "x0": 165.4,
+          "cw": 5.91
+        },
+        {
+          "text": "(that happens before the timer is started). You can move around the code you have to parallelize to a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.158,
+          "bottom": 0.172,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "separate function, and provide it as the start function for the various threads. You must provide suitable",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.175,
+          "bottom": 0.189,
+          "x0": 79.0,
+          "cw": 4.27
+        },
+        {
+          "text": "arguments to the threads so that each thread knows which range of numbers it must compute on. You",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.192,
+          "bottom": 0.206,
+          "x0": 79.0,
+          "cw": 4.66
+        },
+        {
+          "text": "may need to make some of the data structures like the primes and gb_count arrays as global variables",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.209,
+          "bottom": 0.223,
+          "x0": 308.6,
+          "cw": 5.93
+        },
+        {
+          "text": "so that they can be accessed easily by all threads. Think carefully on whether you need locking if the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.226,
+          "bottom": 0.24,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "different threads access different parts of the array corresponding to different ranges of numbers. Please",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.243,
+          "bottom": 0.257,
+          "x0": 79.0,
+          "cw": 4.27
+        },
+        {
+          "text": "do not tamper with other parts of the code not relevant to you, like the time calculation.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.261,
+          "bottom": 0.274,
+          "x0": 79.0,
+          "cw": 4.23
+        },
+        {
+          "text": "We expect you to write a parallel version of the same program goldbach.c which runs a few times",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.277,
+          "bottom": 0.291,
+          "x0": 362.1,
+          "cw": 6.16
+        },
+        {
+          "text": "faster than the single-threaded version. A sample execution of both the single threaded code given to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.295,
+          "bottom": 0.309,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "you, and a multi-threaded version you must write, and shown below. Note that we have to use the “-lm”",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.312,
+          "bottom": 0.326,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "flag when compiling to use the math library, and “-lpthread” flag to use the pthread library. We have also",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.329,
+          "bottom": 0.343,
+          "x0": 79.0,
+          "cw": 4.27
+        },
+        {
+          "text": "given you the output your code must generate in expected-output.txt.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.345,
+          "bottom": 0.36,
+          "x0": 289.4,
+          "cw": 6.35
+        },
+        {
+          "text": "Single threaded execution:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.363,
+          "bottom": 0.377,
+          "x0": 95.9,
+          "cw": 4.46
+        },
+        {
+          "text": "$ gcc goldbach.c -lm",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.393,
+          "bottom": 0.407,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$ ./a.out",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.411,
+          "bottom": 0.424,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "Computed primes upto 100000, count = 9592",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.428,
+          "bottom": 0.441,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "elapsed time: 3448984 microseconds",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.445,
+          "bottom": 0.459,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$ tail output.txt",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.462,
+          "bottom": 0.476,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99982 608",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.479,
+          "bottom": 0.493,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99984 1216",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.496,
+          "bottom": 0.51,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99986 603",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.513,
+          "bottom": 0.527,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99988 736",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.53,
+          "bottom": 0.544,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99990 1855",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.547,
+          "bottom": 0.561,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99992 638",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.565,
+          "bottom": 0.578,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99994 651",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.582,
+          "bottom": 0.595,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99996 1303",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.599,
+          "bottom": 0.613,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "99998 605",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.616,
+          "bottom": 0.63,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "100000 810",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.633,
+          "bottom": 0.647,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$ diff output.txt expected-output.txt",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.65,
+          "bottom": 0.664,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.667,
+          "bottom": 0.681,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "Multi-threaded execution:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.699,
+          "bottom": 0.713,
+          "x0": 95.9,
+          "cw": 4.53
+        },
+        {
+          "text": "$ gcc goldbach.c -lpthread -lm",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.729,
+          "bottom": 0.743,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$ ./a.out",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.746,
+          "bottom": 0.76,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "Computed primes upto 100000, count = 9592",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.763,
+          "bottom": 0.777,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "elapsed time: 931387 microseconds",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.78,
+          "bottom": 0.794,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$ diff output.txt expected-output.txt",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.798,
+          "bottom": 0.811,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "$",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.815,
+          "bottom": 0.828,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "Note that in the solution written by us, the multi-threaded version with 10 threads runs about 4 times",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.846,
+          "bottom": 0.86,
+          "x0": 95.9,
+          "cw": 4.27
+        },
+        {
+          "text": "faster, and produces identical output, i.e., correctly computes the number of Goldbach pairs. The exact",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.863,
+          "bottom": 0.877,
+          "x0": 79.0,
+          "cw": 4.39
+        },
+        {
+          "text": "run times and speedup you may see may differ.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.88,
+          "bottom": 0.894,
+          "x0": 79.0,
+          "cw": 4.57
+        },
+        {
+          "text": "3",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.955,
+          "bottom": 0.969,
+          "x0": 302.4,
+          "cw": 5.45
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "Part B: Master-Worker Thread Pool",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.137,
+          "bottom": 0.156,
+          "x0": 79.0,
+          "cw": 6.76
+        },
+        {
+          "text": "In this part of the lab, you will implement a simple master and worker thread pool, a pattern that occurs",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.172,
+          "bottom": 0.186,
+          "x0": 79.0,
+          "cw": 4.31
+        },
+        {
+          "text": "in many real life applications. The master threads produce numbers continuously and place them in",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.189,
+          "bottom": 0.203,
+          "x0": 79.0,
+          "cw": 4.66
+        },
+        {
+          "text": "a buffer, and worker threads will consume them, i.e., print these numbers to the screen. This simple",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.206,
+          "bottom": 0.22,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "program is an example of a master-worker thread pool pattern that is commonly found in several real-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.224,
+          "bottom": 0.237,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "life application servers. For example, in the commonly used multi-threaded architecture for web servers,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.241,
+          "bottom": 0.254,
+          "x0": 79.0,
+          "cw": 4.35
+        },
+        {
+          "text": "the server has one or more master threads and a pool of worker threads. When a new connection arrives",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.258,
+          "bottom": 0.272,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "from a web client, the master accepts the request and hands it over to one of the workers. The worker",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.275,
+          "bottom": 0.289,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "then reads the web request from the network socket and writes a response back to the client. Your simple",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.292,
+          "bottom": 0.306,
+          "x0": 79.0,
+          "cw": 4.35
+        },
+        {
+          "text": "master-worker program is similar in structure to such applications, albeit with much simpler request",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.309,
+          "bottom": 0.323,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "processing logic at the application layer.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.326,
+          "bottom": 0.34,
+          "x0": 79.0,
+          "cw": 4.18
+        },
+        {
+          "text": "You are given a skeleton program master-worker-skeleton.c. This program takes 4 com-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.343,
+          "bottom": 0.357,
+          "x0": 244.5,
+          "cw": 6.41
+        },
+        {
+          "text": "mand line arguments: how many numbers to “produce” (M), the maximum size of the buffer in which",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.36,
+          "bottom": 0.374,
+          "x0": 79.0,
+          "cw": 4.83
+        },
+        {
+          "text": "the produced numbers should be stored (N), the number of worker threads to consume these numbers",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.377,
+          "bottom": 0.391,
+          "x0": 79.0,
+          "cw": 4.64
+        },
+        {
+          "text": "(C), and the number of master threads to produce numbers (P). The skeleton code spawns P master",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.394,
+          "bottom": 0.408,
+          "x0": 79.0,
+          "cw": 3.63
+        },
+        {
+          "text": "threads, that produce the specified number of integers from 0 to M − 1 into a shared buffer array. The",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.411,
+          "bottom": 0.425,
+          "x0": 79.0,
+          "cw": 4.38
+        },
+        {
+          "text": "main program waits for these threads to join, and then terminates. The skeleton code given to you does",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.429,
+          "bottom": 0.443,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "not have any logic for synchronization.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.446,
+          "bottom": 0.46,
+          "x0": 79.0,
+          "cw": 4.37
+        },
+        {
+          "text": "You must write your solution in the file master-worker.c. You must modify this skeleton code",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.462,
+          "bottom": 0.477,
+          "x0": 267.4,
+          "cw": 6.31
+        },
+        {
+          "text": "in the following ways. You must add code to spawn the required number of worker threads, and write the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.48,
+          "bottom": 0.494,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "function to be run by these threads. This function will remove/consume items from the shared buffer and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.497,
+          "bottom": 0.511,
+          "x0": 79.0,
+          "cw": 4.39
+        },
+        {
+          "text": "print them to screen. Further, you must add logic to correctly synchronize the producer and consumer",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.514,
+          "bottom": 0.528,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "threads in such a way that every number is produced and consumed exactly once. Further, producers",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.531,
+          "bottom": 0.545,
+          "x0": 79.0,
+          "cw": 4.66
+        },
+        {
+          "text": "must not try to produce when the buffer is full, and consumers should not consume from an empty",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.549,
+          "bottom": 0.562,
+          "x0": 79.0,
+          "cw": 4.76
+        },
+        {
+          "text": "buffer. While you need to ensure that all C workers are involved in consuming the integers, it is not",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.565,
+          "bottom": 0.579,
+          "x0": 79.0,
+          "cw": 4.49
+        },
+        {
+          "text": "necessary to ensure perfect load balancing between the workers. Once all M integers (from 0 to M − 1)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.582,
+          "bottom": 0.597,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "have been produced and consumed, all threads must exit. The main thread must call pthread_join",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.599,
+          "bottom": 0.614,
+          "x0": 452.1,
+          "cw": 6.09
+        },
+        {
+          "text": "on the master and worker threads, and terminate itself once all threads have joined. Your solution must",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.617,
+          "bottom": 0.631,
+          "x0": 79.0,
+          "cw": 4.39
+        },
+        {
+          "text": "only use pthreads condition variables for waiting and signaling: busy waiting is not allowed.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.633,
+          "bottom": 0.648,
+          "x0": 115.7,
+          "cw": 6.12
+        },
+        {
+          "text": "Your code can be compiled as shown below.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.651,
+          "bottom": 0.665,
+          "x0": 95.9,
+          "cw": 4.7
+        },
+        {
+          "text": "gcc master-worker.c -lpthread",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.681,
+          "bottom": 0.695,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "If your code is written correctly, every integer from 0 to M − 1 will be produced exactly once by the",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.711,
+          "bottom": 0.726,
+          "x0": 95.9,
+          "cw": 4.16
+        },
+        {
+          "text": "master producer thread, and consumed exactly once by the worker consumer threads. We have provided",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.729,
+          "bottom": 0.743,
+          "x0": 79.0,
+          "cw": 4.61
+        },
+        {
+          "text": "you with a simple testing script (test-master-worker.sh which invokes the script check.awk)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.745,
+          "bottom": 0.76,
+          "x0": 221.0,
+          "cw": 6.55
+        },
+        {
+          "text": "that checks this above invariant on the output produced by your program. The script relies on the two",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.763,
+          "bottom": 0.777,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "print functions that must be invoked by the producer and consumer threads: the master thread must call",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.78,
+          "bottom": 0.794,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "the function print_produced when it produces an integer into the buffer, and the worker threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.797,
+          "bottom": 0.811,
+          "x0": 132.5,
+          "cw": 6.19
+        },
+        {
+          "text": "must call the function print_consumed when it removes an integer from the buffer to consume. You",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.814,
+          "bottom": 0.828,
+          "x0": 173.8,
+          "cw": 6.12
+        },
+        {
+          "text": "must invoke these functions suitably in your solution. Please do not modify these print functions, as their",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.832,
+          "bottom": 0.845,
+          "x0": 79.0,
+          "cw": 4.23
+        },
+        {
+          "text": "output will be parsed by the testing script.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.849,
+          "bottom": 0.862,
+          "x0": 79.0,
+          "cw": 4.16
+        },
+        {
+          "text": "Please ensure that you test your case carefully, as tricky race conditions can pop up unexpectedly.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.866,
+          "bottom": 0.88,
+          "x0": 95.9,
+          "cw": 4.4
+        },
+        {
+          "text": "You must test with up to a few million items produced, and with a few hundreds of master/worker threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.883,
+          "bottom": 0.897,
+          "x0": 79.0,
+          "cw": 4.35
+        },
+        {
+          "text": "Test for various corner cases like a single master or a single worker thread or for a very small buffer size",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.9,
+          "bottom": 0.914,
+          "x0": 79.0,
+          "cw": 4.19
+        },
+        {
+          "text": "as well. Also test for cases when the number of items produced is not a multiple of the buffer size or the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.917,
+          "bottom": 0.931,
+          "x0": 79.0,
+          "cw": 4.27
+        },
+        {
+          "text": "4",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.955,
+          "bottom": 0.969,
+          "x0": 302.4,
+          "cw": 5.45
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "number of master/worker threads, as such cases can uncover some tricky bugs. Increasing the number",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.141,
+          "bottom": 0.155,
+          "x0": 79.0,
+          "cw": 4.61
+        },
+        {
+          "text": "of threads to large values beyond a few hundred will cause your system to slow down considerably, so",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.158,
+          "bottom": 0.172,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "exercise caution.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.175,
+          "bottom": 0.189,
+          "x0": 79.0,
+          "cw": 4.29
+        },
+        {
+          "text": "Part C: Reader-Writer Locks",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.216,
+          "bottom": 0.234,
+          "x0": 79.0,
+          "cw": 6.69
+        },
+        {
+          "text": "Consider an application where multiple threads of a process wish to read and write data shared between",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.251,
+          "bottom": 0.265,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "them. Some threads only want to read (let’s call them “readers”), while others want to update the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.268,
+          "bottom": 0.282,
+          "x0": 79.0,
+          "cw": 4.66
+        },
+        {
+          "text": "shared data (“writers”). In this scenario, it is perfectly safe for multiple readers to concurrently access",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.285,
+          "bottom": 0.299,
+          "x0": 79.0,
+          "cw": 4.23
+        },
+        {
+          "text": "the shared data, as long as no other writer is updating it. However, a writer must still require mutual",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.302,
+          "bottom": 0.316,
+          "x0": 79.0,
+          "cw": 4.39
+        },
+        {
+          "text": "exclusion, and must not access the data concurrently with any other thread, whether a reader or a writer.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.319,
+          "bottom": 0.333,
+          "x0": 79.0,
+          "cw": 4.31
+        },
+        {
+          "text": "A reader-writer lock is a special kind of a lock, where the acquiring thread can specify whether it wishes",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.336,
+          "bottom": 0.35,
+          "x0": 79.0,
+          "cw": 4.27
+        },
+        {
+          "text": "to acquire the lock for reading or writing. That is, this lock will expose two separate locking functions,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.353,
+          "bottom": 0.367,
+          "x0": 79.0,
+          "cw": 4.27
+        },
+        {
+          "text": "say, ReaderLock() and WriterLock(), and analogous unlock functions. If a lock is acquired for reading,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.37,
+          "bottom": 0.384,
+          "x0": 79.0,
+          "cw": 4.14
+        },
+        {
+          "text": "other threads that wish to read may also be permitted to acquire the lock at the same time, leading to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.388,
+          "bottom": 0.401,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "improved concurrency over traditional locks.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.405,
+          "bottom": 0.418,
+          "x0": 79.0,
+          "cw": 4.45
+        },
+        {
+          "text": "There are two flavors of the reader-writer lock, which we will illustrate with an example. Suppose",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.422,
+          "bottom": 0.436,
+          "x0": 95.9,
+          "cw": 4.44
+        },
+        {
+          "text": "a reader thread R1 has acquired a reader-writer lock for reading. While R1 holds this lock, a writer",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.439,
+          "bottom": 0.453,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "thread W and another reader thread R2 have both requested the lock. Now, it is fine to allow R2 also to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.456,
+          "bottom": 0.47,
+          "x0": 79.0,
+          "cw": 4.39
+        },
+        {
+          "text": "simultaneously acquire the lock with R1, because both are only reading shared data. However, allowing",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.473,
+          "bottom": 0.487,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "R2 to acquire the lock may prolong the waiting time of the writer thread W, because W has to now wait",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.49,
+          "bottom": 0.504,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "for both R1 and R2 to release the lock. So, whether we wish to permit more readers to acquire the lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.507,
+          "bottom": 0.521,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "when a writer is waiting is a design decision in the implementation of the lock. When a reader-writer",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.524,
+          "bottom": 0.538,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "lock is implemented with reader preference, additional readers are allowed to concurrently hold the lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.541,
+          "bottom": 0.555,
+          "x0": 79.0,
+          "cw": 4.58
+        },
+        {
+          "text": "with previous readers, even if a writer thread is waiting for the lock. In contrast, when a reader-writer",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.559,
+          "bottom": 0.572,
+          "x0": 79.0,
+          "cw": 4.31
+        },
+        {
+          "text": "lock is implemented with writer preference, additional readers are not granted the lock when a writer is",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.576,
+          "bottom": 0.59,
+          "x0": 79.0,
+          "cw": 4.62
+        },
+        {
+          "text": "already waiting. That is, we do not prolong the waiting time of a writer any more than required.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.593,
+          "bottom": 0.607,
+          "x0": 79.0,
+          "cw": 4.35
+        },
+        {
+          "text": "In this part of the lab, you must implement both flavors of the reader-writer lock. You must complete",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.61,
+          "bottom": 0.624,
+          "x0": 95.9,
+          "cw": 4.31
+        },
+        {
+          "text": "the definition of the structure that captures the reader-writer lock in rwlock.h. The following functions",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.626,
+          "bottom": 0.641,
+          "x0": 366.7,
+          "cw": 6.06
+        },
+        {
+          "text": "to be supported by this lock are also defined in the header file:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.644,
+          "bottom": 0.658,
+          "x0": 79.0,
+          "cw": 4.17
+        },
+        {
+          "text": "• The function InitalizeReadWriteLock() must initialize the lock suitably.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.674,
+          "bottom": 0.689,
+          "x0": 162.3,
+          "cw": 6.39
+        },
+        {
+          "text": "• The function ReaderLock() is invoked by a reader thread before entering a read-only critical",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.703,
+          "bottom": 0.717,
+          "x0": 162.7,
+          "cw": 6.28
+        },
+        {
+          "text": "section, and the function ReaderUnlock() is invoked by the reader when exiting the critical",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.72,
+          "bottom": 0.734,
+          "x0": 215.6,
+          "cw": 6.33
+        },
+        {
+          "text": "section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.738,
+          "bottom": 0.752,
+          "x0": 106.3,
+          "cw": 4.2
+        },
+        {
+          "text": "• The function WriterLock() is invoked by a writer thread before entering a critical section with",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.766,
+          "bottom": 0.78,
+          "x0": 162.0,
+          "cw": 6.23
+        },
+        {
+          "text": "shared data updates, and the function WriterUnlock() is invoked by the writer when exiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.783,
+          "bottom": 0.797,
+          "x0": 269.6,
+          "cw": 6.31
+        },
+        {
+          "text": "the critical section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.8,
+          "bottom": 0.814,
+          "x0": 106.3,
+          "cw": 3.94
+        },
+        {
+          "text": "You must write the code to implement these functions. You must write code that implements reader-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.831,
+          "bottom": 0.845,
+          "x0": 95.9,
+          "cw": 4.49
+        },
+        {
+          "text": "writer locks with reader preference in rwlock-reader-pref.cpp. Similarly, you must implement",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.848,
+          "bottom": 0.862,
+          "x0": 243.1,
+          "cw": 6.38
+        },
+        {
+          "text": "reader-writer locks with writer preference in rwlock-writer-pref.cpp. Note that both imple-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.865,
+          "bottom": 0.879,
+          "x0": 277.5,
+          "cw": 6.42
+        },
+        {
+          "text": "mentations of the lock must share the same header file, including the definition of the reader-writer lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.883,
+          "bottom": 0.897,
+          "x0": 79.0,
+          "cw": 4.27
+        },
+        {
+          "text": "structure. Therefore, your lock structure may have some fields that are only used in one version of the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.9,
+          "bottom": 0.914,
+          "x0": 79.0,
+          "cw": 4.39
+        },
+        {
+          "text": "code and not the other.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.917,
+          "bottom": 0.931,
+          "x0": 79.0,
+          "cw": 4.31
+        },
+        {
+          "text": "5",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.955,
+          "bottom": 0.969,
+          "x0": 302.4,
+          "cw": 5.45
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "As part of the autograding scripts, you are given two tester programs that test each variant of your",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.141,
+          "bottom": 0.155,
+          "x0": 95.9,
+          "cw": 4.35
+        },
+        {
+          "text": "reader-writer lock, and an autograding script that runs both in one go. The tester program takes two",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.158,
+          "bottom": 0.172,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "command line arguments, say R and W. The program then spawns R reader threads, followed by W",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.175,
+          "bottom": 0.189,
+          "x0": 79.0,
+          "cw": 4.89
+        },
+        {
+          "text": "writer threads, followed by R additional reader threads. Each thread, upon creation, tries to acquire",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.192,
+          "bottom": 0.206,
+          "x0": 79.0,
+          "cw": 4.5
+        },
+        {
+          "text": "the same reader-writer lock as a reader or writer (as the case may be), holds the lock for a long period",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.209,
+          "bottom": 0.223,
+          "x0": 79.0,
+          "cw": 4.35
+        },
+        {
+          "text": "of time, and finally releases the lock. The program judges the correctness of your implementation by",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.226,
+          "bottom": 0.24,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "observing the relative ordering of the acquisitions and releases of these locks. By invoking this tester",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.243,
+          "bottom": 0.257,
+          "x0": 79.0,
+          "cw": 4.35
+        },
+        {
+          "text": "with different values of R and W, one can test the reader-writer lock code reasonably thoroughly. Of",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.26,
+          "bottom": 0.274,
+          "x0": 79.0,
+          "cw": 4.31
+        },
+        {
+          "text": "course, you are encouraged to write your own test programs that use the reader-writer lock as well.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.278,
+          "bottom": 0.291,
+          "x0": 79.0,
+          "cw": 4.35
+        },
+        {
+          "text": "Part D: Semaphores using pthreads",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.318,
+          "bottom": 0.337,
+          "x0": 239.2,
+          "cw": 8.05
+        },
+        {
+          "text": "In this part of the lab, you will implement the synchronization functionality of semaphores using pthreads",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.353,
+          "bottom": 0.367,
+          "x0": 491.5,
+          "cw": 6.05
+        },
+        {
+          "text": "mutexes and condition variables. Let’s call these new userspace semaphores that you implement as",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.371,
+          "bottom": 0.384,
+          "x0": 79.0,
+          "cw": 4.71
+        },
+        {
+          "text": "zemaphores, to avoid confusing them with semaphores provided by the Linux kernel. You must",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.387,
+          "bottom": 0.401,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "define your zemaphore structure in the file zemaphore.h, and implement the functions zem_init,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.404,
+          "bottom": 0.418,
+          "x0": 267.5,
+          "cw": 6.28
+        },
+        {
+          "text": "zem_up and zem_down that operate on this structure in the file zemaphore.c. The semantics of",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.421,
+          "bottom": 0.436,
+          "x0": 79.0,
+          "cw": 6.11
+        },
+        {
+          "text": "these zemaphore functions are similar to those of the semaphores you have studied in class.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.439,
+          "bottom": 0.453,
+          "x0": 79.0,
+          "cw": 4.38
+        },
+        {
+          "text": "• The function zem_init initializes the specified zemaphore to the specified value.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.469,
+          "bottom": 0.484,
+          "x0": 162.3,
+          "cw": 5.83
+        },
+        {
+          "text": "• The function zem_up increments the counter value of the zemaphore by one, and wakes up any",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.498,
+          "bottom": 0.512,
+          "x0": 162.8,
+          "cw": 5.7
+        },
+        {
+          "text": "one sleeping thread.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.515,
+          "bottom": 0.529,
+          "x0": 106.3,
+          "cw": 4.38
+        },
+        {
+          "text": "• The function zem_down decrements the counter value of the zemaphore by one. If the value is",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.543,
+          "bottom": 0.558,
+          "x0": 162.9,
+          "cw": 5.9
+        },
+        {
+          "text": "negative, the thread blocks and is context switched out, to be woken up by an up operation on the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.561,
+          "bottom": 0.575,
+          "x0": 106.3,
+          "cw": 4.38
+        },
+        {
+          "text": "zemaphore at a later point.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.578,
+          "bottom": 0.592,
+          "x0": 106.3,
+          "cw": 4.3
+        },
+        {
+          "text": "Once you implement your zemaphores, you can use the program test-zem.c to test your imple-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.608,
+          "bottom": 0.623,
+          "x0": 379.2,
+          "cw": 6.21
+        },
+        {
+          "text": "mentation. This program spawns two threads, and all three threads (the main thread and the two new",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.626,
+          "bottom": 0.64,
+          "x0": 79.0,
+          "cw": 4.61
+        },
+        {
+          "text": "threads) share a zemaphore. Before you implement the zemaphore logic, the new threads will print to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.643,
+          "bottom": 0.657,
+          "x0": 79.0,
+          "cw": 4.57
+        },
+        {
+          "text": "screen before the main thread. However, after you implement the zemaphore correctly, the main thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.66,
+          "bottom": 0.674,
+          "x0": 79.0,
+          "cw": 4.52
+        },
+        {
+          "text": "will print first, owing to the synchronization enabled by the zemaphore. You must not modify this test",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.677,
+          "bottom": 0.691,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "program in any way, but only use it to test your zemaphore implementation.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.695,
+          "bottom": 0.708,
+          "x0": 79.0,
+          "cw": 4.46
+        },
+        {
+          "text": "Next, you are given a simple program with three threads in test-toggle.c. In its current form,",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.711,
+          "bottom": 0.725,
+          "x0": 354.0,
+          "cw": 6.28
+        },
+        {
+          "text": "the three threads will all print to screen in any order. Modify this program in such a way that the print",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.729,
+          "bottom": 0.743,
+          "x0": 79.0,
+          "cw": 4.31
+        },
+        {
+          "text": "statements of the threads are interleaved in the order thread0, thread1, thread2, thread0, thread1, thread2,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.746,
+          "bottom": 0.76,
+          "x0": 79.0,
+          "cw": 4.19
+        },
+        {
+          "text": "... and so on. You must only use your zemaphores to achieve this synchronization between the threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.763,
+          "bottom": 0.777,
+          "x0": 79.0,
+          "cw": 4.48
+        },
+        {
+          "text": "You must not directly use the mutexes and condition variables of the pthreads library in the file",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.779,
+          "bottom": 0.794,
+          "x0": 393.2,
+          "cw": 6.28
+        },
+        {
+          "text": "test-toggle.c.",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.796,
+          "bottom": 0.811,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "The script test-zem.sh will compile and run these test programs for you and can be used for",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.814,
+          "bottom": 0.828,
+          "x0": 140.8,
+          "cw": 6.3
+        },
+        {
+          "text": "testing. Please see the compilation commands in the script to understand how to compile code that uses",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.831,
+          "bottom": 0.845,
+          "x0": 79.0,
+          "cw": 4.43
+        },
+        {
+          "text": "pthreads using the -lpthread flag.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.848,
+          "bottom": 0.862,
+          "x0": 79.0,
+          "cw": 6.55
+        },
+        {
+          "text": "6",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.955,
+          "bottom": 0.969,
+          "x0": 302.4,
+          "cw": 5.45
+        }
+      ]
+    }
+  ],
+  "page_count": 6,
+  "slide_count": null,
+  "properties": {
+    "creator": "TeX",
+    "producer": "pdfTeX-1.40.25",
+    "creationDate": "D:20250616120729+05'30'"
+  },
+  "master_text": []
+}

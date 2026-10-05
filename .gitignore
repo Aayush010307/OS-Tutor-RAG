@@ -1,0 +1,9 @@
+__pycache__/
+.pytest_cache/
+.DS_Store
+.claude/
+# local Qdrant lock file (recreated when the index is opened)
+data/vector_store/qdrant/.lock
+# chat transcripts may contain student answers
+data/tutor_logs/
+~$*.docx

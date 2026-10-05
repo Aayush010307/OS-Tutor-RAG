@@ -1,0 +1,235 @@
+{
+  "document_id": "lecture14-a8135675",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Lecture 14: Condition Variables",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Lecture 14: Condition Variables",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Mythili Vutukuru IIT Bombay",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "Another type of sychronization",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Another type of sychronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Locks allow one type of synchronization between threads – mutual exclusion",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Another common requirement in multi-threaded applications – waiting and signaling",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "E.g., Thread T1 wants to continue only after T2 has finished some task",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Can accomplish this by busy-waiting on some variable, but inefficient",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Need a new synchronization primitive: condition variables",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "Condition Variables",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Condition Variables",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A condition variable (CV) is a queue that a thread can put itself into when waiting on some condition",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Another thread that makes the condition true can signal the CV to wake up a waiting thread",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Pthreads provides CV for user programs",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "OS has a similar functionality of wait/signal for kernel threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Signal wakes up one thread, signal broadcast wakes up all waiting threads",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Example: parent waits for child",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Example: parent waits for child",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "Why check condition in while loop?",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Why check condition in while loop?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "In the example code, why do we check condition before calling wait?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "In case the child has already run and done is true, then no need to wait",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Why check condition with “while” loop and not “if”?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To avoid corner cases of thread being woken up even when condition not true (may be an issue with some implementations)",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "Why use lock when calling wait?",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Why use lock when calling wait?",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "What if no lock is held when calling wait/signal?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Race condition: missed wakeup",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Parent checks done to be 0, decides to sleep, interrupted",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Child runs, sets done to 0, signals, but no one sleeping yet",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parent now resumes and goes to sleep forever",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Lock must be held when calling wait and signal with CV",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The wait function releases the lock before putting thread to sleep, so lock is available for signaling thread",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": "Example: Producer/Consumer problem",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Example: Producer/Consumer problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A common pattern in multi-threaded programs",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Example: in a multi-threaded web server, one thread accepts requests from the network and puts them in a queue. Worker threads get requests from this queue and process them.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Setup: one or more producer threads, one or more consumer threads, a shared buffer of bounded size",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": "Producer/Consumer with 2 CVs",
+      "images": 6,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Producer/Consumer with 2 CVs",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}

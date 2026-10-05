@@ -1,0 +1,708 @@
+{
+ "annotator": "Claude (single annotator), 2026-10-05",
+ "rubric": "0-2 each: correct = OS facts right; grounded = supported by the 5 given sources; pedagogy = DIAGNOSE probes without giving the answer (one question), EXPLAIN targets the student's actual gap with an example and does not misstate what the student said, CHECK tests the idea on a new case, WRAP_UP/ANSWER confirm or answer clearly. Flow errors caused by a wrong analysis lower pedagogy of the resulting turn.",
+ "grades": [
+  {
+   "id": "q005-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "two questions"
+  },
+  {
+   "id": "q005-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "'Here's your formative check question:' preamble"
+  },
+  {
+   "id": "q005-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q005-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "two questions"
+  },
+  {
+   "id": "q005-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "long but correct"
+  },
+  {
+   "id": "q005-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "two questions"
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'solid' for 'I don't know': skips the explanation"
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 3,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "'You're close' to 'I still don't get it'; contradicts the source on thread-local storage"
+  },
+  {
+   "id": "q007-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "confusing question about 'the variable that specifies which thread to wait for'"
+  },
+  {
+   "id": "q007-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q007-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 1,
+   "pedagogy": 2,
+   "note": "attributes the student's words to [S1]"
+  },
+  {
+   "id": "q007-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "confusing question"
+  },
+  {
+   "id": "q007-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "no check question"
+  },
+  {
+   "id": "q007-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "confusing question"
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'solid' for 'I don't know'"
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "does not address the 'join merges threads' misconception; muddled"
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 3,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 1,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'solid' for 'I'm still confused'; says 'You got it right'"
+  },
+  {
+   "id": "q023-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "question gives away load/increment/store"
+  },
+  {
+   "id": "q023-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "arithmetic check, not the concept"
+  },
+  {
+   "id": "q023-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q023-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "gives away the mechanism"
+  },
+  {
+   "id": "q023-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 2,
+   "note": "says a thread keeps no separate copy, though it loads the value into its register"
+  },
+  {
+   "id": "q023-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "over-cites"
+  },
+  {
+   "id": "q023-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "gives away the mechanism"
+  },
+  {
+   "id": "q023-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "example wrong: Thread 1 would store 51, not 'the original 50'"
+  },
+  {
+   "id": "q023-unsure",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'solid' for a vague guess; muddled claim"
+  },
+  {
+   "id": "q031-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "refers to 'Figure 28.2' the student cannot see"
+  },
+  {
+   "id": "q031-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "check describes the whole failure"
+  },
+  {
+   "id": "q031-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "says setting the flag is non-atomic; the problem is test-then-set"
+  },
+  {
+   "id": "q031-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "refers to Figure 28.2"
+  },
+  {
+   "id": "q031-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "wrong mechanism: memory visibility instead of interleaving"
+  },
+  {
+   "id": "q031-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 2,
+   "note": "repeats the wrong visibility reason, then the right one"
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "refers to Figure 28.2"
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "wrong mechanism: T2 sees 0 after T1 set it"
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 3,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'solid' for 'I don't know'; 'You got it right!'"
+  },
+  {
+   "id": "q054-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "check is about the Full semaphore, off the topic"
+  },
+  {
+   "id": "q054-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "'You're close' to a wrong answer; ignores the swapped roles"
+  },
+  {
+   "id": "q054-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-unsure",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'solid' for 'I don't remember'"
+  },
+  {
+   "id": "q054-unsure",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'solid'; 'You're absolutely right'; muddled sem_post claim"
+  },
+  {
+   "id": "q047-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "hints the answer"
+  },
+  {
+   "id": "q047-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q047-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q047-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "hints the answer"
+  },
+  {
+   "id": "q047-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "says the while loop is to avoid wasting CPU cycles (wrong reason)"
+  },
+  {
+   "id": "q047-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 0,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "repeats the wrong CPU-cycles reason"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "hints the answer"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "'You're close' misattributes; spurious wakeups only"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "spurious wakeups only; repeat"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "spurious wakeups only"
+  },
+  {
+   "id": "q072-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q072-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "ambiguous check"
+  },
+  {
+   "id": "q072-solid",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 0,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'misconception'; claims changing one philosopher's order does not break the cycle and that taking both forks first deadlocks (both wrong)"
+  },
+  {
+   "id": "q072-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q072-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 2,
+   "note": "claim that a time limit cannot help is attributed to [S1], which does not say it"
+  },
+  {
+   "id": "q072-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "garbled example (P0 takes P1's chopstick)"
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "labels P0 as odd"
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 2,
+   "note": "claims the monitor solution prevents starvation"
+  },
+  {
+   "id": "q075-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "leading yes/no question that gives the answer"
+  },
+  {
+   "id": "q075-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "confusing lock names (L3/L4 then L2)"
+  },
+  {
+   "id": "q075-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "'no thread will hold a lock while waiting for one later in the order' is wrong"
+  },
+  {
+   "id": "q075-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "leading question"
+  },
+  {
+   "id": "q075-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "overstates: threads 'can never be waiting for a lock another thread holds'"
+  },
+  {
+   "id": "q075-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "copies the explanation verbatim"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "leading question"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "self-contradicting example: describes the deadlock case as safe"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 1,
+   "pedagogy": 1,
+   "note": "repeats the contradicting example"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  }
+ ]
+}

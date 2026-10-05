@@ -1,0 +1,2944 @@
+{
+  "document_id": "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "slide",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "BCSE303L: Operating Systems",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Module 4:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Process Synchronization",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 2,
+      "title": "Module 3: Process Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Module 3: Process Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Background",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The Critical-Section Problem",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Peterson’s Solution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronization Hardware",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Semaphores",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Classic Problems of Synchronization",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Monitors",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronization Examples",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Atomic Transactions",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 3,
+      "title": "Objectives",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Objectives",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "To introduce the critical-section problem, whose solutions can be used to ensure the consistency of shared data",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To present both software and hardware solutions of the critical-section problem",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To introduce the concept of an atomic transaction and describe mechanisms to ensure atomicity",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 4,
+      "title": "Inter process Communication",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Inter process Communication",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 5,
+      "title": "Interprocess Communication",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Interprocess Communication",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Processes within a system may be independent or cooperating",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Cooperating process can affect or be affected by other processes, including sharing data.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Any process that shares data with other processes is a cooperating process.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Reasons for cooperating processes:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Information sharing",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Computation speedup",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Modularity",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Convenience",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Cooperating processes need interprocess communication (IPC)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two models of IPC",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared memory",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Message passing",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 6,
+      "title": "Communications Models",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Communications Models",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Communications models. (a) Shared memory. (b) Message passing",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 7,
+      "title": "Difference",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Difference",
+          "level": 1
+        },
+        {
+          "type": "table",
+          "text": "| Shared Memory | Message Passing |\n| Faster | Slower |\n| No kernel assistance is required | Kernel assistance is required |\n| More data can be kept in shared region | Exchanging smaller amounts of data |\n| System Calls are required only to establish shared memory\nregions | Implemented using System Calls |\n| Requires Synchronization | No synchronization |\n| Shared caches, Client – server communication | Can be used in distributed systems |\n| Processes share a common memory region | Processes don’t share address space |",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 8,
+      "title": "Cooperating Processes",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Cooperating Processes",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Independent process cannot affect or be affected by the execution of another process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Cooperating process can affect or be affected by the execution of another process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Advantages of process cooperation",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Information sharing",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Computation speed-up",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Modularity",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Convenience",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 9,
+      "title": "Producer-Consumer Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Producer-Consumer Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Paradigm for cooperating processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Producer process produces information that is consumed by a consumer process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "producer–consumer problem uses shared memory. To allow producer and consumer processes to run concurrently, we must have available a buffer of items that can be filled by the producer and emptied by the consumer.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two types of buffers can be used",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "unbounded-buffer places no practical limit on the size of the buffer",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "bounded-buffer assumes that there is a fixed buffer size",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 10,
+      "title": "Bounded-Buffer – Shared-Memory Solution",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded-Buffer – Shared-Memory Solution",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared data",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "#define BUFFER_SIZE 10\ntypedef struct {",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": ". . .",
+          "level": 3
+        },
+        {
+          "type": "code",
+          "text": "} item;\nitem buffer[BUFFER_SIZE];\nint in = 0;\nint out = 0;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Can only use BUFFER_SIZE-1 elements",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The variable in points to the next free position in the buffer; out",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "points to the first full position in the buffer.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 11,
+      "title": "Bounded-Buffer – Producer",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded-Buffer – Producer",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "The buffer is empty when in == out;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "the buffer is full when ((in + 1) % BUFFER SIZE) == out",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 12,
+      "title": "Bounded Buffer – Consumer",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded Buffer – Consumer",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 13,
+      "title": "Interprocess Communication – Message Passing",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Interprocess Communication – Message Passing",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Mechanism for processes to communicate and to synchronize their actions",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Message system – processes communicate with each other without resorting to shared variables",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "IPC facility provides two operations:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "send(message) – message size fixed or variable",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "receive(message)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If P and Q wish to communicate, they need to:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "establish a communication link between them",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "exchange messages via send/receive",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Implementation of communication link",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Direct or indirect communication (Naming)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronous or asynchronous communication (Synchronization)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Automatic or explicit buffering (Buffering)",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 14,
+      "title": "IPC: Naming",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "IPC: Naming",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Processes that want to communicate must have a way to refer to each other.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "They can use either direct or indirect communication.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Under direct communication, each process that wants to communicate must explicitly name the recipient or sender of the communication.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "In this scheme, the send() and receive() primitives are defined as:",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 15,
+      "title": null,
+      "images": 1,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Indirect communication, the messages are sent to and received from mailboxes, or ports.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A process can communicate with another process via a number of different mailboxes, but two processes can communicate only if they have a shared mailbox.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The send() and receive() primitives are defined as follows:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A mailbox may be owned either by a process or by the operating system.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "When a process that owns a mailbox terminates, the mailbox disappears.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A mailbox that is owned by the operating system has an existence of its own. The operating system then must provide a mechanism that allows a process to do the following:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Create a new mailbox.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Send and receive messages through the mailbox.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Delete a mailbox.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 16,
+      "title": "IPC: Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "IPC: Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Message passing may be either blocking (Synchronous) or non-blocking (Asynchronous)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Blocking is considered synchronous",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Blocking send has the sender block until the message is received",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Blocking receive has the receiver block until a message is available",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Non-blocking is considered asynchronous",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Non-blocking send has the sender send the message and continue",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Non-blocking receive has the receiver receive a valid message or null",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 17,
+      "title": "IPC: Buffering",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "IPC: Buffering",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Queue of messages attached to the link; implemented in one of three ways",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Zero capacity – 0 messages\nSender must wait for receiver",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Bounded capacity – finite length of n messages\nSender must wait if link full",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "3. Unbounded capacity – infinite length \nSender never waits",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 18,
+      "title": "RACE CONDITION",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "RACE CONDITION",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 19,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Race condition: The situation where several processes access – and manipulate shared data concurrently. The final value of the shared data depends upon which process finishes last.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To prevent race conditions, concurrent processes must be synchronized.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Example:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Consider the bounded buffer problem , where an integer variable counter, initialized to 0 is added . counter is incremented every time we add a new item to the buffer and is decremented every time we remove one item from the buffer",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 20,
+      "title": "Concurrent Execution - Race Condition",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Concurrent Execution - Race Condition",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Concurrent execution has to give the same results as serial execution. Concurrent execution with shared data leads us to speak about synchronization.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To get data consistency we should have mechanism to avoid data inconsistency problem.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronization as embedded system topic we have to speak about producer consumer problem.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Maintaining data consistency requires mechanisms to ensure the orderly execution of cooperating processes.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Suppose that we wanted to provide a solution to the consumer-producer problem that fills all the buffers. We can do so by having an integer count that keeps track of the number of full buffers. Initially, count is set to 0.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "It is incremented by the producer after it produces a new buffer and is decremented by the consumer after it consumes a buffer.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 21,
+      "title": "Producer Consumer Problem – Creates RACE condition",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Producer Consumer Problem – Creates RACE condition",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The producer-consumer problem illustrates the need for synchronization in systems where many processes share a resource.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "In the problem, two processes share a fixed-size buffer. One process produces information and puts it in the buffer, while the other process consumes information from the buffer.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "These processes do not take turns accessing the buffer, they both work concurrently.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "It is also called bounded buffer problem",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 22,
+      "title": "Producer",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Producer",
+          "level": 1
+        },
+        {
+          "type": "table",
+          "text": "|  |  |  |",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "0",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "2",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "1",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 23,
+      "title": "Consumer",
+      "images": 2,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Consumer",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 24,
+      "title": "Race Condition",
+      "images": 3,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Race Condition",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "counter++ could be implemented as\ncounter-- could be implemented as",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Consider this execution interleaving with “count = 5” initially:",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 25,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Now we have arrived at the incorrect state \"counter == 4\", indicating that four buffers are full, If we reversed the order of the statements at T4 and T5, we would arrive at the incorrect state \"counter = 6\".",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "We would arrive at this incorrect state because we allowed both processes to manipulate the variable counter concurrently.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A situation like this, where several processes access and manipulate the same data concurrently and the outcome of the execution depends on the particular order in which the access takes place, is called a race condition.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To avoid the race condition, we need to ensure that only one process at a time can be manipulating the variable counter. To make such a guarantee, we require that the processes be synchronized in some way.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 26,
+      "title": "CRITICAL-SECTION PROBLEM",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "CRITICAL-SECTION PROBLEM",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 27,
+      "title": "Critical Section Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Critical Section Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Consider system of n processes {p0, p1, … pn-1}",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each process has critical section segment of code",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Process may be changing common variables, updating table, writing file, etc",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "When one process in critical section, no other may be in its critical section",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Critical section problem is to design protocol to solve this",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each process must ask permission to enter critical section in entry section, may follow critical section with exit section, then remainder section",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Especially challenging with preemptive kernels",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 28,
+      "title": "Critical Section",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Critical Section",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "General structure of process pi is",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 29,
+      "title": "Requirements to be satisfied for a Solution to the Critical-Section Problem:",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Requirements to be satisfied for a Solution to the Critical-Section Problem:",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "1. Mutual Exclusion - If process Pi is executing in its critical section, then no other processes can be executing in their critical sections",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "2. Progress - If no process is executing in its critical section and there exist some processes that wish to enter their critical section, then the selection of the processes that will enter the critical section next cannot be postponed indefinitely",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "3. Bounded Waiting - After a process has made a request to enter it’s CS, there is a bound on the number of times that the other processes are allowed to enter their CS",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "otherwise the process will suffer from starvation",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Of course also no deadlock (no cycles)",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 30,
+      "title": "Solutions to Critical Section Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solutions to Critical Section Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Software Solution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Peterson Solution – Two process only",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Bakery Algorithm – N processes",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Hardware Solution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Test and Set Instructions",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Compare and Swap Instruction",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "High Level Abstraction",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Mutex Lock",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Semaphores",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 31,
+      "title": "Peterson’s solutions",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Peterson’s solutions",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A classic software-based solution to the critical-section problem known as Peterson’s solution.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Peterson’s solution is restricted to two processes that alternate execution between their critical sections and remainder sections.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The processes are numbered P0 and P1 .",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Peterson’s solution requires the two processes to share two data items:",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 32,
+      "title": "The variable turn indicates whose turn it is to enter its critical section.",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "The variable turn indicates whose turn it is to enter its critical section.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "That is, if turn == i, then process Pi is allowed to execute in its critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The flag array is used to indicate if a process is ready to enter its critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "For example, if flag[i] is true, Pi is ready to enter its critical section.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 33,
+      "title": null,
+      "images": 1,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 34,
+      "title": "We now prove that this solution is correct. We need to show that:",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "We now prove that this solution is correct. We need to show that:",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "1. Mutual exclusion is preserved.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "2. The progress requirement is satisfied.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "3. The bounded-waiting requirement is met.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To prove property 1, we note that each Pi enters its critical section only if either flag[j] == false or turn == i.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To prove properties 2 and 3, we note that a process Pi can be prevented from entering the critical section only if it is stuck in the while loop with the condition flag[j] == true and turn == j; this loop is the only one possible.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If Pj is not ready to enter the critical section, then flag[j] == false, and Pi can enter its critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If Pj has set flag[j] to true and is also executing in its while statement, then either turn == i or turn == j. If turn == i, then Pi will enter the critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If turn == j, then Pj will enter the critical section. However, once Pj exits its critical section, it will reset flag[j] to false, allowing Pi to enter its critical section.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 35,
+      "title": "Scenario",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Scenario",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Imagine an online banking system where two processes are running simultaneously:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Process P0: Updates the account balance after a deposit.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Process P1: Updates the account balance after a withdrawal.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Both processes need to access and update the shared variable Balance.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Answer the following questions:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Is there any chances of Race condition?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If so, how Peterson solution helps to overcome the issue?",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 36,
+      "title": "Bakery Algorithm",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bakery Algorithm",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The Bakery Algorithm, proposed by Leslie Lamport.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "In the Bakery Algorithm, each process is assigned a number (a ticket).",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Before entering the critical section, a process receives a ticket number, and the process with the smallest ticket number enters the critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If two processes receive the same ticket number, the process with the lower process ID is given priority.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 37,
+      "title": "Bakery Algorithm – Software Solution (N Processes)",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bakery Algorithm – Software Solution (N Processes)",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 38,
+      "title": "Hardware Support for Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Hardware Support for Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Hardware Instructions",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "test and set()",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "compare and swap()",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 39,
+      "title": "Test and Set",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Test and Set",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Many modern computer systems provide special hardware instructions that allow us either to test and modify the content of a word or to swap the contents of two words atomically— that is, as one uninterruptible unit. This is accomplished by test and set() and compare and swap() instructions.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The important characteristic of test and set() instruction is that it is executed atomically. Thus, if two test and set() instructions are executed simultaneously each on a different core), they will be executed sequentially in some arbitrary order.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If the machine supports the test and set() instruction, then we can implement mutual exclusion by declaring a boolean variable lock, initialized to false.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 40,
+      "title": "test and set() instruction",
+      "images": 2,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "test and set() instruction",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Process Pi",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Process Pj",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 41,
+      "title": "compare and swap() instruction (CAS)",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "compare and swap() instruction (CAS)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The compare and swap() instruction (CAS), just like the test and set() instruction, operates on two words atomically, but uses a different mechanism that is based on swapping the content of two words.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The operand value is set to new value only if the expression (*value == expected) is true. Regardless, CAS always returns the original value of the variable value. The important characteristic of this instruction is that it is executed atomically.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 42,
+      "title": "compare and swap() instruction (CAS)",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "compare and swap() instruction (CAS)",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 43,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Mutual exclusion using CAS can be provided as follows: A global variable (lock) is declared and is initialized to 0. The first process that invokes compare and swap() will set lock to 1. It will then enter its critical section, because the original value of lock was equal to the expected value of 0.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "When a process exits its critical section, it sets lock back to 0, which allows another process to enter its critical section.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 44,
+      "title": "Semaphores",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphores",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 45,
+      "title": "Semaphores",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphores",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "It is a synchronization tool that is used to generalize the solution to the critical section problem.",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Semaphore S is an integer variable that, apart from initialization,",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Is accessed only through two standard atomic operations: wait() and signal().",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Semaphores were introduced by the Dutch computer scientist Edsger Dijkstra,",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "the wait() operation was originally termed P (from the Dutch proberen, \"to test\");",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal() was originally called V (from verhogen, “to increment”).",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "1. wait or P operation ( to test )",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "2. signal or V operation ( to increment )",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 46,
+      "title": "Types",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Types",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "1. Binary Semaphore",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "2. Counting Semaphore",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 47,
+      "title": "Semaphore Implementation with Busy waiting",
+      "images": 2,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore Implementation with Busy waiting",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The definition of wait()",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "do {",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "wait(S)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Critical Section",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal(s)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Remainder section",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "} while(1)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The definition of signal()",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Disadvantages:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Busy waiting",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "This is called Spin Lock",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 48,
+      "title": "Semaphore Implementation",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore Implementation",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The semaphore discussed so far requires a busy waiting. That is if a process is in critical-section, the other process that tries to enter its critical-section must loop continuously in the entry code.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "To overcome the busy waiting problem, the definition of the semaphore operations wait and signal should be modified.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "When a process executes the wait operation and finds that the semaphore value is not positive, the process can block itself. The block operation places the process into a waiting queue associated with the semaphore.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A process that is blocked waiting on a semaphore should be restarted when some other process executes a signal operation. The blocked process should be restarted by a wakeup operation which put that process into ready queue.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 49,
+      "title": "Classical Problems of Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Classical Problems of Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Classical problems used to test newly-proposed synchronization schemes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Bounded-Buffer Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Readers and Writers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Dining-Philosophers Problem",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 50,
+      "title": "Bounded Buffer Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded Buffer Problem",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 51,
+      "title": "Bounded-Buffer Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded-Buffer Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The producer and consumer processes share the following",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "data structures:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "N buffers, each can hold one item",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Semaphore mutex initialized to the value 1\nSemaphore full initialized to the value 0\nSemaphore empty initialized to the value N",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 52,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "The bounded buffer problem, also known as the producer-consumer problem, is a classic synchronization issue in operating systems. It shows how producers and consumers can safely share a fixed-size buffer using semaphores and mutexe.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Producer: Generates data items and puts them into a shared buffer.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Consumer: Takes data items from the buffer and processes them.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Bounded Buffer: The buffer has a fixed capacity.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Constraints:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Producer must wait if the buffer is full.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Consumer must wait if the buffer is empty.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Access to the buffer must be mutually exclusive to avoid race conditions.",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 53,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "empty semaphore tracks available slots in the buffer.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "full semaphore tracks filled slots.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "mutex ensures only one thread accesses the buffer at a time (ensures the status of the critical section).",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 54,
+      "title": "Bounded Buffer Problem (Cont.)",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded Buffer Problem (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of the producer process",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\tdo  {\n             //   produce an item in nextp\n                               wait (empty);\n                               wait (mutex);\n              //  add the item to the  buffer\n                    signal (mutex);\n                    signal (full);\n           } while (TRUE);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of the consumer process",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "           do {\n                      wait (full);\n                      wait (mutex);\n         //  remove an item from  buffer to nextc\n                    signal (mutex);\n                 signal (empty);\n            //  consume the item in nextc\n   } while (TRUE);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Wait – decrement",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Signal - increment",
+          "level": 0
+        },
+        {
+          "type": "table",
+          "text": "|  |  |  |",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Mutex = 1",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Empty = n =",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Full = 0",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Buffer",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 55,
+      "title": "Readers/Writers Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers/Writers Problem",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 56,
+      "title": "Readers/Writers Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers/Writers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Some of these processes may want only to read the database, whereas others may want to update (that is, read and write) the database",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Motivation: Consider a shared database",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two classes of users:",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Readers – never modify database",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "Writers – read and modify database",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "Is using a single lock on the whole database sufficient?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Like to have many readers at the same time",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "Only one writer at a time",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 57,
+      "title": "Readers-Writers Problem (Cont.)",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers-Writers Problem (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of a reader process",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\tdo {\n                  wait (mutex) ;\n                  readcount ++ ;\n                  if (readcount == 1)\n\t\t\twait (wrt) ;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal (mutex)",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "            // reading is performed\n                  wait (mutex) ;\n                  readcount  - - ;\n                  if (readcount  == 0)\n\t\t\tsignal (wrt) ;\n                   signal (mutex) ;\n    } while (TRUE);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of a writer process",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "              do {\n                        wait (wrt) ;\n              //    writing is performed\n                        signal (wrt) ;\n         } while (TRUE);\nwrt = 1\nMutex = 1\nreadcount = 0",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 58,
+      "title": "Readers/Writers Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers/Writers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A database is to be shared among several concurrent processes. Some of these processes may want only to read the database, whereas others may want to update the database",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "We distinguish between these two types of processes by referring to the former as readers and to the latter as writers",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Obviously, if two readers access the shared data simultaneously, nothing bad will happen",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "However, if a writer and some other process (either a reader or a writer) access the database simultaneously, chaos may ensue",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 59,
+      "title": "Readers/Writers Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers/Writers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "To ensure that these difficulties do not arise, we require that the writers have exclusive access to the shared database",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "There are several variations of this problem, all involving priorities",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The first and simplest one, referred to as the first readers/writers problem, requires that no reader will be kept waiting unless a writer has already obtained permission to use the shared object (i.e., no reader should wait for other readers to finish simply because a writer is waiting) NOTE: writers may starve",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The second readers/writers problem requires that, once a writer is ready, that writer performs its write as soon as possible (i.e., if a writer is waiting, no new readers may start reading) NOTE: readers may starve",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 60,
+      "title": "Dining-Philosophers Problem",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Dining-Philosophers Problem",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 61,
+      "title": "Dining-Philosophers Problem",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Dining-Philosophers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Consider five philosophers who spend their lives thinking and eating.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The philosophers share a circular table surrounded by five chairs, each belonging to one philosopher.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "In the center of the table is a bowl of rice, and the table is laid with five single chopsticks",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "When a philosopher thinks, she does not interact with her colleagues.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "From time to time, a philosopher gets hungry and tries to pick up the two chopsticks that are closest to her (the chopsticks that are between her and her left and right neighbors).",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A philosopher may pick up only one chopstick at a time.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Obviously, she cannot pick up a chopstick that is already in the hand of a neighbor.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "When a hungry philosopher has both her chopsticks at the same time, she eats without releasing the chopsticks.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "When she is finished eating, she puts down both chopsticks and starts thinking again.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 62,
+      "title": "Dining-Philosophers Problem",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Dining-Philosophers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Philosophers spend their lives thinking and eating",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Don’t interact with their neighbors, occasionally try to pick up 2 chopsticks (one at a time) to eat from bowl",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Need both to eat, then release both when done",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "In the case of 5 philosophers",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared data",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Bowl of rice (data set)",
+          "level": 2
+        },
+        {
+          "type": "code",
+          "text": "Semaphore chopstick [5] initialized to 1",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 63,
+      "title": "Dining-Philosophers Problem Algorithm",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Dining-Philosophers Problem Algorithm",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of Philosopher i:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "do  {\n     wait ( chopstick[i] );\n\twait ( chopStick[ (i + 1) % 5] );\n\t          //  eat\n\tsignal ( chopstick[i] );\n\tsignal (chopstick[ (i + 1) % 5] );\n             //  think\n} while (TRUE);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "This solution guarantees that no two neighbors can be eating simultaneously (i.e., mutual exclusion)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "What is the problem with this algorithm?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "This solution could create a deadlock. How?",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "chopstick[i] = 1",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "chopstick[i+1] = 1",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 64,
+      "title": "Deadlock situation and Solution",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Deadlock situation and Solution",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Suppose that all five philosophers become hungry at the same time and each grabs her left chopstick. All the elements of chopstick will now be equal to 0.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "When each philosopher tries to grab her right chopstick, she will be delayed forever. This creates Deadlock.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Several possible remedies to the deadlock problem are the following:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Allow at most four philosophers to be sitting simultaneously at the table.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Allow a philosopher to pick up her chopsticks only if both chopsticks are available (to do this, she must pick them up in a critical section).",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Use an asymmetric solution—that is, an odd-numbered philosopher picks up first her left chopstick and then her right chopstick, whereas an even numbered philosopher picks up her right chopstick and then her left chopstick.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 65,
+      "title": "Problems with Semaphores",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Problems with Semaphores",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Incorrect use of semaphore operations:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal (mutex) …. wait (mutex)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "wait (mutex) … wait (mutex)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Omitting of wait (mutex) or signal (mutex) (or both)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Deadlock and starvation",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 66,
+      "title": "Monitors",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Monitors",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A high-level abstraction that provides a convenient and effective mechanism for process synchronization",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Goal of OS is to share resources amongst many programs.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Separate schedulers should be created for each class of resource.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each scheduler contains local data + procedures that programs may use to acquire and release resources. Such a collection of data + procedures is a monitor.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Abstract data type, internal variables only accessible by code within the procedure",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Only one process may be active within the monitor at a time If more than one program attempts to enter at the same time, only one will succeed, and the remaining programs will remain on a queue.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "But not powerful enough to model some synchronization schemes",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 67,
+      "title": "monitor monitor-name",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "monitor monitor-name",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "{\n\t// shared variable declarations",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "procedure P1 (…) { …. }",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "procedure Pn (…) {……}",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "Initialization code (…) { … }",
+          "level": 2
+        },
+        {
+          "type": "code",
+          "text": "\t}\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 68,
+      "title": "Schematic view of a Monitor",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Schematic view of a Monitor",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The initialization component contains the code that is used exactly once when the monitor is created",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The monitor procedures are procedures that can be called from outside of the monitor.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The monitor entry queue contains all threads that called monitor procedures but have not been granted permissions.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared Data",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 69,
+      "title": "Condition Variables",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Condition Variables",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "condition x, y;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two operations on a condition variable:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "x.wait () – a process that invokes the operation is suspended until x.signal ()",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If a procedure calls wait, the calling program will block until some other procedure calls signal.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "x.signal () – resumes one of processes (if any) that invoked x.wait ()",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "When a procedure calls signal, then the lock on the monitor is also released, and another program that previously called wait will run immediately.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If no x.wait () on the variable, then it has no effect on the variable.",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 70,
+      "title": "Monitor with Condition Variables",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Monitor with Condition Variables",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 71,
+      "title": "Condition Variables Choices",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Condition Variables Choices",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If process P invokes x.signal (), with Q in x.wait () state, what should happen next?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If Q is resumed, then P must wait",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Options include",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Signal and wait – P waits until Q leaves monitor or waits for another condition",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Signal and continue – Q waits until P leaves the monitor or waits for another condition",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Both have pros and cons – language implementer can decide",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Monitors implemented in Concurrent Pascal compromise",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "P executing signal immediately leaves the monitor, Q is resumed",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "Implemented in other languages including Mesa, C#, Java",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 72,
+      "title": "Solution to Dining Philosophers",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution to Dining Philosophers",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 73,
+      "title": "Solution to Dining Philosophers (Cont.)",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution to Dining Philosophers (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Each philosopher i invokes the operations pickup() and putdown() in the following sequence:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "              DiningPhilosophers.pickup (i);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "EAT",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "               DiningPhilosophers.putdown (i);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "No deadlock, but starvation is possible",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 74,
+      "title": "Monitor Implementation Using Semaphores",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Monitor Implementation Using Semaphores",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Variables",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\t\tsemaphore mutex;  // (initially  = 1)\n\t\tsemaphore next;     // (initially  = 0)\n\t\tint next_count = 0;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each procedure F will be replaced by",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\t\t\twait(mutex);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "…",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                                                        body of F;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "…",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\t\t\tif (next_count > 0)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal(next)",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\t\t\telse\n\t\t\t\tsignal(mutex);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Mutual exclusion within a monitor is ensured",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 75,
+      "title": "Monitor Implementation – Condition Variables",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Monitor Implementation – Condition Variables",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "For each condition variable x, we have:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\t\tsemaphore x_sem; // (initially  = 0)\n\t\tint x_count = 0;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The operation x.wait can be implemented as:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\t\tx-count++;\n\t\tif (next_count > 0)\n\t\t\tsignal(next);\n\t\telse\n\t\t\tsignal(mutex);\n\t\twait(x_sem);\n\t\tx-count--;",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 76,
+      "title": "Monitor Implementation (Cont.)",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Monitor Implementation (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The operation x.signal can be implemented as:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "\t\tif (x-count > 0) {\n\t\t\tnext_count++;\n\t\t\tsignal(x_sem);\n\t\t\twait(next);\n\t\t\tnext_count--;\n\t\t}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 77,
+      "title": "Resuming Processes within a Monitor",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Resuming Processes within a Monitor",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If several processes queued on condition x, and x.signal() executed, which should be resumed?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "FCFS frequently not adequate",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "conditional-wait construct of the form x.wait(c)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Where c is priority number",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Process with lowest number (highest priority) is scheduled next",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 78,
+      "title": "A Monitor to Allocate Single Resource",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "A Monitor to Allocate Single Resource",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "monitor ResourceAllocator",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "{\n\tboolean busy;\n\tcondition x;\n\tvoid acquire(int time) {\n\t\tif (busy)\n\t\t\tx.wait(time);\n\t\tbusy = TRUE;\n\t}\n\tvoid release() {\n\t\tbusy = FALSE;\n\t\tx.signal();\n\t}\ninitialization code() {\n\t busy = FALSE;\n\t}\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 79,
+      "title": "Synchronization Examples",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Synchronization Examples",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Solaris",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Windows XP",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Linux",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Pthreads",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 80,
+      "title": "Solaris Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solaris Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Implements a variety of locks to support multitasking, multithreading (including real-time threads), and multiprocessing",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Uses adaptive mutexes for efficiency when protecting data from short code segments",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Starts as a standard semaphore spin-lock",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If lock held, and by a thread running on another CPU, spins",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If lock held by non-run-state thread, block and sleep waiting for signal of lock being released",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Uses condition variables",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Uses readers-writers locks when longer sections of code need access to data",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Uses turnstiles to order the list of threads waiting to acquire either an adaptive mutex or reader-writer lock",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Turnstiles are per-lock-holding-thread, not per-object",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Priority-inheritance per-turnstile gives the running thread the highest of the priorities of the threads in its turnstile",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 81,
+      "title": "Windows XP Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Windows XP Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Uses interrupt masks to protect access to global resources on uniprocessor systems",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Uses spinlocks on multiprocessor systems",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Spinlocking-thread will never be preempted",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Also provides dispatcher objects user-land which may act mutexes, semaphores, events, and timers",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Events",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "An event acts much like a condition variable",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "Timers notify one or more thread when time expired",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Dispatcher objects either signaled-state (object available) or non-signaled state (thread will block)",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 82,
+      "title": "Linux Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Linux Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Linux:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Prior to kernel Version 2.6, disables interrupts to implement short critical sections",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Version 2.6 and later, fully preemptive",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Linux provides:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "semaphores",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "spinlocks",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "reader-writer versions of both",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "On single-cpu system, spinlocks replaced by enabling and disabling kernel preemption",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 83,
+      "title": "Pthreads Synchronization",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Pthreads Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Pthreads API is OS-independent",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "It provides:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "mutex locks",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "condition variables",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Non-portable extensions include:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "read-write locks",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "spinlocks",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}

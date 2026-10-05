@@ -1,0 +1,1020 @@
+{
+  "document_id": "lecture13-0af66874",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Lecture 13: Locks",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Lecture 13: Locks",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.382,
+          "bottom": 0.474,
+          "x0": 242.4,
+          "cw": 18.04
+        },
+        {
+          "text": "Mythili Vutukuru",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.563,
+          "bottom": 0.63,
+          "x0": 286.3,
+          "cw": 13.71
+        },
+        {
+          "text": "IIT Bombay",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.639,
+          "bottom": 0.705,
+          "x0": 323.5,
+          "cw": 14.48
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "Locks: Basic idea",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Locks: Basic idea",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 247.9,
+          "cw": 17.41
+        },
+        {
+          "text": "• Consider update of shared variable",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.255,
+          "bottom": 0.316,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "• We can use a special lock variable to protect it",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.361,
+          "bottom": 0.422,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "• All threads accessing a critical section share a lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.626,
+          "bottom": 0.686,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "• One threads succeeds in locking – owner of lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.678,
+          "bottom": 0.739,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "• Other threads that try to lock cannot proceed further",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.731,
+          "bottom": 0.792,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "until lock is released by the owner",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.779,
+          "bottom": 0.835,
+          "x0": 106.2,
+          "cw": 10.65
+        },
+        {
+          "text": "• Pthreads library in Linux provides such locks",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.827,
+          "bottom": 0.888,
+          "x0": 79.2,
+          "cw": 9.45
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "Building a lock",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Building a lock",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 267.3,
+          "cw": 17.14
+        },
+        {
+          "text": "• Goals of a lock implementation",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.218,
+          "bottom": 0.29,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "– Mutual exclusion (obviously!)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.287,
+          "bottom": 0.35,
+          "x0": 115.2,
+          "cw": 15.55
+        },
+        {
+          "text": "– Fairness: all threads should eventually get the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.347,
+          "bottom": 0.41,
+          "x0": 115.2,
+          "cw": 15.55
+        },
+        {
+          "text": "lock, and no thread should starve",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.402,
+          "bottom": 0.46,
+          "x0": 137.8,
+          "cw": 11.44
+        },
+        {
+          "text": "Low overhead: acquiring, releasing, and waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.462,
+          "bottom": 0.52,
+          "x0": 137.8,
+          "cw": 11.5
+        },
+        {
+          "text": "for lock should not consume too many resources",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.512,
+          "bottom": 0.57,
+          "x0": 137.8,
+          "cw": 11.99
+        },
+        {
+          "text": "• Implementation of locks are needed for both",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.567,
+          "bottom": 0.639,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "userspace programs (e.g., pthreads library)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.629,
+          "bottom": 0.696,
+          "x0": 106.2,
+          "cw": 12.93
+        },
+        {
+          "text": "and kernel code",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.686,
+          "bottom": 0.752,
+          "x0": 106.2,
+          "cw": 13.79
+        },
+        {
+          "text": "• Implementing locks needs support from",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.749,
+          "bottom": 0.821,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "hardware and OS",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.811,
+          "bottom": 0.878,
+          "x0": 106.2,
+          "cw": 14.91
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Is disabling interrupts enough?",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Is disabling interrupts enough?",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 120.5,
+          "cw": 17.75
+        },
+        {
+          "text": "• Is this enough?",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.258,
+          "bottom": 0.326,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "• No, not always!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.323,
+          "bottom": 0.39,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "• Many issues here:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.387,
+          "bottom": 0.455,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "– Disabling interrupts is a privileged instruction and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.452,
+          "bottom": 0.511,
+          "x0": 115.2,
+          "cw": 14.48
+        },
+        {
+          "text": "program can misuse it (e.g., run forever)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.503,
+          "bottom": 0.557,
+          "x0": 137.8,
+          "cw": 10.33
+        },
+        {
+          "text": "– Will not work on multiprocessor systems, since",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.554,
+          "bottom": 0.613,
+          "x0": 115.2,
+          "cw": 14.48
+        },
+        {
+          "text": "another thread on another core can enter critical",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.605,
+          "bottom": 0.659,
+          "x0": 137.8,
+          "cw": 10.54
+        },
+        {
+          "text": "section",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.651,
+          "bottom": 0.705,
+          "x0": 137.8,
+          "cw": 10.88
+        },
+        {
+          "text": "• This technique is used to implement locks on",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.702,
+          "bottom": 0.77,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "single processor systems inside the OS",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.76,
+          "bottom": 0.822,
+          "x0": 106.2,
+          "cw": 12.23
+        },
+        {
+          "text": "– Need better solution for other situations",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.82,
+          "bottom": 0.878,
+          "x0": 115.2,
+          "cw": 14.48
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "A failed lock implementation (1)",
+      "images": 15,
+      "lines": [
+        {
+          "text": "A failed lock implementation (1)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 110.2,
+          "cw": 17.85
+        },
+        {
+          "text": "• Lock: spin on a flag variable until it is unset,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.214,
+          "bottom": 0.287,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "then set it to acquire lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.283,
+          "bottom": 0.349,
+          "x0": 106.2,
+          "cw": 12.2
+        },
+        {
+          "text": "• Unlock: unset flag variable",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.352,
+          "bottom": 0.425,
+          "x0": 79.2,
+          "cw": 11.21
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "A failed lock implementation (2)",
+      "images": 15,
+      "lines": [
+        {
+          "text": "A failed lock implementation (2)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 110.2,
+          "cw": 17.85
+        },
+        {
+          "text": "• Thread 1 spins, lock is released, ends spin",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.214,
+          "bottom": 0.287,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "• Thread 1 interrupted just before setting flag",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.29,
+          "bottom": 0.362,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "• Race condition has moved to the lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.365,
+          "bottom": 0.437,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "acquisition code!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.434,
+          "bottom": 0.5,
+          "x0": 106.2,
+          "cw": 13.06
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": "Solution: Hardware atomic instructions",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Solution: Hardware atomic instructions",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.127,
+          "bottom": 0.21,
+          "x0": 79.6,
+          "cw": 16.63
+        },
+        {
+          "text": "• Very hard to ensure atomicity only in software",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.263,
+          "bottom": 0.336,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "• Modern architectures provide hardware",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.339,
+          "bottom": 0.411,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "atomic instructions",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.407,
+          "bottom": 0.474,
+          "x0": 106.2,
+          "cw": 13.08
+        },
+        {
+          "text": "• Example of an atomic instruction: test-and-set",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.477,
+          "bottom": 0.549,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "– Update a variable and return old value, all in one",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.551,
+          "bottom": 0.614,
+          "x0": 115.2,
+          "cw": 15.55
+        },
+        {
+          "text": "hardware instruction",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.611,
+          "bottom": 0.669,
+          "x0": 137.8,
+          "cw": 11.85
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": "Simple lock using test-and-set",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Simple lock using test-and-set",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 129.5,
+          "cw": 17.76
+        },
+        {
+          "text": "• If TestAndSet(flag,1) returns 1, it means the lock is held by",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.226,
+          "bottom": 0.28,
+          "x0": 79.2,
+          "cw": 8.4
+        },
+        {
+          "text": "someone else, so wait busily",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.277,
+          "bottom": 0.327,
+          "x0": 106.2,
+          "cw": 9.88
+        },
+        {
+          "text": "• This lock is called a spinlock – spins until lock is acquired",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.329,
+          "bottom": 0.384,
+          "x0": 79.2,
+          "cw": 8.4
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": "Spinlock using compare-and-swap",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Spinlock using compare-and-swap",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 92.3,
+          "cw": 19.59
+        },
+        {
+          "text": "• Another atomic instruction: compare-and-swap",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.263,
+          "bottom": 0.336,
+          "x0": 67.2,
+          "cw": 11.21
+        },
+        {
+          "text": "• Spinlock using compare-and-swap",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.565,
+          "bottom": 0.637,
+          "x0": 67.2,
+          "cw": 11.21
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": "Alternative to spinning",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Alternative to spinning",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 193.3,
+          "cw": 17.61
+        },
+        {
+          "text": "• Alternative to spinlock: a (sleeping) mutex",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.215,
+          "bottom": 0.278,
+          "x0": 79.2,
+          "cw": 9.79
+        },
+        {
+          "text": "• Instead of spinning for a lock, a contending thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.281,
+          "bottom": 0.344,
+          "x0": 79.2,
+          "cw": 9.79
+        },
+        {
+          "text": "could simply give up the CPU and check back later",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.341,
+          "bottom": 0.399,
+          "x0": 106.2,
+          "cw": 11.56
+        },
+        {
+          "text": "– yield() moves thread from running to ready state",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.4,
+          "bottom": 0.454,
+          "x0": 128.5,
+          "cw": 13.75
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": "Spinlock vs. sleeping mutex",
+      "images": 15,
+      "lines": [
+        {
+          "text": "Spinlock vs. sleeping mutex",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 152.1,
+          "cw": 18.06
+        },
+        {
+          "text": "• Most userspace lock implementations are of the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.226,
+          "bottom": 0.286,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "sleeping mutex kind",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.273,
+          "bottom": 0.329,
+          "x0": 106.2,
+          "cw": 11.52
+        },
+        {
+          "text": "– CPU wasted by spinning contending threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.321,
+          "bottom": 0.376,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "– More so if a thread holds spinlock and blocks for long",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.368,
+          "bottom": 0.423,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "• Locks inside the OS are always spinlocks",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.415,
+          "bottom": 0.476,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "– Why? Who will the OS yield to?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.468,
+          "bottom": 0.523,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "• When OS acquires a spinlock:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.515,
+          "bottom": 0.576,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "– It must disable interrupts (on that processor core) while",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.568,
+          "bottom": 0.623,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "the lock is held. Why? An interrupt handler could request",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.61,
+          "bottom": 0.66,
+          "x0": 137.8,
+          "cw": 9.75
+        },
+        {
+          "text": "the same lock, and spin for it forever.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.648,
+          "bottom": 0.698,
+          "x0": 137.8,
+          "cw": 9.21
+        },
+        {
+          "text": "– It must not perform any blocking operation – never go to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.691,
+          "bottom": 0.745,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "sleep with a locked spinlock!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.733,
+          "bottom": 0.783,
+          "x0": 137.8,
+          "cw": 9.56
+        },
+        {
+          "text": "• In general, use spinlocks with care, and release as soon",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.775,
+          "bottom": 0.836,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "as possible",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.822,
+          "bottom": 0.878,
+          "x0": 106.2,
+          "cw": 10.81
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 12,
+      "title": "How should locks be used?",
+      "images": 15,
+      "lines": [
+        {
+          "text": "How should locks be used?",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 155.1,
+          "cw": 19.25
+        },
+        {
+          "text": "• A lock should be acquired before accessing any",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.253,
+          "bottom": 0.321,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "variable or data structure that is shared between",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.306,
+          "bottom": 0.368,
+          "x0": 106.2,
+          "cw": 12.1
+        },
+        {
+          "text": "multiple threads of a process",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.353,
+          "bottom": 0.415,
+          "x0": 106.2,
+          "cw": 12.14
+        },
+        {
+          "text": "– “Thread-safe” data structures",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.407,
+          "bottom": 0.466,
+          "x0": 115.2,
+          "cw": 14.48
+        },
+        {
+          "text": "• All shared kernel data structures must also be",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.457,
+          "bottom": 0.525,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "accessed only after locking",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.51,
+          "bottom": 0.572,
+          "x0": 106.2,
+          "cw": 12.03
+        },
+        {
+          "text": "• Coarse-grained vs. fine-grained locking: one big",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.563,
+          "bottom": 0.631,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "lock for all shared data vs. separate locks",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.616,
+          "bottom": 0.678,
+          "x0": 106.2,
+          "cw": 11.48
+        },
+        {
+          "text": "– Fine-grained allows more parallelism",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.67,
+          "bottom": 0.728,
+          "x0": 115.2,
+          "cw": 14.48
+        },
+        {
+          "text": "– Multiple fine-grained locks may be harder to manage",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.721,
+          "bottom": 0.779,
+          "x0": 115.2,
+          "cw": 14.48
+        },
+        {
+          "text": "• OS only provides locks, correct locking discipline",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.771,
+          "bottom": 0.839,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "is left to the user",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.823,
+          "bottom": 0.886,
+          "x0": 106.2,
+          "cw": 10.79
+        }
+      ]
+    }
+  ],
+  "page_count": 12,
+  "slide_count": null,
+  "properties": {
+    "creator": "Nitro Pro 7  (7. 4. 1. 4)",
+    "producer": "Nitro Pro 7  (7. 4. 1. 4)",
+    "creationDate": "D:20180410132132Z"
+  },
+  "master_text": []
+}

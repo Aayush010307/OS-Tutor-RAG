@@ -1,0 +1,1784 @@
+{
+  "document_id": "fallsem2025-26-vl-bcse303l-00100-th-2025-3f6ce962",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "slide",
+      "number": 1,
+      "title": "Process Synchronization",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Process Synchronization",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 2,
+      "title": "Module 6: Process Synchronization",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Module 6: Process Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Background",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The Critical-Section Problem",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Peterson’s Solution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronization Hardware",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Semaphores",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Classic Problems of Synchronization",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Monitors",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronization Examples",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Atomic Transactions",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 3,
+      "title": "Cooperating Processes",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Cooperating Processes",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Independent process cannot affect or be affected by the execution of another process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Cooperating process can affect or be affected by the execution of another process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Advantages of process cooperation",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Information sharing",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Computation speed-up",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Modularity",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Convenience",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 4,
+      "title": "Producer-Consumer Problem",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Producer-Consumer Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Paradigm for cooperating processes, producer process produces information that is consumed by a consumer process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "unbounded-buffer places no practical limit on the size of the buffer",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "bounded-buffer assumes that there is a fixed buffer size",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 5,
+      "title": "Bounded-Buffer – Shared-Memory Solution",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded-Buffer – Shared-Memory Solution",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared data",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "#define BUFFER_SIZE 10\nTypedef struct {",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": ". . .",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "} item;\nitem buffer[BUFFER_SIZE];\nint in = 0;\nint out = 0;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Solution is correct, but can only use BUFFER_SIZE-1 elements",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 6,
+      "title": "Bounded-Buffer – Insert() Method",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded-Buffer – Insert() Method",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "    while (true) {\n   /* Produce an item */\n       while((((in + 1) % BUFFER SIZE count)  == out)\n        // ;   /* do nothing -- no free buffers */",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Busy waiting",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "        buffer[in] = item;\n        in = (in + 1) % BUFFER SIZE;\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 7,
+      "title": "Bounded Buffer – Remove() Method",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded Buffer – Remove() Method",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "    while (true) {\n          while (in == out)\n                 ; // do nothing -- nothing to consume\n         // remove an item from the buffer\n         item = buffer[out];\n         out = (out + 1) % BUFFER SIZE;\n    return item;\n     }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 8,
+      "title": "Background",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Background",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Concurrent access to shared data may result in data inconsistency",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Maintaining data consistency requires mechanisms to ensure the orderly execution of cooperating processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Suppose that we wanted to provide a solution to the consumer-producer problem that fills all the buffers. We can do so by having an integer count that keeps track of the number of full buffers. Initially, count is set to 0. It is incremented by the producer after it produces a new buffer and is decremented by the consumer after it consumes a buffer.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 9,
+      "title": "Producer",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Producer",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "while (true) {\n          /*  produce an item and put in nextProduced  */\n          while (count == BUFFER_SIZE)\n            ; // do nothing\n               buffer [in] = nextProduced;\n               in = (in + 1) % BUFFER_SIZE;\n               count++;\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 10,
+      "title": "Consumer",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Consumer",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "    while (true)  {\n            while (count == 0)\n                ; // do nothing\n                nextConsumed =  buffer[out];\n                 out = (out + 1) % BUFFER_SIZE;\n                      count--;\n            /*  consume the item in nextConsumed\n    }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 11,
+      "title": "Race Condition",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Race Condition",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "count++ could be implemented as\n\n register1 = count\n register1 = register1 + 1\n count = register1",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "count-- could be implemented as\n\n register2 = count\n register2 = register2 - 1\n count = register2",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Consider this execution interleaving with “count = 5” initially:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "S0: producer execute register1 = count {register1 = 5}\nS1: producer execute register1 = register1 + 1 {register1 = 6} \nS2: consumer execute register2 = count {register2 = 5} \nS3: consumer execute register2 = register2 - 1 {register2 = 4} \nS4: producer execute count = register1 {count = 6 } \nS5: consumer execute count = register2 {count = 4}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 12,
+      "title": "PROCESS SYNCHRONIZATION",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "PROCESS SYNCHRONIZATION",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A section of code, common to n cooperating processes, in which the processes may be accessing common variables.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A Critical Section Environment contains:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Entry Section Code requesting entry into the critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Critical Section Code in which only one process can execute at any one time.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Exit Section The end of the critical section, releasing or allowing others in.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Remainder Section Rest of the code AFTER the critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Critical Sections",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 13,
+      "title": "Solution to Critical-Section Problem",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution to Critical-Section Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "1. Mutual Exclusion - If process Pi is executing in its critical section, then no other processes can be executing in their critical sections",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "2. Progress - If no process is executing in its critical section and there exist some processes that wish to enter their critical section, then the selection of the processes that will enter the critical section next cannot be postponed indefinitely",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "3. Bounded Waiting - A bound must exist on the number of times that other processes are allowed to enter their critical sections after a process has made a request to enter its critical section and before that request is granted.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 14,
+      "title": "Peterson’s Solution",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Peterson’s Solution",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Two process solution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Assume that the LOAD and STORE instructions are atomic; that is, cannot be interrupted.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The two processes share two variables:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "int turn;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Boolean flag[2]",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The variable turn indicates whose turn it is to enter the critical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The flag array is used to indicate if a process is ready to enter the critical section. flag[i] = true implies that process Pi is ready!",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 15,
+      "title": "Algorithm for Process Pi",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Algorithm for Process Pi",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "    while (true) {\n               flag[i] = TRUE;\n               turn = j;\n               while ( flag[j] == true && turn == j);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "CRITICAL SECTION",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "               flag[i] = FALSE;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "REMAINDER SECTION",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "       }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 16,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 17,
+      "title": null,
+      "images": null,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Process={0,1}",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Flag ={ f,f}",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Turn=0",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Process 0 Process 1",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Flag[0]=T Flag[1]=T",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Turn=1 Turn =0",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "While(flag[1]==t&&turn==1);                    while(flag[0]=T&&turn==0);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "CS CS",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Flag[0]= F Flag[1]=F",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 18,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 19,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 20,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 21,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 22,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 23,
+      "title": "Bakery Algorithm",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bakery Algorithm",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "N process solution",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 24,
+      "title": null,
+      "images": null,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Processes = {P1,P2,P3}",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Choosing = { F, F, F}",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Num= {0,0,0}",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "CS",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Num[i]=0",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 25,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 26,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 27,
+      "title": "Synchronization Hardware",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Synchronization Hardware",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Many systems provide hardware support for critical section code",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Uniprocessors – could disable interrupts",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Currently running code would execute without preemption",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Generally too inefficient on multiprocessor systems",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Operating systems using this not broadly scalable",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Modern machines provide special atomic hardware instructions",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Atomic = non-interruptable",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Either test memory word and set value",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Or swap contents of two memory words",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 28,
+      "title": "TestAndSet Instruction",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "TestAndSet Instruction",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Definition:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "boolean TestAndSet (boolean *target)",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "          {\n               boolean rv = *target;\n               *target = TRUE;\n               return rv:\n          }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 29,
+      "title": "Solution using TestAndSet",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution using TestAndSet",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared boolean variable lock., initialized to false.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Solution:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "           while (true) {\n                     while ( TestAndSet (&lock ))\n                                 ;   /* do nothing\n                               //    critical section\n                     lock = FALSE;\n                               //      remainder section\n           }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 30,
+      "title": null,
+      "images": null,
+      "blocks": [
+        {
+          "type": "code",
+          "text": "boolean waiting[n];\nboolean lock;\nlock = FALSE; waiting[i] = FALSE;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "do",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "{\nwaiting[i]=TRUE;\nKey=TRUE;\nWhile(waiting[i] && key)\n    key=TestAndSet(&lock);\nWaiting[i]=FALSE;\n//CS\nj=(i+1)%n;\nWhile((j!=i)&&!waiting[j])\n    j=(j+1)%n;\nIf(j==i)\n    lock=FALSE;\nElse\n    Waiting[j]=FALSE;\n//Remainder section\n} while(TRUE);",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 31,
+      "title": "Swap Instruction",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Swap Instruction",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Definition:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "         void Swap (boolean *a, boolean *b)\n          {\n                  boolean temp = *a;\n                  *a = *b;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "*b = temp:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "          }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 32,
+      "title": "Solution using Swap",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution using Swap",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared Boolean variable lock initialized to FALSE; Each process has a local Boolean variable key.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Solution:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "          while (true)  {\n                    key = TRUE;\n                    while ( key == TRUE)\n                             Swap (&lock, &key );\n                                 //    critical section\n                     lock = FALSE;\n                                //      remainder section\n           }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 33,
+      "title": "Semaphore",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronization tool that does not require busy waiting",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Semaphore S – integer variable",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two standard operations modify S: wait() and signal()",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Originally called P() and V()",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Less complicated",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Can only be accessed via two indivisible (atomic) operations",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "wait (S) {",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "while S <= 0",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                  ; // no-op\n              S--;\n      }\nsignal (S) {\n        S++;\n     }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 34,
+      "title": "Semaphore as General Synchronization Tool",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore as General Synchronization Tool",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Counting semaphore – integer value can range over an unrestricted domain",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Binary semaphore – integer value can range only between 0 \nand 1; can be simpler to implement",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Also known as mutex locks",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Can implement a counting semaphore S as a binary semaphore",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Provides mutual exclusion",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Semaphore S;    //  initialized to 1\nwait (S);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Critical Section",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "     signal (S);",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 35,
+      "title": "Semaphore Implementation",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore Implementation",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Must guarantee that no two processes can execute wait () and signal () on the same semaphore at the same time",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Thus, implementation becomes the critical section problem where the wait and signal code are placed in the crtical section.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Could now have busy waiting in critical section implementation",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "But implementation code is short",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Little busy waiting if critical section rarely occupied",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Note that applications may spend lots of time in critical sections and therefore this is not a good solution.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 36,
+      "title": "Semaphore Implementation with no Busy waiting (spin lock)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore Implementation with no Busy waiting (spin lock)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "With each semaphore there is an associated waiting queue. Each entry in a waiting queue has two data items:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "value (of type integer)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pointer to next record in the list",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two operations:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "block – place the process invoking the operation on the appropriate waiting queue.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "wakeup – remove one of processes in the waiting queue and place it in the ready queue.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 37,
+      "title": "Semaphore Implementation",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore Implementation",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "typedef struct\n{\nint value;\nstruct process * list;\n}semaphore;",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 38,
+      "title": "Semaphore Implementation with no Busy waiting (Cont.)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphore Implementation with no Busy waiting (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Implementation of wait:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                        wait (semaphore *S){\n                              S->value--;\n                              if (S->value < 0) {",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "add this process to S->list",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "block(); }",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                         }",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Implementation of signal:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                        Signal (semaphore *S){\n                                S-> value++;\n                                  if (S->value > 0) {",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "remove a process P from the waiting queue",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "wakeup(P); }",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                        }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 39,
+      "title": null,
+      "images": null,
+      "blocks": []
+    },
+    {
+      "kind": "slide",
+      "number": 40,
+      "title": "Deadlock and Starvation",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Deadlock and Starvation",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Deadlock – two or more processes are waiting indefinitely for an event that can be caused by only one of the waiting processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Let S and Q be two semaphores initialized to 1",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "P0 P1",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "            wait (S);                                          wait (Q);\n              wait (Q);                                          wait (S);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": ". .",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": ". .",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": ". .",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                signal  (S);                                            signal (Q);\n                signal (Q);                                            signal (S);",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Starvation – indefinite blocking. A process may never be removed from the semaphore queue in which it is suspended.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 41,
+      "title": "Classical Problems of Synchronization",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Classical Problems of Synchronization",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Bounded-Buffer Problem",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Readers and Writers Problem",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Dining-Philosophers Problem",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 42,
+      "title": "Bounded-Buffer Problem",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded-Buffer Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "N buffers, each can hold one item",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Semaphore mutex initialized to the value 1\nSemaphore full initialized to the value 0",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Semaphore empty initialized to the value N.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 43,
+      "title": "Bounded Buffer Problem (Cont.)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded Buffer Problem (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of the producer process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Mutex=1, full=0,empty=N",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "           while (true)  {\n                         //   produce an item\n                   wait (empty);\n                   wait (mutex);\n                         //  add the item to the  buffer\n                    signal (mutex);\n                    signal (full);\n           }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 44,
+      "title": "Bounded Buffer Problem (Cont.)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bounded Buffer Problem (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of the consumer process",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "           while (true) {\n                    wait (full);\n                    wait (mutex);\n                             //  remove an item from  buffer\n                    signal (mutex);\n                    signal (empty);\n                            //  consume the removed item\n           }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 45,
+      "title": "Readers-Writers Problem",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers-Writers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A data set is shared among a number of concurrent processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Readers – only read the data set; they do not perform any updates",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Writers – can both read and write.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Problem – allow multiple readers to read at the same time. Only one single writer can access the shared data at the same time.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared Data",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Data set",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Semaphore mutex initialized to 1.\nSemaphore wrt initialized to 1.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Integer readcount initialized to 0.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 46,
+      "title": "Readers-Writers Problem (Cont.)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers-Writers Problem (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of a writer process",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "              while (true) {\n                        wait (wrt) ;\n                             //    writing is performed\n                        signal (wrt) ;\n             }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 47,
+      "title": "Readers-Writers Problem (Cont.)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Readers-Writers Problem (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of a reader process",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "              while (true) {\n                       wait (mutex) ;\n                       readcount ++ ;\n                       if (readercount == 1)  wait (wrt) ;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal (mutex)",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                               // reading is performed\n                        wait (mutex) ;\n                        readcount  - - ;\n                        if (redacount  == 0)  signal (wrt) ;\n                        signal (mutex) ;\n              }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 48,
+      "title": "Dining-Philosophers Problem",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Dining-Philosophers Problem",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared data",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Bowl of rice (data set)",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Semaphore chopstick [5] initialized to 1",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 49,
+      "title": "Philo i",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Philo i",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "Wait(chopstick[0]); //0\nWait(chopstick[1]); //0",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Eat",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Signal(chopstick[0]);\nSignal(chopstick[1]);",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 50,
+      "title": "Dining-Philosophers Problem (Cont.)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Dining-Philosophers Problem (Cont.)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The structure of Philosopher i:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "While (true)  {\n          wait ( chopstick[i] );\n         wait ( chopStick[ (i + 1) % 5] );\n                 //  eat\n         signal ( chopstick[i] );\n         signal (chopstick[ (i + 1) % 5] );\n                 //  think\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 51,
+      "title": "Problems with Semaphores",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Problems with Semaphores",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Correct use of semaphore operations:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal (mutex) …. wait (mutex)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "wait (mutex) … wait (mutex)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Omitting of wait (mutex) or signal (mutex) (or both)",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 52,
+      "title": "Monitors",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Monitors",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A high-level abstraction that provides a convenient and effective mechanism for process synchronization",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Only one process may be active within the monitor at a time",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "monitor monitor-name",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "{\n    // shared variable declarations",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "procedure P1 (…) { …. }",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "…",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "procedure Pn (…) {……}",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Initialization code ( ….) { … }",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "…",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "    }\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 53,
+      "title": "Schematic view of a Monitor",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Schematic view of a Monitor",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 54,
+      "title": "Condition Variables",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Condition Variables",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "condition x, y;",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two operations on a condition variable:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "x.wait () – a process that invokes the operation is",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "suspended.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "x.signal () – resumes one of processes (if any) that",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "invoked x.wait ()",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two possibilities for signal",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "1. Signal and wait: P either waits until Q leaves the monitoror waits for another condition",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "2. Signal and continue: Q either waits until P leaves the monitor or waits for another condition.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 55,
+      "title": "Monitor with Condition Variables",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Monitor with Condition Variables",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 56,
+      "title": "Producer - Consumer",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Producer - Consumer",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "monitor PC",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "   {\nint slots=0;\ncondition full, empty;\nVoid producer()\n{\nwhile(slots==N)    empty.wait();\nslots++;\nfull.signal();\n}\nVoid consumer()\n{\nWhile(slots==0) full.wait();\nslots--;\nempty.signal();\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 57,
+      "title": "Solution to Dining Philosophers",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution to Dining Philosophers",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "monitor DP",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "   {\n    enum { THINKING; HUNGRY, EATING) state [5] ;\n    condition self [5];\n    void pickup (int i) {\n           state[i] = HUNGRY;\n           test(i);\n           if (state[i] != EATING) self [i].wait();\n    }\n       void putdown (int i) {\n           state[i] = THINKING;\n                   // test left and right neighbors\n            test((i + 4) % 5);\n            test((i + 1) % 5);\n        }",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 58,
+      "title": "Solution to Dining Philosophers (cont)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution to Dining Philosophers (cont)",
+          "level": 1
+        },
+        {
+          "type": "code",
+          "text": "    void test (int i) {\n            if ( (state[(i + 4) % 5] != EATING) &&",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "(state[i] == HUNGRY) &&",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "            (state[(i + 1) % 5] != EATING) ) {\n                 state[i] = EATING ;\n            self[i].signal () ;\n             }\n     }\n       initialization_code() {\n           for (int i = 0; i < 5; i++)\n           state[i] = THINKING;\n    }\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 59,
+      "title": "Solution to Dining Philosophers (cont)",
+      "images": null,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution to Dining Philosophers (cont)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Each philosopher I invokes the operations pickup()",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "and putdown() in the following sequence:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "dp.pickup (i)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "EAT",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "dp.putdown (i)",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

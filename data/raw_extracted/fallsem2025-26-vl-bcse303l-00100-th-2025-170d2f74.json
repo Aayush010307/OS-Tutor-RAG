@@ -1,0 +1,1302 @@
+{
+  "document_id": "fallsem2025-26-vl-bcse303l-00100-th-2025-170d2f74",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "slide",
+      "number": 1,
+      "title": "Threads",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "A thread is a flow of execution through the process code, with its own program counter that keeps track of which instruction to execute next, system registers which hold its current working variables, and a stack which contains the execution history.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "A thread shares with its peer threads few information like code segment, data segment and open files. When one thread alters a code segment memory item, all other threads see that.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "A thread is also called a lightweight process. Threads provide a way to improve application performance through parallelism. Threads represent a software approach to improving performance of operating system by reducing the overhead thread is equivalent to a classical process.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "Each thread belongs to exactly one process and no thread can exist outside a process.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Each thread represents a separate flow of control. Threads have been successfully used in implementing network servers and web server.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "They also provide a suitable foundation for parallel execution of applications on shared memory multiprocessors. The following figure shows the working of a single-threaded and a multithreaded process.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 4,
+      "title": "Single and Multithreaded Processes",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Single and Multithreaded Processes",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 5,
+      "title": "Benefits",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Benefits",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Responsiveness",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Resource Sharing",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Economy",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Scalability",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 6,
+      "title": "Multicore Programming",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Multicore Programming",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Multicore systems putting pressure on programmers, challenges include:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Dividing activities",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Balance",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Data splitting",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Data dependency",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Testing and debugging",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 7,
+      "title": "Multithreaded Server Architecture",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Multithreaded Server Architecture",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 8,
+      "title": "Concurrent Execution on a Single-core System",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Concurrent Execution on a Single-core System",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 9,
+      "title": "Parallel Execution on a Multicore System",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Parallel Execution on a Multicore System",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 10,
+      "title": "User Threads",
+      "images": 1,
+      "lines": [
+        {
+          "text": "User Threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Thread management done by user-level threads library",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "All of the thread management is done by the application and the kernel is not aware of the existence of threads.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Three primary thread libraries:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "POSIX Pthreads",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Win32 threads",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Java threads",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Advantages of user level threads:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "There are a number of advantages to the use of ULTs instead of KLTs",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Thread switching does not require kernel mode privileges",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Scheduling can be application specific",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "ULTs can run on any OS.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Disadvantages of user level threads:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "When a ULT executes a blocking system call, not only is that thread blocked, but also all of the threads within the process are blocked.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "A Multithreaded application cannot take advantage of multiprocessing. A kernel assigns one process to only one processor at a time.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 11,
+      "title": "Kernel Threads",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Kernel Threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Supported by the Kernel",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "There is no thread management code in the",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "application level, simply an application programming",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "interface (API) to the kernel thread facility.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "The kernel maintains context information",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "for the process as a whole and for individual threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "within the process.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Examples",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Windows XP/2000",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Solaris",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Linux",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Tru64 UNIX",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Mac OS X",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Advantages of Kernel level threads:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "The kernel can simultaneously schedule multiple threads from the same process on multiple processors.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "If one thread in a process is blocked, the kernel can schedule another thread of the same process.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Disadvantages of kernel level threads:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "The transfer of control from one thread to another within the same process requires a mode switch to the kernel.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 12,
+      "title": "Multithreading Models",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Multithreading Models",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Many-to-One",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "One-to-One",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Many-to-Many",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 13,
+      "title": "Many-to-One",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Many-to-One",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Many user-level threads mapped to single kernel thread",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Examples:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Solaris Green Threads",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "GNU Portable Threads",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 14,
+      "title": "Many-to-One Model",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Many-to-One Model",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 15,
+      "title": "One-to-One",
+      "images": 0,
+      "lines": [
+        {
+          "text": "One-to-One",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Each user-level thread maps to kernel thread",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Examples",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Windows NT/XP/2000",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Linux",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Solaris 9 and later",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 16,
+      "title": "One-to-one Model",
+      "images": 1,
+      "lines": [
+        {
+          "text": "One-to-one Model",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 17,
+      "title": "Many-to-Many Model",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Many-to-Many Model",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Allows many user level threads to be mapped to many kernel threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Allows the operating system to create a sufficient number of kernel threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Solaris prior to version 9",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Windows NT/2000 with the ThreadFiber package",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 18,
+      "title": "Many-to-Many Model",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Many-to-Many Model",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 19,
+      "title": "Two-level Model",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Two-level Model",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Similar to M:M, except that it allows a user thread to be bound to kernel thread",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Examples",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "IRIX",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "HP-UX",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Tru64 UNIX",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Solaris 8 and earlier",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 20,
+      "title": "Two-level Model",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Two-level Model",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 21,
+      "title": "Thread Libraries",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Thread Libraries",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Thread library provides programmer with API for creating and managing threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Two primary ways of implementing",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Library entirely in user space",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Kernel-level library supported by the OS",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 22,
+      "title": "Comparison Between Process and Threads",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Comparison Between Process and Threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "| S.N. | Process | Thread |\n| 1 | Process is heavy weight or resource intensive. | Thread is light weight, taking lesser resources than a process. |\n| 2 | Process switching needs interaction with operating system. | Thread switching does not need to interact with operating system. |\n| 3 | In multiple processing environments, each process executes the same code but has its own memory and file resources. | All threads can share same set of open files, child processes. |\n| 4 | If one process is blocked, then no other process can execute until the first process is unblocked. | While one thread is blocked and waiting, a second thread in the same task can run. |\n| 5 | Multiple processes without using threads use more resources. | Multiple threaded processes use fewer resources. |\n| 6 | In multiple processes each process operates independently of the others. | One thread can read, write or change another thread's data. |\n|  |  |  |",
+          "kind": "table",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 23,
+      "title": "Why Pthreads",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Why Pthreads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "The primary motivation for using Pthreads is to realize potential program performance gains.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "When compared to the cost of creating and managing a process, a thread can be created with much less operating system overhead. Managing threads requires fewer system resources than managing processes.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "All threads within a process share the same address space. Inter-thread communication is more efficient and in many cases, easier to use than inter-process communication.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Threaded applications offer potential performance gains and practical advantages over non-threaded applications in several other ways:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Overlapping CPU work with I/O: For example, a program may have sections where it is performing a long I/O operation. While one thread is waiting for an I/O system call to complete, other threads can perform CPU intensive work.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Priority/real-time scheduling: tasks that are more important can be scheduled to supersede or interrupt lower priority tasks.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Multi-threaded applications will work on a uni-processor system; yet naturally take advantage of a multiprocessor system, without recompiling.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 24,
+      "title": "Java Threads",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Java Threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Java threads are managed by the JVM",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Typically implemented using the threads model provided by underlying OS",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Java threads may be created by:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Extending Thread class",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Implementing the Runnable interface",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 25,
+      "title": "Threading Issues",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Threading Issues",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Semantics of fork() and exec() system calls",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Thread cancellation of target thread",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Asynchronous or deferred",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Signal handling",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Synchronous and asynchronous",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 26,
+      "title": "Threading Issues (Cont.)",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Threading Issues (Cont.)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Thread pools",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Thread-specific data",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Create Facility needed for data private to thread",
+          "kind": "bullet",
+          "level": 2,
+          "para_break": true
+        },
+        {
+          "text": "Scheduler activations",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 27,
+      "title": "Semantics of fork() and exec()",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Semantics of fork() and exec()",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Does fork() duplicate only the calling thread or all threads?",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "exec() - replace the running process including all threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 28,
+      "title": "Thread Cancellation",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Thread Cancellation",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Terminating a thread before it has finished",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Two general approaches:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Asynchronous cancellation terminates the target thread immediately.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Deferred cancellation allows the target thread to periodically check if it should be cancelled.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 29,
+      "title": "Signal Handling",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Signal Handling",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Signals are used in UNIX systems to notify a process that a particular event has occurred.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "A signal handler is used to process signals",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Signal is generated by particular event",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Signal is delivered to a process",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Signal is handled",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Options:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Deliver the signal to the thread to which the signal applies",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Deliver the signal to every thread in the process",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Deliver the signal to certain threads in the process",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Assign a specific thread to receive all signals for the process",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 30,
+      "title": "Thread Pools",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Thread Pools",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Create a number of threads in a pool where they await work",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Advantages:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Usually slightly faster to service a request with an existing thread than create a new thread",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Allows the number of threads in the application(s) to be bound to the size of the pool",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 31,
+      "title": "Thread Specific Data",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Thread Specific Data",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Allows each thread to have its own copy of data",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Useful when you do not have control over the thread creation process (i.e., when using a thread pool)",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 32,
+      "title": "Scheduler Activations",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Scheduler Activations",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Both M:M and Two-level models require communication to maintain the appropriate number of kernel threads allocated to the application",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Scheduler activations provide upcalls - a communication mechanism from the kernel to the thread library",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "This communication allows an application to maintain the correct number kernel threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 33,
+      "title": "Lightweight Processes",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Lightweight Processes",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 34,
+      "title": "Operating System Examples",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Operating System Examples",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Windows XP Threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Linux Thread",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 35,
+      "title": "Linux Threads",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Linux Threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Linux refers to them as tasks rather than threads",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Thread creation is done through clone() system call",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "clone() allows a child task to share the address space of the parent task (process)",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "struct task_struct points to process data structures (shared or unique)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 36,
+      "title": "Linux Threads",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Linux Threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "fork() and clone() system calls",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Doesn’t distinguish between process and thread",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Uses term task rather than thread",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "clone() takes options to determine sharing on process create",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "struct task_struct points to process data structures (shared or unique)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    }
+  ],
+  "page_count": null,
+  "slide_count": 36,
+  "properties": {
+    "title": "Figure 5.01",
+    "author": "Marilyn Turnamian",
+    "last_modified_by": "Admin"
+  },
+  "master_text": [
+    "4.‹#›",
+    "Silberschatz, Galvin and Gagne ©2009",
+    "Operating System Concepts – 8th Edition"
+  ]
+}

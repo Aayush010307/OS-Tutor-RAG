@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "frozen": "2026-10-04, before any evaluation run",
+  "purpose": "Scripted student dialogues for the tutor quality evaluation. Each question is a benchmark v1.1 query (one per learning objective). None was used while tuning the tutor prompts (the dev question was 'Why do we need a thread pool?', q017).",
+  "profiles": {
+    "solid": "Answers the diagnostic question correctly and completely, then answers the check correctly. Expected labels: solid, solid. Expected path: DIAGNOSE -> CHECK -> DONE.",
+    "misconception": "Answers the diagnostic question with a specific wrong belief, then gives a correct answer after the explanation. Expected labels: misconception, solid. Expected path: DIAGNOSE -> EXPLAIN -> DONE.",
+    "unsure": "Does not know, then stays vague, then still does not know. Expected labels: unclear, not solid, not solid. Expected path: DIAGNOSE -> EXPLAIN -> EXPLAIN -> DONE (full answer after 2 rounds)."
+  },
+  "limitation": "Student replies are fixed in advance, while the tutor's questions are generated. A scripted reply can therefore fit the generated question imperfectly; correct replies are written as complete statements of the concept so that they answer any reasonable question about it.",
+  "scenarios": [
+    {"objective": "LO1", "query_id": "q005", "question": "Why does every thread get its own stack even though threads share the heap and code?",
+     "replies": {
+       "solid": ["Each thread runs its own sequence of function calls, so it needs its own stack for its local variables, return addresses and saved registers. The heap, globals and code can be shared because they are not tied to one call sequence.", "Local variables live on the stack of the thread that declared them, so another thread cannot see or overwrite them, while heap and global data are visible to every thread of the process."],
+       "misconception": ["Threads get their own stack because each thread has its own separate address space, just like a process.", "Threads share one address space; only the stack, registers and program counter are private, because each thread runs its own chain of function calls with its own local variables."],
+       "unsure": ["I'm not sure, I don't really know why.", "Maybe it is something to do with memory being faster?", "No, I still don't get it."]}},
+    {"objective": "LO2", "query_id": "q007", "question": "What does pthread_join do and why would the main thread call it?",
+     "replies": {
+       "solid": ["pthread_join blocks the calling thread until the given thread finishes, and can collect its return value. Main calls it so it does not exit or use results before the worker threads are done.", "If main returned without joining, the process could end while worker threads are still running, and main could read results that are not written yet; joining waits for each thread and gets its return value."],
+       "misconception": ["pthread_join starts the thread running; until you call join the new thread does not execute.", "pthread_create already starts the thread; pthread_join only waits for that thread to terminate and optionally collects its return value, so main can safely use its results."],
+       "unsure": ["I don't know what join does.", "Does it join two threads into one thread?", "I'm still confused, sorry."]}},
+    {"objective": "LO3", "query_id": "q023", "question": "Two threads each add 1 to a shared counter ten million times, but the final value is less than twenty million. Why?",
+     "replies": {
+       "solid": ["counter = counter + 1 is a load, an add and a store, not one atomic step. If a thread is interrupted between the load and the store, both threads store the same value and one increment is lost. That is a race condition on a critical section.", "The update must run as an atomic critical section, for example by holding a mutex around the increment, so the load-add-store of one thread cannot interleave with the other's."],
+       "misconception": ["Because the two threads run on different CPUs, each CPU keeps its own copy of the counter and only one copy is saved at the end.", "The increment is several instructions, so the two threads' load-add-store sequences interleave and overwrite each other's results; protecting it with a lock makes it a critical section that runs atomically."],
+       "unsure": ["No idea, maybe the computer is too slow?", "Something about the threads running at the same time?", "I still don't understand."]}},
+    {"objective": "LO4", "query_id": "q031", "question": "Why does a lock built from an ordinary flag variable with plain loads and stores fail to provide mutual exclusion?",
+     "replies": {
+       "solid": ["Testing the flag and setting it are two separate steps. A thread can be interrupted after seeing flag == 0 but before setting it to 1, so another thread also sees 0 and both enter the critical section. An atomic instruction like test-and-set fixes this.", "Test-and-set reads the old value and writes 1 in one indivisible hardware step, so only one thread can see the lock free and take it."],
+       "misconception": ["It fails because the flag variable is not declared volatile, so the compiler caches it; making it volatile fixes the lock.", "The problem is that checking the flag and setting it are separate steps that can interleave between threads; an atomic instruction such as test-and-set or compare-and-swap does both in one step."],
+       "unsure": ["I'm not sure what a flag lock is.", "Maybe the flag gets deleted?", "I don't know."]}},
+    {"objective": "LO5", "query_id": "q054", "question": "How can a semaphore be used as a lock, and what initial value should it have?",
+     "replies": {
+       "solid": ["Initialise the semaphore to 1. Call sem_wait before the critical section and sem_post after it. The first thread decrements it to 0 and enters; others block in sem_wait until sem_post increments it again.", "With an initial value of 1 only one thread can pass sem_wait at a time, so it behaves like a binary semaphore or mutex; sem_post releases it and wakes a waiting thread."],
+       "misconception": ["You initialise it to 0, call sem_post to lock and sem_wait to unlock.", "It should start at 1: sem_wait before the critical section decrements it to 0 and blocks others, and sem_post afterwards increments it so another thread can enter."],
+       "unsure": ["I don't remember how semaphores work.", "Is the initial value the number of threads?", "No, I don't know."]}},
+    {"objective": "LO6", "query_id": "q047", "question": "Why should a thread recheck its condition in a while loop rather than an if statement before calling wait?",
+     "replies": {
+       "solid": ["When a waiting thread wakes up, the condition may no longer be true: another thread may have run first and changed the state, and spurious wakeups can happen. With Mesa semantics a signal is only a hint, so the thread must recheck the condition in a while loop.", "Because the woken thread does not run immediately, another thread can consume the item first; the while loop rechecks and waits again if the condition is false."],
+       "misconception": ["If is fine; a while loop is only used so that the thread waits longer and wastes less CPU.", "After a signal the condition may already be false again because another thread ran first, or the wakeup was spurious, so the thread must recheck it in a while loop before proceeding."],
+       "unsure": ["I'm not sure, I thought if and while do the same thing here.", "Maybe it is for performance?", "I still don't know."]}},
+    {"objective": "LO7", "query_id": "q072", "question": "Why can the obvious dining philosophers solution deadlock, and how can the deadlock be prevented?",
+     "replies": {
+       "solid": ["If every philosopher picks up the left fork at the same time, each then waits forever for the right fork held by a neighbour: a circular wait. Breaking the cycle prevents it, for example one philosopher picks up the right fork first, or at most four sit at the table.", "Changing the order for one philosopher breaks the circular wait, so at least one philosopher can get both forks, eat and release them."],
+       "misconception": ["It deadlocks because the forks are not shared fairly, so one philosopher eats all the time; giving each philosopher a time limit fixes it.", "All philosophers can hold their left fork and wait for the right one in a cycle, which is a circular wait; letting one philosopher take the forks in the opposite order breaks the cycle."],
+       "unsure": ["I don't know the dining philosophers problem.", "Is it about too many philosophers?", "Sorry, no idea."]}},
+    {"objective": "LO8", "query_id": "q075", "question": "How does acquiring locks in a fixed global order prevent deadlock?",
+     "replies": {
+       "solid": ["Deadlock needs a circular wait. If every thread acquires locks in the same global order, a thread holding a lock only waits for a lock later in the order, so a cycle of waiting threads cannot form.", "For example if every thread locks L1 before L2, no thread can hold L2 while waiting for L1, so the cycle of two threads waiting for each other cannot happen."],
+       "misconception": ["It prevents deadlock because threads hold each lock for less time when they are ordered.", "Ordering removes the circular-wait condition: every thread waits only for locks later in the order, so no cycle of waiting threads can form."],
+       "unsure": ["I'm not really sure what lock ordering means.", "Maybe it makes the locks faster?", "I still don't understand it."]}}
+  ]
+}

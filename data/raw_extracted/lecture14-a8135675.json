@@ -1,0 +1,638 @@
+{
+  "document_id": "lecture14-a8135675",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Lecture 14: Condition Variables",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Lecture 14: Condition Variables",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.382,
+          "bottom": 0.474,
+          "x0": 117.5,
+          "cw": 17.94
+        },
+        {
+          "text": "Mythili Vutukuru",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.563,
+          "bottom": 0.63,
+          "x0": 286.3,
+          "cw": 13.71
+        },
+        {
+          "text": "IIT Bombay",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.639,
+          "bottom": 0.705,
+          "x0": 323.5,
+          "cw": 14.48
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "Another type of sychronization",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Another type of sychronization",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 120.7,
+          "cw": 18.35
+        },
+        {
+          "text": "• Locks allow one type of synchronization between",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.258,
+          "bottom": 0.326,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "threads – mutual exclusion",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.316,
+          "bottom": 0.379,
+          "x0": 106.2,
+          "cw": 12.55
+        },
+        {
+          "text": "• Another common requirement in multi-threaded",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.376,
+          "bottom": 0.443,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "applications – waiting and signaling",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.434,
+          "bottom": 0.496,
+          "x0": 106.2,
+          "cw": 11.93
+        },
+        {
+          "text": "– E.g., Thread T1 wants to continue only after T2 has",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.493,
+          "bottom": 0.552,
+          "x0": 115.2,
+          "cw": 14.48
+        },
+        {
+          "text": "finished some task",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.544,
+          "bottom": 0.598,
+          "x0": 137.8,
+          "cw": 10.87
+        },
+        {
+          "text": "• Can accomplish this by busy-waiting on some",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.595,
+          "bottom": 0.663,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "variable, but inefficient",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.654,
+          "bottom": 0.716,
+          "x0": 106.2,
+          "cw": 11.24
+        },
+        {
+          "text": "• Need a new synchronization primitive: condition",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.713,
+          "bottom": 0.781,
+          "x0": 79.2,
+          "cw": 10.5
+        },
+        {
+          "text": "variables",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.771,
+          "bottom": 0.833,
+          "x0": 106.2,
+          "cw": 12.03
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "Condition Variables",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Condition Variables",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 222.5,
+          "cw": 18.23
+        },
+        {
+          "text": "• A condition variable (CV) is a queue that a",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.257,
+          "bottom": 0.329,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "thread can put itself into when waiting on",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.319,
+          "bottom": 0.386,
+          "x0": 106.2,
+          "cw": 12.93
+        },
+        {
+          "text": "some condition",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.376,
+          "bottom": 0.442,
+          "x0": 106.2,
+          "cw": 14.33
+        },
+        {
+          "text": "• Another thread that makes the condition true",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.439,
+          "bottom": 0.511,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "can signal the CV to wake up a waiting thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.501,
+          "bottom": 0.568,
+          "x0": 106.2,
+          "cw": 13.09
+        },
+        {
+          "text": "• Pthreads provides CV for user programs",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.565,
+          "bottom": 0.637,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "– OS has a similar functionality of wait/signal for",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.634,
+          "bottom": 0.697,
+          "x0": 115.2,
+          "cw": 15.55
+        },
+        {
+          "text": "kernel threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.688,
+          "bottom": 0.746,
+          "x0": 137.8,
+          "cw": 11.64
+        },
+        {
+          "text": "• Signal wakes up one thread, signal broadcast",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.743,
+          "bottom": 0.816,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "wakes up all waiting threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.806,
+          "bottom": 0.872,
+          "x0": 106.2,
+          "cw": 13.09
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Example: parent waits for child",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Example: parent waits for child",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.087,
+          "bottom": 0.179,
+          "x0": 120.2,
+          "cw": 17.78
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "Why check condition in while loop?",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Why check condition in while loop?",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 85.6,
+          "cw": 18.59
+        },
+        {
+          "text": "• In the example code, why do we check condition",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.24,
+          "bottom": 0.301,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "before calling wait?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.292,
+          "bottom": 0.348,
+          "x0": 106.2,
+          "cw": 10.64
+        },
+        {
+          "text": "– In case the child has already run and done is true, then no",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.345,
+          "bottom": 0.4,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "need to wait",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.392,
+          "bottom": 0.442,
+          "x0": 137.8,
+          "cw": 10.18
+        },
+        {
+          "text": "• Why check condition with “while” loop and not “if”?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.44,
+          "bottom": 0.501,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "– To avoid corner cases of thread being woken up even when",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.498,
+          "bottom": 0.552,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "condition not true (may be an issue with some",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.545,
+          "bottom": 0.594,
+          "x0": 137.8,
+          "cw": 10.02
+        },
+        {
+          "text": "implementations)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.587,
+          "bottom": 0.637,
+          "x0": 137.8,
+          "cw": 10.79
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "Why use lock when calling wait?",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Why use lock when calling wait?",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.123,
+          "bottom": 0.214,
+          "x0": 107.9,
+          "cw": 18.56
+        },
+        {
+          "text": "What if no lock is held when",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.299,
+          "bottom": 0.361,
+          "x0": 61.2,
+          "cw": 12.26
+        },
+        {
+          "text": "calling wait/signal?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.357,
+          "bottom": 0.42,
+          "x0": 88.2,
+          "cw": 11.54
+        },
+        {
+          "text": "• Race condition: missed wakeup",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.5,
+          "bottom": 0.561,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "– Parent checks done to be 0, decides to sleep, interrupted",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.554,
+          "bottom": 0.608,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "– Child runs, sets done to 0, signals, but no one sleeping yet",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.601,
+          "bottom": 0.655,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "– Parent now resumes and goes to sleep forever",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.648,
+          "bottom": 0.702,
+          "x0": 115.2,
+          "cw": 13.34
+        },
+        {
+          "text": "• Lock must be held when calling wait and signal with CV",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.694,
+          "bottom": 0.755,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "• The wait function releases the lock before putting",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.747,
+          "bottom": 0.808,
+          "x0": 79.2,
+          "cw": 9.45
+        },
+        {
+          "text": "thread to sleep, so lock is available for signaling thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.794,
+          "bottom": 0.85,
+          "x0": 106.2,
+          "cw": 10.28
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": "Example: Producer/Consumer problem",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Example: Producer/Consumer problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.127,
+          "bottom": 0.21,
+          "x0": 79.6,
+          "cw": 18.59
+        },
+        {
+          "text": "• A common pattern in multi-threaded",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.257,
+          "bottom": 0.329,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "programs",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.319,
+          "bottom": 0.386,
+          "x0": 106.2,
+          "cw": 15.42
+        },
+        {
+          "text": "• Example: in a multi-threaded web server, one",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.383,
+          "bottom": 0.455,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "thread accepts requests from the network and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.445,
+          "bottom": 0.511,
+          "x0": 106.2,
+          "cw": 13.7
+        },
+        {
+          "text": "puts them in a queue. Worker threads get",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.501,
+          "bottom": 0.568,
+          "x0": 106.2,
+          "cw": 13.56
+        },
+        {
+          "text": "requests from this queue and process them.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.558,
+          "bottom": 0.624,
+          "x0": 106.2,
+          "cw": 13.62
+        },
+        {
+          "text": "• Setup: one or more producer threads, one or",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.621,
+          "bottom": 0.693,
+          "x0": 79.2,
+          "cw": 11.21
+        },
+        {
+          "text": "more consumer threads, a shared buffer of",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.683,
+          "bottom": 0.75,
+          "x0": 106.2,
+          "cw": 13.59
+        },
+        {
+          "text": "bounded size",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.74,
+          "bottom": 0.806,
+          "x0": 106.2,
+          "cw": 14.31
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": "Producer/Consumer with 2 CVs",
+      "images": 6,
+      "lines": [
+        {
+          "text": "Producer/Consumer with 2 CVs",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.082,
+          "bottom": 0.173,
+          "x0": 117.1,
+          "cw": 19.9
+        }
+      ]
+    }
+  ],
+  "page_count": 8,
+  "slide_count": null,
+  "properties": {
+    "creator": "Nitro Pro 7  (7. 4. 1. 4)",
+    "producer": "Nitro Pro 7  (7. 4. 1. 4)",
+    "creationDate": "D:20180410132219Z"
+  },
+  "master_text": []
+}

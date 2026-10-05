@@ -1,0 +1,1324 @@
+{
+  "document_id": "thread-synchronization-lab-problems-e871e8ad",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "1. One-Lane Bridge Synchronization",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "A bridge can accommodate a maximum of 3 vehicles simultaneously. Vehicles from East and West directions cannot be on the bridge at the same time.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Create one thread for each vehicle.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Number of vehicles: 6",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Vehicle Direction\nV1 East\nV2 East\nV3 West\nV4 East\nV5 West\nV6 West",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "V1 entered the bridge from East\nV2 entered the bridge from East\nV4 entered the bridge from East",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "V1 exited the bridge\nV2 exited the bridge\nV4 exited the bridge",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "V3 entered the bridge from West\nV5 entered the bridge from West\nV6 entered the bridge from West",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "All vehicles crossed successfully.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – Create one thread for each vehicle.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_join() – Wait for all vehicle threads.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect shared bridge variables.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_t – Make vehicles wait when the bridge cannot be entered.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "vehicles_on_bridge",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "current_direction",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – Wait if:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Bridge already has 3 vehicles.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Vehicles from the opposite direction are crossing.",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "pthread_cond_broadcast() – Notify waiting vehicles when the bridge becomes available.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "2. Airport Runway Allocation",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "An airport has 2 runways. Multiple aircraft request permission to land.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Emergency aircraft should be given priority over normal aircraft.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Number of aircraft: 5\nNumber of runways: 2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Aircraft Type\nA1 Normal\nA2 Emergency\nA3 Normal\nA4 Emergency\nA5 Normal",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "A2 (Emergency) assigned Runway 1\nA4 (Emergency) assigned Runway 2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "A2 completed landing and released Runway 1\nA1 assigned Runway 1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "A4 completed landing and released Runway 2\nA3 assigned Runway 2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "All aircraft landed successfully.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread per aircraft.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect runway availability.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_t – Separate condition variables for:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Emergency aircraft",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Normal aircraft",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "available_runways",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_emergency",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_normal",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – Aircraft waits when no runway is available.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_signal() or pthread_cond_broadcast() – Notify waiting aircraft.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Priority logic:",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Normal aircraft should wait if an emergency aircraft is waiting.",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "3. Parking Lot Management",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "A parking lot has 3 parking spaces and 5 cars. A car must wait if the parking lot is full.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Parking slots: 3\nNumber of cars: 5",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Car 1 entered. Available slots: 2\nCar 2 entered. Available slots: 1\nCar 3 entered. Available slots: 0",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Car 4 is waiting\nCar 5 is waiting",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Car 2 left the parking lot\nCar 4 entered. Available slots: 0",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Car 1 left the parking lot\nCar 5 entered. Available slots: 0",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread for each car.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect the parking slot count.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "One pthread_cond_t – For waiting cars.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variable:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "available_slots",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – When available_slots == 0.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_signal() – When a car leaves and releases a slot.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_join() – Wait for all cars.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "4. Elevator Capacity Control",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "An elevator can accommodate a maximum of 4 passengers. There are 7 passenger threads.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "A passenger must wait when the elevator is full.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Elevator capacity: 4\nNumber of passengers: 7",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "P1 entered the elevator\nP2 entered the elevator\nP3 entered the elevator\nP4 entered the elevator",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Elevator is full",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "P5 waiting\nP6 waiting\nP7 waiting",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "P1 exited\nP5 entered",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "P2 exited\nP6 entered",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "P3 exited\nP7 entered",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread per passenger.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect elevator occupancy.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_t – Manage waiting passengers.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variable:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "current_passengers",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – When elevator is full.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_signal() – When a passenger exits.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Additional condition",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "current_passengers < MAX_CAPACITY",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "5. Railway Junction Synchronization",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Trains arrive from Track A and Track B. Only one train can use the railway junction at a time.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "The solution should ensure that trains from one track do not permanently block trains from the other track.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Number of trains: 5",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Train Track\nT1 A\nT2 B\nT3 A\nT4 B\nT5 A",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "T1 from Track A entered the junction",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T2 waiting from Track B\nT3 waiting from Track A",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T1 crossed the junction",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T2 from Track B entered the junction\nT2 crossed the junction",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T3 from Track A entered the junction\nT3 crossed the junction",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "All trains crossed safely.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread for each train.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect the railway junction.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two condition variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "trackA_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "trackB_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "junction_busy",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "last_track",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_A",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_B",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – When the junction is occupied.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_signal() – Notify the next waiting train.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Alternation/fairness logic should be implemented to reduce starvation.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "6. Operating Room Allocation with Priority",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "A hospital has 2 operating rooms. Patients can be either Emergency or Normal.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Emergency patients should receive priority when an operating room becomes available.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Operating rooms: 2\nNumber of patients: 5",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Patient Type\nP1 Normal\nP2 Emergency\nP3 Normal\nP4 Emergency\nP5 Normal",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "P2 (Emergency) assigned Operating Room 1\nP4 (Emergency) assigned Operating Room 2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "P2 completed surgery\nP1 assigned Operating Room 1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "P4 completed surgery\nP3 assigned Operating Room 2",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread per patient.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect operating room allocation.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two condition variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "emergency_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "normal_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "available_rooms",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_emergency",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_normal",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Emergency patients should be signaled first.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – Wait if no room is available.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "7. Database Connection Pool",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "A system has 3 database connections shared among 6 client threads.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Each client must acquire one available connection, perform its operation, and release the connection.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Number of database connections: 3\nNumber of clients: 6",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Client 1 acquired Connection 1\nClient 2 acquired Connection 2\nClient 3 acquired Connection 3",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Client 4 waiting for connection\nClient 5 waiting for connection\nClient 6 waiting for connection",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Client 2 released Connection 2\nClient 4 acquired Connection 2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Client 1 released Connection 1\nClient 5 acquired Connection 1",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread for each client.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect the connection pool.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_t – For clients waiting for a connection.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared data structure:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "int connection_status[3];",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "For example:",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "0 → Available\n1 → Busy",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – When no connection is available.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_signal() – When a connection is released.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Important",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Students must ensure that the same connection is not assigned to two clients simultaneously.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "8. Computer Lab Allocation with Priority",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "A computer lab has 3 computers shared by students and faculty.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Faculty members should receive priority over waiting students.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Number of computers: 3\nNumber of users: 6",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "User Type\nU1 Student\nU2 Faculty\nU3 Student\nU4 Faculty\nU5 Student\nU6 Student",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "U2 (Faculty) assigned Computer 1\nU4 (Faculty) assigned Computer 2\nU1 (Student) assigned Computer 3",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "U3 waiting\nU5 waiting\nU6 waiting",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "U2 released Computer 1\nU3 assigned Computer 1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "U4 released Computer 2\nU5 assigned Computer 2",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread per user.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect computer allocation.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two condition variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "faculty_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "student_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variables:",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "available_computers",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_faculty",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "waiting_students",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Priority condition:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "A student should wait if a faculty member is waiting.",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "9. Traffic Intersection Synchronization",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Vehicles arrive from North, South, East, and West.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Rules:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "North and South vehicles may pass simultaneously.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "East and West vehicles may pass simultaneously.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "North/South traffic cannot pass together with East/West traffic.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Number of vehicles: 6",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Vehicle Direction\nV1 North\nV2 South\nV3 East\nV4 West\nV5 North\nV6 East",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "V1 entered from North\nV2 entered from South",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "V3 waiting from East\nV4 waiting from West",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "V1 exited\nV2 exited",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "V3 entered from East\nV4 entered from West",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "V3 exited\nV4 exited",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "V5 entered from North",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – One thread per vehicle.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect intersection state.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "At least two condition variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "north_south_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "east_west_cond",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared variables:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "ns_count",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "ew_count",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – When conflicting traffic is using the intersection.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_broadcast() – When an entire direction group finishes.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "This is one of the more challenging questions because students must identify compatible and conflicting threads.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "10. Shared Resource Pool",
+          "level": 1
+        },
+        {
+          "type": "heading",
+          "text": "Problem",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "A system contains 3 identical resources shared among 7 threads.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Each thread must:",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Request a resource.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Use the resource.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Release the resource.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Input",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Number of resources: 3\nNumber of threads: 7",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Sample Output",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "T1 acquired Resource 1\nT2 acquired Resource 2\nT3 acquired Resource 3",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T4 waiting\nT5 waiting\nT6 waiting\nT7 waiting",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T2 released Resource 2\nT4 acquired Resource 2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T1 released Resource 1",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "T5 acquired Resource 1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T3 released Resource 3\nT6 acquired Resource 3",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Students must use",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_create() – Create 7 worker threads.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_join() – Wait for completion.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_mutex_t – Protect the resource pool.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_t – Wait for resource availability.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Shared array:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "int resource[3];",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Example:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "resource[i] = 0 → Free\nresource[i] = 1 → Allocated",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_wait() – If all resources are busy.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "pthread_cond_signal() – When a resource is released.",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3566 @@
+{
+  "document_id": "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "1.Producer & Consumer problem using Semaphores",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.101,
+          "x0": 72.0,
+          "cw": 5.35
+        },
+        {
+          "text": "Producer consumer problem is a classical synchronization problem. We can solve this problem by using",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.112,
+          "bottom": 0.125,
+          "x0": 72.0,
+          "cw": 4.14
+        },
+        {
+          "text": "semaphores.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.125,
+          "bottom": 0.139,
+          "x0": 72.0,
+          "cw": 4.35
+        },
+        {
+          "text": "A semaphore S is an integer variable that can be accessed only through two standard operations : wait() and",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.139,
+          "bottom": 0.152,
+          "x0": 72.0,
+          "cw": 4.84
+        },
+        {
+          "text": "signal().",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.153,
+          "bottom": 0.166,
+          "x0": 72.0,
+          "cw": 3.55
+        },
+        {
+          "text": "The wait() operation reduces the value of semaphore by 1 and the signal() operation increases its value by 1.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.167,
+          "bottom": 0.18,
+          "x0": 72.0,
+          "cw": 3.96
+        },
+        {
+          "text": "wait(S){",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.194,
+          "bottom": 0.207,
+          "x0": 191.2,
+          "cw": 4.08
+        },
+        {
+          "text": "while(S<=0);   // busy waiting",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.207,
+          "bottom": 0.221,
+          "x0": 191.2,
+          "cw": 3.97
+        },
+        {
+          "text": "S--;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.221,
+          "bottom": 0.234,
+          "x0": 191.2,
+          "cw": 3.5
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.235,
+          "bottom": 0.248,
+          "x0": 191.2,
+          "cw": 3.64
+        },
+        {
+          "text": "signal(S){",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.262,
+          "bottom": 0.275,
+          "x0": 191.2,
+          "cw": 3.95
+        },
+        {
+          "text": "S++;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.276,
+          "bottom": 0.289,
+          "x0": 191.2,
+          "cw": 4.43
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.289,
+          "bottom": 0.302,
+          "x0": 191.2,
+          "cw": 3.64
+        },
+        {
+          "text": "Semaphores are of two types:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.318,
+          "bottom": 0.331,
+          "x0": 72.0,
+          "cw": 4.17
+        },
+        {
+          "text": "1. Binary Semaphore – This is also known as mutex lock. It can have only two values – 0 and 1. Its value is",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.339,
+          "bottom": 0.352,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "initialized to 1. It is used to implement solution of critical section problem with multiple processes.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.353,
+          "bottom": 0.366,
+          "x0": 94.6,
+          "cw": 3.84
+        },
+        {
+          "text": "2. Counting Semaphore – Its value can range over an unrestricted domain. It is used to control access to a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.367,
+          "bottom": 0.38,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "resource that has multiple instances.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.38,
+          "bottom": 0.393,
+          "x0": 94.6,
+          "cw": 3.87
+        },
+        {
+          "text": "Problem Statement – We have a buffer of fixed size. A producer can produce an item and can place in the",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.394,
+          "bottom": 0.407,
+          "x0": 72.0,
+          "cw": 4.74
+        },
+        {
+          "text": "buffer. A consumer can pick items and can consume them. We need to ensure that when a producer is placing an",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.407,
+          "bottom": 0.421,
+          "x0": 72.0,
+          "cw": 4.16
+        },
+        {
+          "text": "item in the buffer, then at the same time consumer should not consume any item. In this problem, buffer is the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.421,
+          "bottom": 0.434,
+          "x0": 72.0,
+          "cw": 3.99
+        },
+        {
+          "text": "critical section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.435,
+          "bottom": 0.448,
+          "x0": 72.0,
+          "cw": 3.53
+        },
+        {
+          "text": "To solve this problem, we need two counting semaphores – Full and Empty. “Full” keeps track of number of",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.448,
+          "bottom": 0.462,
+          "x0": 72.0,
+          "cw": 4.16
+        },
+        {
+          "text": "items in the buffer at any given time and “Empty” keeps track of number of unoccupied slots.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.462,
+          "bottom": 0.475,
+          "x0": 72.0,
+          "cw": 4.06
+        },
+        {
+          "text": "Initialization of semaphores –",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.483,
+          "bottom": 0.496,
+          "x0": 72.0,
+          "cw": 4.21
+        },
+        {
+          "text": "mutex = 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.497,
+          "bottom": 0.51,
+          "x0": 72.0,
+          "cw": 4.32
+        },
+        {
+          "text": "Full = 0 // Initially, all slots are empty. Thus full slots are 0",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.51,
+          "bottom": 0.524,
+          "x0": 72.0,
+          "cw": 3.62
+        },
+        {
+          "text": "Empty = n // All slots are empty initially",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.524,
+          "bottom": 0.537,
+          "x0": 72.0,
+          "cw": 3.83
+        },
+        {
+          "text": "Solution for Producer –",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.538,
+          "bottom": 0.551,
+          "x0": 72.0,
+          "cw": 4.3
+        },
+        {
+          "text": "do{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.565,
+          "bottom": 0.578,
+          "x0": 151.5,
+          "cw": 4.31
+        },
+        {
+          "text": "//produce an item",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.579,
+          "bottom": 0.592,
+          "x0": 151.5,
+          "cw": 4.03
+        },
+        {
+          "text": "wait(empty);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.592,
+          "bottom": 0.606,
+          "x0": 151.5,
+          "cw": 4.16
+        },
+        {
+          "text": "wait(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.606,
+          "bottom": 0.619,
+          "x0": 151.5,
+          "cw": 4.16
+        },
+        {
+          "text": "//place in buffer",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.62,
+          "bottom": 0.633,
+          "x0": 151.5,
+          "cw": 3.69
+        },
+        {
+          "text": "signal(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.633,
+          "bottom": 0.647,
+          "x0": 151.5,
+          "cw": 4.06
+        },
+        {
+          "text": "signal(full);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.647,
+          "bottom": 0.66,
+          "x0": 151.5,
+          "cw": 3.55
+        },
+        {
+          "text": "}while(true)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.661,
+          "bottom": 0.674,
+          "x0": 151.5,
+          "cw": 3.98
+        },
+        {
+          "text": "When producer produces an item then the value of “empty” is reduced by 1 because one slot will be filled now.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.696,
+          "bottom": 0.709,
+          "x0": 72.0,
+          "cw": 4.12
+        },
+        {
+          "text": "The value of mutex is also reduced to prevent consumer to access the buffer. Now, the producer has placed the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.709,
+          "bottom": 0.722,
+          "x0": 72.0,
+          "cw": 4.12
+        },
+        {
+          "text": "item and thus the value of “full” is increased by 1. The value of mutex is also increased by 1 beacuse the task of",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.723,
+          "bottom": 0.736,
+          "x0": 72.0,
+          "cw": 3.94
+        },
+        {
+          "text": "producer has been completed and consumer can access the buffer.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.737,
+          "bottom": 0.75,
+          "x0": 72.0,
+          "cw": 4.16
+        },
+        {
+          "text": "Solution for Consumer –",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.758,
+          "bottom": 0.771,
+          "x0": 72.0,
+          "cw": 4.58
+        },
+        {
+          "text": "do{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.771,
+          "bottom": 0.784,
+          "x0": 191.2,
+          "cw": 4.31
+        },
+        {
+          "text": "wait(full);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.785,
+          "bottom": 0.798,
+          "x0": 191.2,
+          "cw": 3.59
+        },
+        {
+          "text": "wait(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.799,
+          "bottom": 0.812,
+          "x0": 191.2,
+          "cw": 4.16
+        },
+        {
+          "text": "// remove item from buffer",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.812,
+          "bottom": 0.825,
+          "x0": 191.2,
+          "cw": 4.06
+        },
+        {
+          "text": "signal(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.826,
+          "bottom": 0.839,
+          "x0": 191.2,
+          "cw": 4.05
+        },
+        {
+          "text": "signal(empty);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.839,
+          "bottom": 0.853,
+          "x0": 191.2,
+          "cw": 4.05
+        },
+        {
+          "text": "// consumes item",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.853,
+          "bottom": 0.866,
+          "x0": 191.2,
+          "cw": 4.13
+        },
+        {
+          "text": "}while(true)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.867,
+          "bottom": 0.88,
+          "x0": 191.2,
+          "cw": 3.98
+        },
+        {
+          "text": "• As the consumer is removing an item from buffer, therefore the value of “full” is reduced by 1 and the",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.88,
+          "bottom": 0.894,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "value is mutex is also reduced so that the producer cannot access the buffer at this moment.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.895,
+          "bottom": 0.908,
+          "x0": 108.0,
+          "cw": 3.94
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "• Now, the consumer has consumed the item, thus increasing the value of “empty” by 1. The value of",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.1,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "mutex is also increased so that producer can access the buffer now.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.101,
+          "bottom": 0.114,
+          "x0": 108.0,
+          "cw": 3.98
+        },
+        {
+          "text": "#include<stdio.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.149,
+          "bottom": 0.162,
+          "x0": 72.0,
+          "cw": 4.18
+        },
+        {
+          "text": "#include<stdlib.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.163,
+          "bottom": 0.176,
+          "x0": 72.0,
+          "cw": 4.1
+        },
+        {
+          "text": " int mutex=1,full=0,empty=3,x=0;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.176,
+          "bottom": 0.191,
+          "x0": 72.0,
+          "cw": 4.06
+        },
+        {
+          "text": " int main()",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.192,
+          "bottom": 0.205,
+          "x0": 72.0,
+          "cw": 3.73
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.205,
+          "bottom": 0.218,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    int n;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.219,
+          "bottom": 0.232,
+          "x0": 72.0,
+          "cw": 3.03
+        },
+        {
+          "text": "    void producer();",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.232,
+          "bottom": 0.246,
+          "x0": 72.0,
+          "cw": 3.7
+        },
+        {
+          "text": "    void consumer();",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.246,
+          "bottom": 0.259,
+          "x0": 72.0,
+          "cw": 3.86
+        },
+        {
+          "text": "    int wait(int);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.26,
+          "bottom": 0.273,
+          "x0": 72.0,
+          "cw": 3.3
+        },
+        {
+          "text": "    int signal(int);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.274,
+          "bottom": 0.287,
+          "x0": 72.0,
+          "cw": 3.31
+        },
+        {
+          "text": "    printf(\"\\n1.Producer\\n2.Consumer\\n3.Exit\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.287,
+          "bottom": 0.3,
+          "x0": 72.0,
+          "cw": 4.0
+        },
+        {
+          "text": "    while(1)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.301,
+          "bottom": 0.314,
+          "x0": 72.0,
+          "cw": 3.57
+        },
+        {
+          "text": "    {",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.314,
+          "bottom": 0.328,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "        printf(\"\\nEnter your choice:\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.328,
+          "bottom": 0.341,
+          "x0": 72.0,
+          "cw": 3.6
+        },
+        {
+          "text": "        scanf(\"%d\",&n);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.342,
+          "bottom": 0.356,
+          "x0": 72.0,
+          "cw": 3.6
+        },
+        {
+          "text": "        switch(n)",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.357,
+          "bottom": 0.37,
+          "x0": 72.0,
+          "cw": 3.34
+        },
+        {
+          "text": "        {",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.371,
+          "bottom": 0.384,
+          "x0": 72.0,
+          "cw": 2.73
+        },
+        {
+          "text": "            case 1:    if((mutex==1)&&(empty!=0))",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.384,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 3.04
+        },
+        {
+          "text": "                        producer();",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.399,
+          "bottom": 0.412,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "                    else",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.413,
+          "bottom": 0.426,
+          "x0": 72.0,
+          "cw": 2.72
+        },
+        {
+          "text": "                        printf(\"Buffer is full!!\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.427,
+          "bottom": 0.44,
+          "x0": 72.0,
+          "cw": 3.09
+        },
+        {
+          "text": "                    break;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.44,
+          "bottom": 0.453,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "            case 2:    if((mutex==1)&&(full!=0))",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.454,
+          "bottom": 0.468,
+          "x0": 72.0,
+          "cw": 3.04
+        },
+        {
+          "text": "                        consumer();",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.469,
+          "bottom": 0.482,
+          "x0": 72.0,
+          "cw": 3.08
+        },
+        {
+          "text": "                    else",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.483,
+          "bottom": 0.496,
+          "x0": 72.0,
+          "cw": 2.72
+        },
+        {
+          "text": "                        printf(\"Buffer is empty!!\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.496,
+          "bottom": 0.509,
+          "x0": 72.0,
+          "cw": 3.24
+        },
+        {
+          "text": "                    break;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.51,
+          "bottom": 0.523,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "            case 3:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.523,
+          "bottom": 0.538,
+          "x0": 72.0,
+          "cw": 3.04
+        },
+        {
+          "text": "                    exit(0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.539,
+          "bottom": 0.552,
+          "x0": 72.0,
+          "cw": 2.83
+        },
+        {
+          "text": "                    break;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.552,
+          "bottom": 0.565,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "        }",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.566,
+          "bottom": 0.579,
+          "x0": 72.0,
+          "cw": 2.73
+        },
+        {
+          "text": "    }",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.579,
+          "bottom": 0.593,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "    return 0;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.607,
+          "bottom": 0.62,
+          "x0": 72.0,
+          "cw": 3.33
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.621,
+          "bottom": 0.634,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "int wait(int s)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.648,
+          "bottom": 0.661,
+          "x0": 72.0,
+          "cw": 3.52
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.661,
+          "bottom": 0.675,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    return (--s);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.675,
+          "bottom": 0.689,
+          "x0": 72.0,
+          "cw": 3.32
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.69,
+          "bottom": 0.703,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "int signal(int s)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.717,
+          "bottom": 0.731,
+          "x0": 72.0,
+          "cw": 3.5
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.731,
+          "bottom": 0.744,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    return(++s);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.745,
+          "bottom": 0.759,
+          "x0": 72.0,
+          "cw": 3.39
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.76,
+          "bottom": 0.773,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "void producer()",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.787,
+          "bottom": 0.8,
+          "x0": 72.0,
+          "cw": 4.06
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.801,
+          "bottom": 0.814,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    mutex=wait(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.814,
+          "bottom": 0.829,
+          "x0": 72.0,
+          "cw": 3.9
+        },
+        {
+          "text": "    full=signal(full);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.829,
+          "bottom": 0.844,
+          "x0": 72.0,
+          "cw": 3.0
+        },
+        {
+          "text": "    empty=wait(empty);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.844,
+          "bottom": 0.859,
+          "x0": 72.0,
+          "cw": 3.9
+        },
+        {
+          "text": "    x++;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.859,
+          "bottom": 0.874,
+          "x0": 72.0,
+          "cw": 3.01
+        },
+        {
+          "text": "    printf(\"\\nProducer produces the item %d\",x);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.875,
+          "bottom": 0.888,
+          "x0": 72.0,
+          "cw": 3.94
+        },
+        {
+          "text": "    mutex=signal(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.888,
+          "bottom": 0.903,
+          "x0": 72.0,
+          "cw": 3.9
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.099,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "void consumer()",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.113,
+          "bottom": 0.126,
+          "x0": 72.0,
+          "cw": 4.27
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.127,
+          "bottom": 0.14,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    mutex=wait(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.141,
+          "bottom": 0.155,
+          "x0": 72.0,
+          "cw": 3.9
+        },
+        {
+          "text": "    full=wait(full);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.156,
+          "bottom": 0.17,
+          "x0": 72.0,
+          "cw": 3.0
+        },
+        {
+          "text": "    empty=signal(empty);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.171,
+          "bottom": 0.185,
+          "x0": 72.0,
+          "cw": 3.9
+        },
+        {
+          "text": "    printf(\"\\nConsumer consumes item %d\",x);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.186,
+          "bottom": 0.199,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "    x--;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.199,
+          "bottom": 0.214,
+          "x0": 72.0,
+          "cw": 3.01
+        },
+        {
+          "text": "    mutex=signal(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.214,
+          "bottom": 0.229,
+          "x0": 72.0,
+          "cw": 3.9
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.23,
+          "bottom": 0.243,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "Output",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.254,
+          "bottom": 0.267,
+          "x0": 72.0,
+          "cw": 5.17
+        },
+        {
+          "text": "1.Producer",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.267,
+          "bottom": 0.281,
+          "x0": 72.0,
+          "cw": 4.36
+        },
+        {
+          "text": "2.Consumer",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.281,
+          "bottom": 0.294,
+          "x0": 72.0,
+          "cw": 4.86
+        },
+        {
+          "text": "3.Exit",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.295,
+          "bottom": 0.308,
+          "x0": 72.0,
+          "cw": 4.04
+        },
+        {
+          "text": "Enter your choice:1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.308,
+          "bottom": 0.321,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Producer produces the item 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.322,
+          "bottom": 0.335,
+          "x0": 72.0,
+          "cw": 4.19
+        },
+        {
+          "text": "Enter your choice:2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.336,
+          "bottom": 0.349,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Consumer consumes item 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.349,
+          "bottom": 0.363,
+          "x0": 72.0,
+          "cw": 4.62
+        },
+        {
+          "text": "Enter your choice:2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.363,
+          "bottom": 0.376,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Buffer is empty!!",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.377,
+          "bottom": 0.39,
+          "x0": 72.0,
+          "cw": 4.09
+        },
+        {
+          "text": "Enter your choice:1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.39,
+          "bottom": 0.403,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Producer produces the item 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.404,
+          "bottom": 0.417,
+          "x0": 72.0,
+          "cw": 4.19
+        },
+        {
+          "text": "Enter your choice:1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.418,
+          "bottom": 0.431,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Producer produces the item 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.431,
+          "bottom": 0.444,
+          "x0": 72.0,
+          "cw": 4.19
+        },
+        {
+          "text": "Enter your choice:1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.445,
+          "bottom": 0.458,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Producer produces the item 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.459,
+          "bottom": 0.472,
+          "x0": 72.0,
+          "cw": 4.19
+        },
+        {
+          "text": "Enter your choice:1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.472,
+          "bottom": 0.485,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Buffer is full!!",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.486,
+          "bottom": 0.499,
+          "x0": 72.0,
+          "cw": 3.65
+        },
+        {
+          "text": "Enter your choice:3",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.5,
+          "bottom": 0.513,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "2.Write a program to implement producer consumer Shared memory",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.538,
+          "bottom": 0.551,
+          "x0": 72.0,
+          "cw": 4.75
+        },
+        {
+          "text": "#include <sys/types.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.575,
+          "bottom": 0.589,
+          "x0": 72.0,
+          "cw": 4.13
+        },
+        {
+          "text": "#include <sys/ipc.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.589,
+          "bottom": 0.602,
+          "x0": 72.0,
+          "cw": 4.1
+        },
+        {
+          "text": "#include <sys/shm.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.603,
+          "bottom": 0.616,
+          "x0": 72.0,
+          "cw": 4.31
+        },
+        {
+          "text": "#include <stdio.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.616,
+          "bottom": 0.629,
+          "x0": 72.0,
+          "cw": 4.08
+        },
+        {
+          "text": "#include<stdlib.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.63,
+          "bottom": 0.643,
+          "x0": 72.0,
+          "cw": 4.1
+        },
+        {
+          "text": "#include<unistd.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.644,
+          "bottom": 0.657,
+          "x0": 72.0,
+          "cw": 4.22
+        },
+        {
+          "text": "#define PERMS 0666",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.657,
+          "bottom": 0.671,
+          "x0": 72.0,
+          "cw": 4.75
+        },
+        {
+          "text": "#define mkey 45787",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.671,
+          "bottom": 0.684,
+          "x0": 72.0,
+          "cw": 4.46
+        },
+        {
+          "text": "file 2: sender.c",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.698,
+          "bottom": 0.711,
+          "x0": 72.0,
+          "cw": 3.63
+        },
+        {
+          "text": "#include \"shmem.h\"",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.726,
+          "bottom": 0.739,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "int main()",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.739,
+          "bottom": 0.753,
+          "x0": 72.0,
+          "cw": 3.84
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.753,
+          "bottom": 0.766,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "int shmemid,n;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.767,
+          "bottom": 0.78,
+          "x0": 72.0,
+          "cw": 4.17
+        },
+        {
+          "text": "char *pshmem;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.78,
+          "bottom": 0.793,
+          "x0": 72.0,
+          "cw": 4.56
+        },
+        {
+          "text": "if((shmemid=shmget(mkey,10,PERMS|IPC_CREAT))<0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.794,
+          "bottom": 0.807,
+          "x0": 72.0,
+          "cw": 4.91
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.808,
+          "bottom": 0.821,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "printf(\"\\n Sender: Cant get shared memory\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.821,
+          "bottom": 0.834,
+          "x0": 72.0,
+          "cw": 4.08
+        },
+        {
+          "text": "exit(1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.835,
+          "bottom": 0.848,
+          "x0": 72.0,
+          "cw": 3.54
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.849,
+          "bottom": 0.862,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "pshmem=shmat(shmemid,(char *) 0,0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.862,
+          "bottom": 0.875,
+          "x0": 72.0,
+          "cw": 4.47
+        },
+        {
+          "text": "if(pshmem < 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.876,
+          "bottom": 0.889,
+          "x0": 72.0,
+          "cw": 4.32
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.89,
+          "bottom": 0.903,
+          "x0": 72.0,
+          "cw": 3.64
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "perror(\"Sender: Cant attach shared memory\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.099,
+          "x0": 72.0,
+          "cw": 4.16
+        },
+        {
+          "text": "exit(1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.1,
+          "bottom": 0.113,
+          "x0": 72.0,
+          "cw": 3.54
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.113,
+          "bottom": 0.126,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "n=read(0,pshmem,10);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.127,
+          "bottom": 0.14,
+          "x0": 72.0,
+          "cw": 4.46
+        },
+        {
+          "text": "pshmem[n]='\\0';",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.141,
+          "bottom": 0.154,
+          "x0": 72.0,
+          "cw": 4.24
+        },
+        {
+          "text": "exit(0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.154,
+          "bottom": 0.167,
+          "x0": 72.0,
+          "cw": 3.54
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "file 3: receiver.c",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 72.0,
+          "cw": 3.57
+        },
+        {
+          "text": "#include \"shmem.h\"",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.223,
+          "bottom": 0.236,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "int main()",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.236,
+          "bottom": 0.249,
+          "x0": 72.0,
+          "cw": 3.84
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.25,
+          "bottom": 0.263,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "int shmemid,n;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.264,
+          "bottom": 0.277,
+          "x0": 72.0,
+          "cw": 4.17
+        },
+        {
+          "text": "char *pshmem;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.277,
+          "bottom": 0.29,
+          "x0": 72.0,
+          "cw": 4.56
+        },
+        {
+          "text": "if((shmemid=shmget(mkey,10,PERMS|IPC_CREAT))<0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.291,
+          "bottom": 0.304,
+          "x0": 72.0,
+          "cw": 4.91
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.305,
+          "bottom": 0.318,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "printf(\"\\nReceiver: Error opening shared memory\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.318,
+          "bottom": 0.331,
+          "x0": 72.0,
+          "cw": 4.14
+        },
+        {
+          "text": "exit(1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.332,
+          "bottom": 0.345,
+          "x0": 72.0,
+          "cw": 3.54
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.346,
+          "bottom": 0.359,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "pshmem=shmat(shmemid,(char *) 0,0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.359,
+          "bottom": 0.372,
+          "x0": 72.0,
+          "cw": 4.47
+        },
+        {
+          "text": "if(pshmem < 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.373,
+          "bottom": 0.386,
+          "x0": 72.0,
+          "cw": 4.32
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.387,
+          "bottom": 0.4,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "printf(\"\\n Receiver : Can't attach shared memory\");",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.4,
+          "bottom": 0.413,
+          "x0": 72.0,
+          "cw": 3.99
+        },
+        {
+          "text": "exit(1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.414,
+          "bottom": 0.427,
+          "x0": 72.0,
+          "cw": 3.54
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.428,
+          "bottom": 0.441,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "printf(\"%s\",pshmem);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.441,
+          "bottom": 0.454,
+          "x0": 72.0,
+          "cw": 4.33
+        },
+        {
+          "text": "shmctl(shmemid,IPC_RMID,NULL);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.455,
+          "bottom": 0.468,
+          "x0": 72.0,
+          "cw": 4.95
+        },
+        {
+          "text": "exit(0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.469,
+          "bottom": 0.482,
+          "x0": 72.0,
+          "cw": 3.54
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.482,
+          "bottom": 0.495,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "output",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.509,
+          "bottom": 0.523,
+          "x0": 72.0,
+          "cw": 4.01
+        },
+        {
+          "text": "cc sender.c",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.537,
+          "bottom": 0.55,
+          "x0": 72.0,
+          "cw": 3.91
+        },
+        {
+          "text": "$ ./a.out",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.551,
+          "bottom": 0.564,
+          "x0": 72.0,
+          "cw": 3.5
+        },
+        {
+          "text": "hi",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.564,
+          "bottom": 0.577,
+          "x0": 72.0,
+          "cw": 3.43
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": null,
+      "images": 1,
+      "lines": [
+        {
+          "text": "3. Dining Philosophers problem using Semaphores",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.101,
+          "x0": 90.0,
+          "cw": 4.14
+        },
+        {
+          "text": "Prerequisite – Process Synchronization, Semaphores, Dining-Philosophers Solution Using Monitors",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.112,
+          "bottom": 0.125,
+          "x0": 72.0,
+          "cw": 4.26
+        },
+        {
+          "text": "The Dining Philosopher Problem – The Dining Philosopher Problem states that K philosophers seated around",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.125,
+          "bottom": 0.139,
+          "x0": 72.0,
+          "cw": 4.64
+        },
+        {
+          "text": "a circular table with one chopstick between each pair of philosophers. There is one chopstick between each",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.139,
+          "bottom": 0.152,
+          "x0": 72.0,
+          "cw": 4.02
+        },
+        {
+          "text": "philosopher. A philosopher may eat if he can pickup the two chopsticks adjacent to him. One chopstick may be",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.153,
+          "bottom": 0.166,
+          "x0": 72.0,
+          "cw": 4.11
+        },
+        {
+          "text": "picked up by any one of its adjacent followers but not both.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.167,
+          "bottom": 0.18,
+          "x0": 72.0,
+          "cw": 3.94
+        },
+        {
+          "text": "Semaphore Solution to Dining Philosopher –",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.455,
+          "bottom": 0.468,
+          "x0": 72.0,
+          "cw": 4.52
+        },
+        {
+          "text": "Each philosopher is represented by the following pseudocode:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.469,
+          "bottom": 0.482,
+          "x0": 72.0,
+          "cw": 4.12
+        },
+        {
+          "text": "process P[i]",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.49,
+          "bottom": 0.503,
+          "x0": 72.0,
+          "cw": 3.85
+        },
+        {
+          "text": " while true do",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.511,
+          "bottom": 0.524,
+          "x0": 72.0,
+          "cw": 3.85
+        },
+        {
+          "text": "   {  THINK;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.532,
+          "bottom": 0.545,
+          "x0": 72.0,
+          "cw": 4.13
+        },
+        {
+          "text": "      PICKUP(CHOPSTICK[i], CHOPSTICK[i+1 mod 5]);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.553,
+          "bottom": 0.566,
+          "x0": 72.0,
+          "cw": 4.72
+        },
+        {
+          "text": "      EAT;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.574,
+          "bottom": 0.587,
+          "x0": 72.0,
+          "cw": 3.61
+        },
+        {
+          "text": "      PUTDOWN(CHOPSTICK[i], CHOPSTICK[i+1 mod 5])",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.595,
+          "bottom": 0.608,
+          "x0": 72.0,
+          "cw": 4.95
+        },
+        {
+          "text": "   }",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.616,
+          "bottom": 0.629,
+          "x0": 72.0,
+          "cw": 2.97
+        },
+        {
+          "text": "There are three states of philosopher : THINKING, HUNGRY and EATING. Here there are two semaphores :",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.637,
+          "bottom": 0.65,
+          "x0": 72.0,
+          "cw": 3.84
+        },
+        {
+          "text": "Mutex and a semaphore array for the philosophers. Mutex is used such that no two philosophers may access the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.651,
+          "bottom": 0.664,
+          "x0": 72.0,
+          "cw": 4.12
+        },
+        {
+          "text": "pickup or putdown at the same time. The array is used to control the behavior of each philosopher. But,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.665,
+          "bottom": 0.678,
+          "x0": 72.0,
+          "cw": 4.0
+        },
+        {
+          "text": "semaphores can result in deadlock due to programming errors.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.678,
+          "bottom": 0.691,
+          "x0": 72.0,
+          "cw": 4.13
+        },
+        {
+          "text": "#include<stdio.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.718,
+          "bottom": 0.731,
+          "x0": 72.0,
+          "cw": 4.18
+        },
+        {
+          "text": "#include<semaphore.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.732,
+          "bottom": 0.745,
+          "x0": 72.0,
+          "cw": 4.5
+        },
+        {
+          "text": "#include<pthread.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.745,
+          "bottom": 0.759,
+          "x0": 72.0,
+          "cw": 4.28
+        },
+        {
+          "text": "#define N 5",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.773,
+          "bottom": 0.786,
+          "x0": 72.0,
+          "cw": 4.14
+        },
+        {
+          "text": "#define THINKING 0",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.786,
+          "bottom": 0.799,
+          "x0": 72.0,
+          "cw": 4.81
+        },
+        {
+          "text": "#define HUNGRY 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.8,
+          "bottom": 0.813,
+          "x0": 72.0,
+          "cw": 5.02
+        },
+        {
+          "text": "#define EATING 2",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.814,
+          "bottom": 0.827,
+          "x0": 72.0,
+          "cw": 4.69
+        },
+        {
+          "text": "#define LEFT (ph_num+4)%N",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.827,
+          "bottom": 0.84,
+          "x0": 72.0,
+          "cw": 4.88
+        },
+        {
+          "text": "#define RIGHT (ph_num+1)%N",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.841,
+          "bottom": 0.854,
+          "x0": 72.0,
+          "cw": 4.96
+        },
+        {
+          "text": "sem_t mutex;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.868,
+          "bottom": 0.881,
+          "x0": 72.0,
+          "cw": 4.35
+        },
+        {
+          "text": "sem_t S[N];",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.882,
+          "bottom": 0.895,
+          "x0": 72.0,
+          "cw": 4.26
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "void * philospher(void *num);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.099,
+          "x0": 72.0,
+          "cw": 4.17
+        },
+        {
+          "text": "void take_fork(int);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.1,
+          "bottom": 0.113,
+          "x0": 72.0,
+          "cw": 3.86
+        },
+        {
+          "text": "void put_fork(int);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.113,
+          "bottom": 0.126,
+          "x0": 72.0,
+          "cw": 3.86
+        },
+        {
+          "text": "void test(int);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.127,
+          "bottom": 0.14,
+          "x0": 72.0,
+          "cw": 3.54
+        },
+        {
+          "text": "int state[N];",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.154,
+          "bottom": 0.167,
+          "x0": 72.0,
+          "cw": 3.61
+        },
+        {
+          "text": "int phil_num[N]={0,1,2,3,4};",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 72.0,
+          "cw": 4.17
+        },
+        {
+          "text": "int main()",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 72.0,
+          "cw": 3.84
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.209,
+          "bottom": 0.222,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    int i;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.223,
+          "bottom": 0.236,
+          "x0": 72.0,
+          "cw": 2.82
+        },
+        {
+          "text": "    pthread_t thread_id[N];",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.236,
+          "bottom": 0.249,
+          "x0": 72.0,
+          "cw": 3.83
+        },
+        {
+          "text": "    sem_init(&mutex,0,1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.25,
+          "bottom": 0.263,
+          "x0": 72.0,
+          "cw": 4.0
+        },
+        {
+          "text": "    for(i=0;i<N;i++)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.264,
+          "bottom": 0.277,
+          "x0": 72.0,
+          "cw": 3.79
+        },
+        {
+          "text": "        sem_init(&S[i],0,0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.277,
+          "bottom": 0.29,
+          "x0": 72.0,
+          "cw": 3.59
+        },
+        {
+          "text": "    for(i=0;i<N;i++)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.291,
+          "bottom": 0.304,
+          "x0": 72.0,
+          "cw": 3.79
+        },
+        {
+          "text": "    {",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.305,
+          "bottom": 0.318,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "        pthread_create(&thread_id[i],NULL,philospher,&phil_num[i]);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.318,
+          "bottom": 0.331,
+          "x0": 72.0,
+          "cw": 4.09
+        },
+        {
+          "text": "        printf(\"Philosopher %d is thinking\\n\",i+1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.332,
+          "bottom": 0.345,
+          "x0": 72.0,
+          "cw": 3.74
+        },
+        {
+          "text": "    }",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.346,
+          "bottom": 0.359,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "    for(i=0;i<N;i++)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.359,
+          "bottom": 0.372,
+          "x0": 72.0,
+          "cw": 3.79
+        },
+        {
+          "text": "        pthread_join(thread_id[i],NULL);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.373,
+          "bottom": 0.386,
+          "x0": 72.0,
+          "cw": 3.88
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.387,
+          "bottom": 0.4,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "void *philospher(void *num)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.414,
+          "bottom": 0.427,
+          "x0": 72.0,
+          "cw": 4.28
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.428,
+          "bottom": 0.441,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    while(1)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.441,
+          "bottom": 0.454,
+          "x0": 72.0,
+          "cw": 3.57
+        },
+        {
+          "text": "    {",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.455,
+          "bottom": 0.468,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "        int *i = num;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.469,
+          "bottom": 0.482,
+          "x0": 72.0,
+          "cw": 3.39
+        },
+        {
+          "text": "        sleep(1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.482,
+          "bottom": 0.495,
+          "x0": 72.0,
+          "cw": 3.19
+        },
+        {
+          "text": "        take_fork(*i);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.496,
+          "bottom": 0.509,
+          "x0": 72.0,
+          "cw": 3.39
+        },
+        {
+          "text": "        sleep(0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.509,
+          "bottom": 0.523,
+          "x0": 72.0,
+          "cw": 3.19
+        },
+        {
+          "text": "        put_fork(*i);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.523,
+          "bottom": 0.536,
+          "x0": 72.0,
+          "cw": 3.37
+        },
+        {
+          "text": "    }",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.537,
+          "bottom": 0.55,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.551,
+          "bottom": 0.564,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "void take_fork(int ph_num)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.578,
+          "bottom": 0.591,
+          "x0": 72.0,
+          "cw": 4.21
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.591,
+          "bottom": 0.605,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    sem_wait(&mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.605,
+          "bottom": 0.618,
+          "x0": 72.0,
+          "cw": 4.23
+        },
+        {
+          "text": "    state[ph_num] = HUNGRY;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.619,
+          "bottom": 0.632,
+          "x0": 72.0,
+          "cw": 4.52
+        },
+        {
+          "text": "    printf(\"Philosopher %d is Hungry\\n\",ph_num+1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.633,
+          "bottom": 0.646,
+          "x0": 72.0,
+          "cw": 4.16
+        },
+        {
+          "text": "    test(ph_num);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.646,
+          "bottom": 0.659,
+          "x0": 72.0,
+          "cw": 3.81
+        },
+        {
+          "text": "    sem_post(&mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.66,
+          "bottom": 0.673,
+          "x0": 72.0,
+          "cw": 4.2
+        },
+        {
+          "text": "    sem_wait(&S[ph_num]);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.673,
+          "bottom": 0.687,
+          "x0": 72.0,
+          "cw": 4.35
+        },
+        {
+          "text": "    sleep(1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.687,
+          "bottom": 0.7,
+          "x0": 72.0,
+          "cw": 3.39
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.701,
+          "bottom": 0.714,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "void test(int ph_num)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.728,
+          "bottom": 0.741,
+          "x0": 72.0,
+          "cw": 4.05
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.742,
+          "bottom": 0.755,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    if (state[ph_num] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.755,
+          "bottom": 0.768,
+          "x0": 72.0,
+          "cw": 4.67
+        },
+        {
+          "text": "    {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.769,
+          "bottom": 0.782,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "        state[ph_num] = EATING;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.783,
+          "bottom": 0.796,
+          "x0": 72.0,
+          "cw": 4.09
+        },
+        {
+          "text": "        sleep(2);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.796,
+          "bottom": 0.81,
+          "x0": 72.0,
+          "cw": 3.19
+        },
+        {
+          "text": "        printf(\"Philosopher %d takes fork %d and %d\\n\",ph_num+1,LEFT+1,ph_num+1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.81,
+          "bottom": 0.823,
+          "x0": 72.0,
+          "cw": 4.31
+        },
+        {
+          "text": "        printf(\"Philosopher %d is Eating\\n\",ph_num+1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.824,
+          "bottom": 0.837,
+          "x0": 72.0,
+          "cw": 3.95
+        },
+        {
+          "text": "        sem_post(&S[ph_num]);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.837,
+          "bottom": 0.85,
+          "x0": 72.0,
+          "cw": 4.08
+        },
+        {
+          "text": "    }",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.851,
+          "bottom": 0.864,
+          "x0": 72.0,
+          "cw": 2.87
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.865,
+          "bottom": 0.878,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "void  put_fork(int ph_num)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.892,
+          "bottom": 0.905,
+          "x0": 72.0,
+          "cw": 4.15
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.099,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "    sem_wait(&mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.1,
+          "bottom": 0.113,
+          "x0": 72.0,
+          "cw": 4.23
+        },
+        {
+          "text": "    state[ph_num] = THINKING;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.113,
+          "bottom": 0.126,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "    printf(\"Philosopher %d putting fork %d and %d down\\n\",ph_num+1,LEFT+1,ph_num+1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.127,
+          "bottom": 0.14,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "    printf(\"Philosopher %d is thinking\\n\",ph_num+1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.141,
+          "bottom": 0.154,
+          "x0": 72.0,
+          "cw": 4.05
+        },
+        {
+          "text": "    test(LEFT);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.154,
+          "bottom": 0.167,
+          "x0": 72.0,
+          "cw": 3.73
+        },
+        {
+          "text": "    test(RIGHT);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 72.0,
+          "cw": 3.9
+        },
+        {
+          "text": "    sem_post(&mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.182,
+          "bottom": 0.195,
+          "x0": 72.0,
+          "cw": 4.2
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "4. Readers and Writers problem using Semaphores",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.235,
+          "bottom": 0.249,
+          "x0": 90.0,
+          "cw": 4.14
+        },
+        {
+          "text": "Consider a situation where we have a file shared between many people.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.271,
+          "bottom": 0.284,
+          "x0": 72.0,
+          "cw": 4.12
+        },
+        {
+          "text": "• If one of the people tries editing the file, no other person should be reading or writing at the same time,",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.292,
+          "bottom": 0.306,
+          "x0": 76.6,
+          "cw": 4.58
+        },
+        {
+          "text": "otherwise changes will not be visible to him/her.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.307,
+          "bottom": 0.32,
+          "x0": 94.6,
+          "cw": 3.94
+        },
+        {
+          "text": "• However if some person is reading the file, then others may read it at the same time.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.32,
+          "bottom": 0.334,
+          "x0": 76.6,
+          "cw": 4.58
+        },
+        {
+          "text": "Precisely in OS we call this situation as the readers-writers problem",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.335,
+          "bottom": 0.348,
+          "x0": 72.0,
+          "cw": 3.81
+        },
+        {
+          "text": "Problem parameters:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.349,
+          "bottom": 0.362,
+          "x0": 72.0,
+          "cw": 4.28
+        },
+        {
+          "text": "• One set of data is shared among a number of processes",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.369,
+          "bottom": 0.384,
+          "x0": 76.6,
+          "cw": 4.58
+        },
+        {
+          "text": "• Once a writer is ready, it performs its write. Only one writer may write at a time",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.384,
+          "bottom": 0.398,
+          "x0": 76.6,
+          "cw": 4.58
+        },
+        {
+          "text": "• If a process is writing, no other process can read it",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.398,
+          "bottom": 0.413,
+          "x0": 76.6,
+          "cw": 4.58
+        },
+        {
+          "text": "• If at least one reader is reading, no other process can write",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.413,
+          "bottom": 0.427,
+          "x0": 76.6,
+          "cw": 4.58
+        },
+        {
+          "text": "• Readers may not write and only read",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.427,
+          "bottom": 0.442,
+          "x0": 76.6,
+          "cw": 4.58
+        },
+        {
+          "text": "Solution when Reader has the Priority over Writer",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.47,
+          "bottom": 0.483,
+          "x0": 189.3,
+          "cw": 4.43
+        },
+        {
+          "text": "Here priority means, no reader should wait if the share is currently opened for reading.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.483,
+          "bottom": 0.496,
+          "x0": 72.0,
+          "cw": 3.92
+        },
+        {
+          "text": "Three variables are used: mutex, wrt, readcnt to implement solution",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.504,
+          "bottom": 0.517,
+          "x0": 72.0,
+          "cw": 3.95
+        },
+        {
+          "text": "1. semaphore mutex, wrt; // semaphore mutex is used to ensure mutual exclusion when readcnt is updated",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.518,
+          "bottom": 0.531,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "i.e. when any reader enters or exit from the critical section and semaphore wrt is used by both readers and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.532,
+          "bottom": 0.545,
+          "x0": 94.6,
+          "cw": 3.93
+        },
+        {
+          "text": "writers",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.545,
+          "bottom": 0.558,
+          "x0": 94.6,
+          "cw": 3.78
+        },
+        {
+          "text": "2. int readcnt;  //    readcnt tells the number of processes performing read in the critical section, initially 0",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.559,
+          "bottom": 0.572,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "Functions for sempahore :",
+          "kind": "heading",
+          "level": 2,
+          "para_break": false,
+          "top": 0.573,
+          "bottom": 0.586,
+          "x0": 72.0,
+          "cw": 4.5
+        },
+        {
+          "text": "– wait() : decrements the semaphore value.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.586,
+          "bottom": 0.599,
+          "x0": 72.0,
+          "cw": 4.06
+        },
+        {
+          "text": "– signal() : increments the semaphore value.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.607,
+          "bottom": 0.621,
+          "x0": 72.0,
+          "cw": 3.99
+        },
+        {
+          "text": "Writer process:",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.628,
+          "bottom": 0.641,
+          "x0": 72.0,
+          "cw": 4.45
+        },
+        {
+          "text": "1. Writer requests the entry to critical section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.642,
+          "bottom": 0.655,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "2. If allowed i.e. wait() gives a true value, it enters and performs the write. If not allowed, it keeps on",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.656,
+          "bottom": 0.669,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "waiting.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.669,
+          "bottom": 0.683,
+          "x0": 94.6,
+          "cw": 3.89
+        },
+        {
+          "text": "3. It exits the critical section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.683,
+          "bottom": 0.696,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "do {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.731,
+          "bottom": 0.743,
+          "x0": 72.0,
+          "cw": 3.76
+        },
+        {
+          "text": "    // writer requests for critical section",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.751,
+          "bottom": 0.764,
+          "x0": 72.0,
+          "cw": 3.35
+        },
+        {
+          "text": "    wait(wrt);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.772,
+          "bottom": 0.784,
+          "x0": 72.0,
+          "cw": 3.21
+        },
+        {
+          "text": "      // performs the write",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.792,
+          "bottom": 0.804,
+          "x0": 72.0,
+          "cw": 3.37
+        },
+        {
+          "text": "    // leaves the critical section",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.812,
+          "bottom": 0.825,
+          "x0": 72.0,
+          "cw": 3.29
+        },
+        {
+          "text": "    signal(wrt);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.833,
+          "bottom": 0.845,
+          "x0": 72.0,
+          "cw": 3.31
+        },
+        {
+          "text": "} while(true);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.853,
+          "bottom": 0.866,
+          "x0": 72.0,
+          "cw": 3.61
+        },
+        {
+          "text": "Reader process:",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.887,
+          "bottom": 0.9,
+          "x0": 72.0,
+          "cw": 4.56
+        },
+        {
+          "text": "1. Reader requests the entry to critical section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.901,
+          "bottom": 0.914,
+          "x0": 76.6,
+          "cw": 3.76
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "2. If allowed:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.086,
+          "bottom": 0.099,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "• it increments the count of number of readers inside the critical section. If this reader is the first reader",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.114,
+          "x0": 99.1,
+          "cw": 4.58
+        },
+        {
+          "text": "entering, it locks the wrt semaphore to restrict the entry of writers if any reader is inside.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.114,
+          "bottom": 0.127,
+          "x0": 117.1,
+          "cw": 3.66
+        },
+        {
+          "text": "• It then, signals mutex as any other reader is allowed to enter while others are already reading.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.127,
+          "bottom": 0.142,
+          "x0": 99.1,
+          "cw": 4.58
+        },
+        {
+          "text": "• After performing reading, it exits the critical section. When exiting, it checks if no more reader is",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.142,
+          "bottom": 0.156,
+          "x0": 99.1,
+          "cw": 4.58
+        },
+        {
+          "text": "inside, it signals the semaphore “wrt” as now, writer can enter the critical section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.157,
+          "bottom": 0.17,
+          "x0": 117.1,
+          "cw": 3.83
+        },
+        {
+          "text": "3. If not allowed, it keeps on waiting.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.171,
+          "bottom": 0.184,
+          "x0": 76.6,
+          "cw": 3.76
+        },
+        {
+          "text": "do {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.266,
+          "bottom": 0.279,
+          "x0": 72.0,
+          "cw": 3.76
+        },
+        {
+          "text": "       // Reader wants to enter the critical section",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.287,
+          "bottom": 0.299,
+          "x0": 72.0,
+          "cw": 3.42
+        },
+        {
+          "text": "   wait(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.307,
+          "bottom": 0.319,
+          "x0": 72.0,
+          "cw": 3.66
+        },
+        {
+          "text": "   // The number of readers has now increased by 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.327,
+          "bottom": 0.34,
+          "x0": 72.0,
+          "cw": 3.81
+        },
+        {
+          "text": "   readcnt++;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.348,
+          "bottom": 0.36,
+          "x0": 72.0,
+          "cw": 2.81
+        },
+        {
+          "text": "   // there is atleast one reader in the critical section",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.368,
+          "bottom": 0.381,
+          "x0": 72.0,
+          "cw": 3.37
+        },
+        {
+          "text": "// this ensure no writer can enter if there is even one reader",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.389,
+          "bottom": 0.401,
+          "x0": 79.2,
+          "cw": 3.85
+        },
+        {
+          "text": "// thus we give preference to readers here",
+          "kind": "heading",
+          "level": 2,
+          "para_break": "line",
+          "top": 0.402,
+          "bottom": 0.414,
+          "x0": 79.2,
+          "cw": 3.96
+        },
+        {
+          "text": "   if (readcnt==1)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.414,
+          "bottom": 0.427,
+          "x0": 72.0,
+          "cw": 3.3
+        },
+        {
+          "text": "      wait(wrt);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.427,
+          "bottom": 0.44,
+          "x0": 72.0,
+          "cw": 2.76
+        },
+        {
+          "text": "   // other readers can enter while this current reader is inside",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.454,
+          "bottom": 0.466,
+          "x0": 72.0,
+          "cw": 3.5
+        },
+        {
+          "text": "   // the critical section",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.467,
+          "bottom": 0.479,
+          "x0": 72.0,
+          "cw": 3.22
+        },
+        {
+          "text": "   signal(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.479,
+          "bottom": 0.492,
+          "x0": 72.0,
+          "cw": 2.97
+        },
+        {
+          "text": "   // current reader performs reading here",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.505,
+          "bottom": 0.518,
+          "x0": 72.0,
+          "cw": 3.64
+        },
+        {
+          "text": "   wait(mutex);   // a reader wants to leave",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.518,
+          "bottom": 0.531,
+          "x0": 72.0,
+          "cw": 3.57
+        },
+        {
+          "text": "   readcnt--;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.544,
+          "bottom": 0.557,
+          "x0": 72.0,
+          "cw": 3.31
+        },
+        {
+          "text": "   // that is, no reader is left in the critical section,",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.57,
+          "bottom": 0.583,
+          "x0": 72.0,
+          "cw": 3.25
+        },
+        {
+          "text": "   if (readcnt == 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.583,
+          "bottom": 0.596,
+          "x0": 72.0,
+          "cw": 3.39
+        },
+        {
+          "text": "       signal(wrt);         // writers can enter",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.596,
+          "bottom": 0.609,
+          "x0": 72.0,
+          "cw": 3.18
+        },
+        {
+          "text": "   signal(mutex); // reader leaves",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.622,
+          "bottom": 0.635,
+          "x0": 72.0,
+          "cw": 3.57
+        },
+        {
+          "text": "} while(true);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.648,
+          "bottom": 0.661,
+          "x0": 72.0,
+          "cw": 3.61
+        },
+        {
+          "text": "Thus, the semaphore ‘wrt‘ is queued on both readers and writers in a manner such that preference is given to",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.675,
+          "bottom": 0.688,
+          "x0": 72.0,
+          "cw": 4.23
+        },
+        {
+          "text": "readers if writers are also there. Thus, no reader is waiting simply because a writer has requested to enter the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.689,
+          "bottom": 0.702,
+          "x0": 72.0,
+          "cw": 3.86
+        },
+        {
+          "text": "critical section.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.702,
+          "bottom": 0.715,
+          "x0": 72.0,
+          "cw": 3.53
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": null,
+      "images": 0,
+      "lines": []
+    }
+  ],
+  "page_count": 9,
+  "slide_count": null,
+  "properties": {
+    "author": "DEEPA SARAVANAKUMAR",
+    "creator": "Microsoft® Word 2019",
+    "producer": "Microsoft® Word 2019",
+    "creationDate": "D:20250918124656+05'30'"
+  },
+  "master_text": []
+}

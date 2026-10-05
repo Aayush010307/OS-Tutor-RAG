@@ -1,0 +1,26 @@
+{
+  "_purpose": "SMOKE TEST ONLY: catches broken retrieval (wrong model, empty or garbled index, broken filters). NOT a relevance-judged evaluation set; passing says nothing about retrieval quality. Each query passes if at least one of the top-k results has one of the expected chunk subtopics (keyword labels assigned by Phase 1) or contains one of the expected terms. Expectations were written before running the queries.",
+  "top_k": 5,
+  "queries": [
+    {"id": "threads-vs-processes", "query": "What is the difference between a thread and a process?",
+     "expect_subtopics": ["Thread Fundamentals", "Multithreading"], "expect_terms": ["thread"]},
+    {"id": "pthread-create-join", "query": "How do pthread_create and pthread_join work?",
+     "expect_subtopics": ["Thread Creation", "Thread Join"], "expect_terms": ["pthread_create", "pthread_join"]},
+    {"id": "mutex-locks", "query": "How does a mutex lock protect a critical section?",
+     "expect_subtopics": ["Mutex", "Locks", "Critical Sections"], "expect_terms": ["mutex"]},
+    {"id": "condition-variables", "query": "Why must pthread_cond_wait be called inside a while loop?",
+     "expect_subtopics": ["Condition Variables"], "expect_terms": ["pthread_cond_wait", "condition variable"]},
+    {"id": "semaphores", "query": "What do the wait and signal operations do on a semaphore?",
+     "expect_subtopics": ["Semaphores"], "expect_terms": ["semaphore"]},
+    {"id": "peterson", "query": "How does Peterson's solution provide mutual exclusion?",
+     "expect_subtopics": ["Peterson's Solution"], "expect_terms": ["peterson"]},
+    {"id": "producer-consumer", "query": "How is the producer-consumer problem solved with semaphores?",
+     "expect_subtopics": ["Producer-Consumer"], "expect_terms": ["producer", "bounded buffer"]},
+    {"id": "dining-philosophers", "query": "How can deadlock be avoided in the dining philosophers problem?",
+     "expect_subtopics": ["Dining Philosophers"], "expect_terms": ["philosopher"]},
+    {"id": "concurrency-bugs", "query": "What are atomicity violation and order violation bugs?",
+     "expect_subtopics": ["Concurrency Bugs"], "expect_terms": ["atomicity", "order-violation", "order violation"]},
+    {"id": "spinlock-test-and-set", "query": "How is a spinlock implemented using test-and-set?",
+     "expect_subtopics": ["Test-and-Set", "Spinlocks"], "expect_terms": ["test-and-set", "testandset"]}
+  ]
+}

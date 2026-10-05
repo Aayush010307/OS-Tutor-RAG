@@ -1,0 +1,5211 @@
+{
+  "document_id": "threads-api-8ce54688",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "27",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.193,
+          "bottom": 0.225,
+          "x0": 348.5,
+          "cw": 11.49
+        },
+        {
+          "text": "Interlude: Thread API",
+          "kind": "heading",
+          "level": 2,
+          "para_break": true,
+          "top": 0.267,
+          "bottom": 0.289,
+          "x0": 208.4,
+          "cw": 6.55
+        },
+        {
+          "text": "This chapter brieﬂy covers the main portions of the thread API. Each part",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.355,
+          "bottom": 0.369,
+          "x0": 58.0,
+          "cw": 3.94
+        },
+        {
+          "text": "will be explained further in the subsequent chapters, as we show how",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.37,
+          "bottom": 0.384,
+          "x0": 58.0,
+          "cw": 4.23
+        },
+        {
+          "text": "to use the API. More details can be found in various books and online",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.386,
+          "bottom": 0.4,
+          "x0": 58.1,
+          "cw": 4.17
+        },
+        {
+          "text": "sources [B89, B97, B+96, K+96]. We should note that the subsequent chap-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.401,
+          "bottom": 0.415,
+          "x0": 58.1,
+          "cw": 4.0
+        },
+        {
+          "text": "ters introduce the concepts of locks and condition variables more slowly,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.417,
+          "bottom": 0.431,
+          "x0": 58.0,
+          "cw": 3.94
+        },
+        {
+          "text": "with many examples; this chapter is thus better used as a reference.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.432,
+          "bottom": 0.446,
+          "x0": 58.0,
+          "cw": 3.92
+        },
+        {
+          "text": "CRUX: HOW TO CREATE AND CONTROL THREADS",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.473,
+          "bottom": 0.487,
+          "x0": 100.1,
+          "cw": 6.36
+        },
+        {
+          "text": "What interfaces should the OS present for thread creation and control?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.488,
+          "bottom": 0.502,
+          "x0": 70.0,
+          "cw": 3.94
+        },
+        {
+          "text": "How should these interfaces be designed to enable ease of use as well as",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.503,
+          "bottom": 0.517,
+          "x0": 58.0,
+          "cw": 4.0
+        },
+        {
+          "text": "utility?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.519,
+          "bottom": 0.533,
+          "x0": 58.0,
+          "cw": 3.51
+        },
+        {
+          "text": "27.1 Thread Creation",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.575,
+          "bottom": 0.592,
+          "x0": 28.1,
+          "cw": 4.77
+        },
+        {
+          "text": "The ﬁrst thing you have to be able to do to write a multi-threaded",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.606,
+          "bottom": 0.62,
+          "x0": 70.0,
+          "cw": 4.18
+        },
+        {
+          "text": "program is to create new threads, and thus some kind of thread creation",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.621,
+          "bottom": 0.635,
+          "x0": 58.0,
+          "cw": 4.06
+        },
+        {
+          "text": "interface must exist. In POSIX, it is easy:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.636,
+          "bottom": 0.65,
+          "x0": 58.0,
+          "cw": 3.71
+        },
+        {
+          "text": "#include <pthread.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.666,
+          "bottom": 0.679,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.681,
+          "bottom": 0.695,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "pthread_create(pthread_t",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.696,
+          "bottom": 0.71,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "*thread,",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.696,
+          "bottom": 0.713,
+          "x0": 219.4,
+          "cw": 5.38
+        },
+        {
+          "text": "const pthread_attr_t *attr,",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.712,
+          "bottom": 0.728,
+          "x0": 106.5,
+          "cw": 5.38
+        },
+        {
+          "text": "void",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.727,
+          "bottom": 0.741,
+          "x0": 138.8,
+          "cw": 5.38
+        },
+        {
+          "text": "*(*start_routine)(void*),",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.727,
+          "bottom": 0.743,
+          "x0": 219.4,
+          "cw": 5.38
+        },
+        {
+          "text": "void",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.742,
+          "bottom": 0.756,
+          "x0": 138.8,
+          "cw": 5.38
+        },
+        {
+          "text": "*arg);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.742,
+          "bottom": 0.759,
+          "x0": 219.4,
+          "cw": 5.38
+        },
+        {
+          "text": "This declaration might look a little complex (particularly if you haven’t",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.773,
+          "bottom": 0.787,
+          "x0": 70.0,
+          "cw": 3.78
+        },
+        {
+          "text": "used function pointers in C), but actually it’s not too bad. There are",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.788,
+          "bottom": 0.802,
+          "x0": 58.0,
+          "cw": 4.03
+        },
+        {
+          "text": "four arguments: thread, attr, start_routine, and arg. The ﬁrst,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.803,
+          "bottom": 0.818,
+          "x0": 122.9,
+          "cw": 5.31
+        },
+        {
+          "text": "thread, is a pointer to a structure of type pthread_t; we’ll use this",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.818,
+          "bottom": 0.833,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "structure to interact with this thread, and thus we need to pass it to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.834,
+          "bottom": 0.848,
+          "x0": 58.1,
+          "cw": 4.11
+        },
+        {
+          "text": "pthread_create() in order to initialize it.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.849,
+          "bottom": 0.864,
+          "x0": 58.1,
+          "cw": 5.25
+        },
+        {
+          "text": "1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.887,
+          "bottom": 0.901,
+          "x0": 199.8,
+          "cw": 4.48
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 85.9,
+          "cw": 4.48
+        },
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 268.7,
+          "cw": 3.02
+        },
+        {
+          "text": "The second argument, attr, is used to specify any attributes this thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.142,
+          "bottom": 0.157,
+          "x0": 184.9,
+          "cw": 4.67
+        },
+        {
+          "text": "might have. Some examples include setting the stack size or perhaps in-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.158,
+          "bottom": 0.172,
+          "x0": 86.0,
+          "cw": 4.06
+        },
+        {
+          "text": "formation about the scheduling priority of the thread. An attribute is",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.173,
+          "bottom": 0.187,
+          "x0": 86.0,
+          "cw": 4.11
+        },
+        {
+          "text": "initialized with a separate call to pthread_attr_init(); see the man-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.188,
+          "bottom": 0.203,
+          "x0": 217.0,
+          "cw": 5.03
+        },
+        {
+          "text": "ual page for details. However, in most cases, the defaults will be ﬁne; in",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.204,
+          "bottom": 0.218,
+          "x0": 86.0,
+          "cw": 3.89
+        },
+        {
+          "text": "this case, we will simply pass the value NULL in.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.219,
+          "bottom": 0.234,
+          "x0": 241.2,
+          "cw": 4.75
+        },
+        {
+          "text": "The third argument is the most complex, but is really just asking: which",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.235,
+          "bottom": 0.249,
+          "x0": 97.9,
+          "cw": 3.86
+        },
+        {
+          "text": "function should this thread start running in? In C, we call this a function",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.25,
+          "bottom": 0.264,
+          "x0": 86.0,
+          "cw": 3.8
+        },
+        {
+          "text": "pointer, and this one tells us the following is expected: a function name",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.266,
+          "bottom": 0.28,
+          "x0": 86.0,
+          "cw": 4.27
+        },
+        {
+          "text": "(start_routine), which is passed a single argument of type void * (as",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.28,
+          "bottom": 0.297,
+          "x0": 88.9,
+          "cw": 5.21
+        },
+        {
+          "text": "indicated in the parentheses after start_routine), and which returns a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.296,
+          "bottom": 0.31,
+          "x0": 217.3,
+          "cw": 5.0
+        },
+        {
+          "text": "value of type void * (i.e., a void pointer).",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.311,
+          "bottom": 0.328,
+          "x0": 137.8,
+          "cw": 4.93
+        },
+        {
+          "text": "If this routine instead required an integer argument, instead of a void",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.327,
+          "bottom": 0.341,
+          "x0": 97.9,
+          "cw": 3.89
+        },
+        {
+          "text": "pointer, the declaration would look like this:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.343,
+          "bottom": 0.357,
+          "x0": 86.0,
+          "cw": 3.81
+        },
+        {
+          "text": "int pthread_create(..., // first two args are the same",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.364,
+          "bottom": 0.378,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "void *(*start_routine)(int),",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.379,
+          "bottom": 0.395,
+          "x0": 188.2,
+          "cw": 5.38
+        },
+        {
+          "text": "int arg);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.395,
+          "bottom": 0.408,
+          "x0": 188.2,
+          "cw": 5.38
+        },
+        {
+          "text": "If instead the routine took a void pointer as an argument, but returned",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.417,
+          "bottom": 0.431,
+          "x0": 97.9,
+          "cw": 3.89
+        },
+        {
+          "text": "an integer, it would look like this:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.433,
+          "bottom": 0.447,
+          "x0": 86.0,
+          "cw": 3.69
+        },
+        {
+          "text": "int pthread_create(..., // first two args are the same",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.454,
+          "bottom": 0.468,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int (*start_routine)(void *),",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.469,
+          "bottom": 0.486,
+          "x0": 188.2,
+          "cw": 5.38
+        },
+        {
+          "text": "void *arg);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.485,
+          "bottom": 0.501,
+          "x0": 188.2,
+          "cw": 5.38
+        },
+        {
+          "text": "Finally, the fourth argument, arg, is exactly the argument to be passed",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.507,
+          "bottom": 0.522,
+          "x0": 210.6,
+          "cw": 4.52
+        },
+        {
+          "text": "to the function where the thread begins execution. You might ask: why",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.523,
+          "bottom": 0.537,
+          "x0": 86.0,
+          "cw": 4.17
+        },
+        {
+          "text": "do we need these void pointers? Well, the answer is quite simple: having",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.538,
+          "bottom": 0.552,
+          "x0": 86.0,
+          "cw": 4.0
+        },
+        {
+          "text": "a void pointer as an argument to the function start_routine allows us",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.553,
+          "bottom": 0.568,
+          "x0": 264.6,
+          "cw": 4.99
+        },
+        {
+          "text": "to pass in any type of argument; having it as a return value allows the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.569,
+          "bottom": 0.583,
+          "x0": 86.0,
+          "cw": 3.94
+        },
+        {
+          "text": "thread to return any type of result.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.584,
+          "bottom": 0.598,
+          "x0": 85.9,
+          "cw": 3.93
+        },
+        {
+          "text": "Let’s look at an example in Figure 27.1. Here we just create a thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.6,
+          "bottom": 0.614,
+          "x0": 97.9,
+          "cw": 4.0
+        },
+        {
+          "text": "that is passed two arguments, packaged into a single type we deﬁne our-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.615,
+          "bottom": 0.629,
+          "x0": 85.9,
+          "cw": 4.06
+        },
+        {
+          "text": "selves (myarg_t). The thread, once created, can simply cast its argument",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.63,
+          "bottom": 0.645,
+          "x0": 115.1,
+          "cw": 5.07
+        },
+        {
+          "text": "to the type it expects and thus unpack the arguments as desired.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.646,
+          "bottom": 0.66,
+          "x0": 86.0,
+          "cw": 3.97
+        },
+        {
+          "text": "And there it is! Once you create a thread, you really have another",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.661,
+          "bottom": 0.675,
+          "x0": 97.9,
+          "cw": 4.18
+        },
+        {
+          "text": "live executing entity, complete with its own call stack, running within the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.677,
+          "bottom": 0.691,
+          "x0": 86.0,
+          "cw": 3.84
+        },
+        {
+          "text": "same address space as all the currently existing threads in the program.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.692,
+          "bottom": 0.706,
+          "x0": 86.0,
+          "cw": 4.48
+        },
+        {
+          "text": "The fun thus begins!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.707,
+          "bottom": 0.721,
+          "x0": 86.0,
+          "cw": 4.05
+        },
+        {
+          "text": "27.2 Thread Completion",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.746,
+          "bottom": 0.763,
+          "x0": 55.9,
+          "cw": 4.77
+        },
+        {
+          "text": "The example above shows how to create a thread. However, what",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.776,
+          "bottom": 0.79,
+          "x0": 97.9,
+          "cw": 4.52
+        },
+        {
+          "text": "happens if you want to wait for a thread to complete? You need to do",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.792,
+          "bottom": 0.806,
+          "x0": 86.0,
+          "cw": 4.23
+        },
+        {
+          "text": "something special in order to wait for completion; in particular, you must",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.807,
+          "bottom": 0.821,
+          "x0": 86.0,
+          "cw": 3.89
+        },
+        {
+          "text": "call the routine pthread_join().",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.822,
+          "bottom": 0.836,
+          "x0": 145.3,
+          "cw": 5.03
+        },
+        {
+          "text": "int pthread_join(pthread_t thread, void **value_ptr);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.849,
+          "bottom": 0.865,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "OPERATING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.907,
+          "bottom": 0.921,
+          "x0": 28.6,
+          "cw": 7.05
+        },
+        {
+          "text": "SYSTEMS",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 28.6,
+          "cw": 4.71
+        },
+        {
+          "text": "[VERSION 1.01]",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.939,
+          "bottom": 0.951,
+          "x0": 28.5,
+          "cw": 4.4
+        },
+        {
+          "text": "WWW.OSTEP.ORG",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 195.9,
+          "cw": 7.47
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 58.3,
+          "cw": 3.02
+        },
+        {
+          "text": "3",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 341.5,
+          "cw": 4.48
+        },
+        {
+          "text": "#include <stdio.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.137,
+          "bottom": 0.151,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "#include <pthread.h>",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.153,
+          "bottom": 0.166,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "typedef struct {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.183,
+          "bottom": 0.197,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int a;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.199,
+          "bottom": 0.213,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "int b;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.214,
+          "bottom": 0.228,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "} myarg_t;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.229,
+          "bottom": 0.243,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "void *mythread(void *arg) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.26,
+          "bottom": 0.276,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "myarg_t *args = (myarg_t *) arg;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.276,
+          "bottom": 0.292,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "printf(\"%d %d\\n\", args->a, args->b);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.291,
+          "bottom": 0.305,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "return NULL;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.306,
+          "bottom": 0.32,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.322,
+          "bottom": 0.336,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int main(int argc, char *argv[]) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.352,
+          "bottom": 0.369,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "pthread_t p;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.368,
+          "bottom": 0.382,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "myarg_t args = { 10, 20 };",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.383,
+          "bottom": 0.397,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "int rc = pthread_create(&p, NULL, mythread, &args);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.414,
+          "bottom": 0.428,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "...",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.429,
+          "bottom": 0.443,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.445,
+          "bottom": 0.459,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "Figure 27.1: Creating a Thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.46,
+          "bottom": 0.474,
+          "x0": 140.8,
+          "cw": 3.82
+        },
+        {
+          "text": "This routine takes two arguments. The ﬁrst is of type pthread_t, and",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.49,
+          "bottom": 0.505,
+          "x0": 278.1,
+          "cw": 4.83
+        },
+        {
+          "text": "is used to specify which thread to wait for. This variable is initialized by",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.506,
+          "bottom": 0.52,
+          "x0": 58.1,
+          "cw": 3.79
+        },
+        {
+          "text": "the thread creation routine (when you pass a pointer to it as an argument",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.521,
+          "bottom": 0.535,
+          "x0": 58.1,
+          "cw": 3.94
+        },
+        {
+          "text": "to pthread_create()); if you keep it around, you can use it to wait for",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.536,
+          "bottom": 0.551,
+          "x0": 65.9,
+          "cw": 5.07
+        },
+        {
+          "text": "that thread to terminate.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.552,
+          "bottom": 0.566,
+          "x0": 58.0,
+          "cw": 3.85
+        },
+        {
+          "text": "The second argument is a pointer to the return value you expect to get",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.569,
+          "bottom": 0.583,
+          "x0": 70.0,
+          "cw": 3.94
+        },
+        {
+          "text": "back. Because the routine can return anything, it is deﬁned to return a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.584,
+          "bottom": 0.598,
+          "x0": 58.0,
+          "cw": 4.06
+        },
+        {
+          "text": "pointer to void; because the pthread_join() routine changes the value",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.599,
+          "bottom": 0.613,
+          "x0": 168.8,
+          "cw": 5.04
+        },
+        {
+          "text": "of the passed in argument, you need to pass in a pointer to that value, not",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.615,
+          "bottom": 0.629,
+          "x0": 58.1,
+          "cw": 3.84
+        },
+        {
+          "text": "just the value itself.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.63,
+          "bottom": 0.644,
+          "x0": 58.1,
+          "cw": 3.49
+        },
+        {
+          "text": "Let’s look at another example (Figure 27.2, page 4). In the code, a",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.647,
+          "bottom": 0.661,
+          "x0": 70.0,
+          "cw": 4.12
+        },
+        {
+          "text": "single thread is again created, and passed a couple of arguments via the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.662,
+          "bottom": 0.676,
+          "x0": 58.1,
+          "cw": 4.0
+        },
+        {
+          "text": "myarg_t structure. To return values, the myret_t type is used. Once",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.677,
+          "bottom": 0.691,
+          "x0": 58.1,
+          "cw": 5.07
+        },
+        {
+          "text": "the thread is ﬁnished running, the main thread, which has been waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.693,
+          "bottom": 0.707,
+          "x0": 58.0,
+          "cw": 4.11
+        },
+        {
+          "text": "inside of the pthread_join() routine1, then returns, and we can access",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.708,
+          "bottom": 0.725,
+          "x0": 106.9,
+          "cw": 5.03
+        },
+        {
+          "text": "the values returned from the thread, namely whatever is in myret_t.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.725,
+          "bottom": 0.74,
+          "x0": 291.5,
+          "cw": 4.72
+        },
+        {
+          "text": "A few things to note about this example. First, often times we don’t",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.743,
+          "bottom": 0.757,
+          "x0": 70.0,
+          "cw": 4.06
+        },
+        {
+          "text": "have to do all of this painful packing and unpacking of arguments. For",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.758,
+          "bottom": 0.772,
+          "x0": 58.1,
+          "cw": 4.11
+        },
+        {
+          "text": "example, if we just create a thread with no arguments, we can pass NULL",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.773,
+          "bottom": 0.787,
+          "x0": 322.2,
+          "cw": 4.76
+        },
+        {
+          "text": "in as an argument when the thread is created. Similarly, we can pass NULL",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.788,
+          "bottom": 0.803,
+          "x0": 322.7,
+          "cw": 4.66
+        },
+        {
+          "text": "into pthread_join() if we don’t care about the return value.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.803,
+          "bottom": 0.818,
+          "x0": 73.7,
+          "cw": 5.03
+        },
+        {
+          "text": "Note we use wrapper functions here; speciﬁcally, we call Malloc(), Pthread_join(), and",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.837,
+          "bottom": 0.851,
+          "x0": 74.6,
+          "cw": 3.16
+        },
+        {
+          "text": "Pthread_create(), which just call their similarly-named lower-case versions and make sure the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.852,
+          "bottom": 0.863,
+          "x0": 58.1,
+          "cw": 3.1
+        },
+        {
+          "text": "⃝c 2008–19, ARPACI-DUSSEAU",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 139.9,
+          "cw": 9.21
+        },
+        {
+          "text": "THREE",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.914,
+          "bottom": 0.928,
+          "x0": 377.8,
+          "cw": 5.5
+        },
+        {
+          "text": "EASY",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.929,
+          "bottom": 0.943,
+          "x0": 383.6,
+          "cw": 5.48
+        },
+        {
+          "text": "PIECES",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.945,
+          "bottom": 0.959,
+          "x0": 376.9,
+          "cw": 5.42
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "4",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 85.9,
+          "cw": 4.48
+        },
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 268.7,
+          "cw": 3.02
+        },
+        {
+          "text": "typedef struct { int a; int b; } myarg_t;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.137,
+          "bottom": 0.151,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "typedef struct { int x; int y; } myret_t;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.153,
+          "bottom": 0.166,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "void *mythread(void *arg) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.183,
+          "bottom": 0.2,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "myret_t *rvals = Malloc(sizeof(myret_t));",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.199,
+          "bottom": 0.215,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "rvals->x = 1;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.214,
+          "bottom": 0.228,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "rvals->y = 2;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.229,
+          "bottom": 0.243,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "return (void *) rvals;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.245,
+          "bottom": 0.261,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.26,
+          "bottom": 0.274,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "int main(int argc, char *argv[]) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.291,
+          "bottom": 0.307,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "pthread_t p;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.306,
+          "bottom": 0.32,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "myret_t *rvals;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.322,
+          "bottom": 0.338,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "myarg_t args = { 10, 20 };",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.337,
+          "bottom": 0.351,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_create(&p, NULL, mythread, &args);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.352,
+          "bottom": 0.366,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_join(p, (void **) &rvals);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.368,
+          "bottom": 0.384,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "printf(\"returned %d %d\\n\", rvals->x, rvals->y);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.383,
+          "bottom": 0.397,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "free(rvals);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.399,
+          "bottom": 0.412,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "return 0;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.414,
+          "bottom": 0.428,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.429,
+          "bottom": 0.443,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "Figure 27.2: Waiting for Thread Completion",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.455,
+          "bottom": 0.469,
+          "x0": 141.0,
+          "cw": 3.82
+        },
+        {
+          "text": "Second, if we are just passing in a single value (e.g., a long long",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.485,
+          "bottom": 0.499,
+          "x0": 322.0,
+          "cw": 5.18
+        },
+        {
+          "text": "int), we don’t have to package it up as an argument. Figure 27.3 (page",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.5,
+          "bottom": 0.515,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "5) shows an example. In this case, life is a bit simpler, as we don’t have to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.516,
+          "bottom": 0.53,
+          "x0": 85.9,
+          "cw": 3.74
+        },
+        {
+          "text": "package arguments and return values inside of structures.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.531,
+          "bottom": 0.545,
+          "x0": 85.9,
+          "cw": 4.03
+        },
+        {
+          "text": "Third, we should note that one has to be extremely careful with how",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.548,
+          "bottom": 0.562,
+          "x0": 97.9,
+          "cw": 4.12
+        },
+        {
+          "text": "values are returned from a thread. Speciﬁcally, never return a pointer",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.563,
+          "bottom": 0.577,
+          "x0": 85.9,
+          "cw": 4.11
+        },
+        {
+          "text": "which refers to something allocated on the thread’s call stack. If you do,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.578,
+          "bottom": 0.592,
+          "x0": 85.9,
+          "cw": 3.89
+        },
+        {
+          "text": "what do you think will happen? (think about it!) Here is an example of a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.594,
+          "bottom": 0.608,
+          "x0": 85.9,
+          "cw": 4.0
+        },
+        {
+          "text": "dangerous piece of code, modiﬁed from the example in Figure 27.2.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.609,
+          "bottom": 0.623,
+          "x0": 85.9,
+          "cw": 4.1
+        },
+        {
+          "text": "void *mythread(void *arg) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.641,
+          "bottom": 0.657,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "myarg_t *args = (myarg_t *) arg;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.656,
+          "bottom": 0.673,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "printf(\"%d %d\\n\", args->a, args->b);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.672,
+          "bottom": 0.686,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "myret_t oops; // ALLOCATED ON STACK: BAD!",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.687,
+          "bottom": 0.701,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "oops.x = 1;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.703,
+          "bottom": 0.716,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "oops.y = 2;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.718,
+          "bottom": 0.732,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "return (void *) &oops;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.733,
+          "bottom": 0.75,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.749,
+          "bottom": 0.763,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "In this case, the variable oops is allocated on the stack of mythread.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.781,
+          "bottom": 0.796,
+          "x0": 194.1,
+          "cw": 4.81
+        },
+        {
+          "text": "However, when it returns, the value is automatically deallocated (that’s",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.798,
+          "bottom": 0.812,
+          "x0": 85.9,
+          "cw": 4.0
+        },
+        {
+          "text": "why the stack is so easy to use, after all!), and thus, passing back a pointer",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.813,
+          "bottom": 0.827,
+          "x0": 85.9,
+          "cw": 3.69
+        },
+        {
+          "text": "routines did not return anything unexpected.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.852,
+          "bottom": 0.863,
+          "x0": 85.9,
+          "cw": 3.16
+        },
+        {
+          "text": "OPERATING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.907,
+          "bottom": 0.921,
+          "x0": 28.6,
+          "cw": 7.05
+        },
+        {
+          "text": "SYSTEMS",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 28.6,
+          "cw": 4.71
+        },
+        {
+          "text": "[VERSION 1.01]",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.939,
+          "bottom": 0.951,
+          "x0": 28.5,
+          "cw": 4.4
+        },
+        {
+          "text": "WWW.OSTEP.ORG",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 195.9,
+          "cw": 7.47
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 58.3,
+          "cw": 3.02
+        },
+        {
+          "text": "5",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 341.5,
+          "cw": 4.48
+        },
+        {
+          "text": "void *mythread(void *arg) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.137,
+          "bottom": 0.153,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "long long int value = (long long int) arg;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.153,
+          "bottom": 0.166,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "printf(\"%lld\\n\", value);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.168,
+          "bottom": 0.182,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "return (void *) (value + 1);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.183,
+          "bottom": 0.2,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.199,
+          "bottom": 0.213,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "int main(int argc, char *argv[]) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.229,
+          "bottom": 0.246,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "pthread_t p;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.245,
+          "bottom": 0.259,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "long long int rvalue;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.26,
+          "bottom": 0.274,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_create(&p, NULL, mythread, (void *) 100);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.276,
+          "bottom": 0.292,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_join(p, (void **) &rvalue);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.291,
+          "bottom": 0.307,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "printf(\"returned %lld\\n\", rvalue);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.306,
+          "bottom": 0.32,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "return 0;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.322,
+          "bottom": 0.336,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.337,
+          "bottom": 0.351,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "Figure 27.3: Simpler Argument Passing to a Thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.363,
+          "bottom": 0.377,
+          "x0": 98.1,
+          "cw": 3.82
+        },
+        {
+          "text": "to a now deallocated variable will lead to all sorts of bad results. Cer-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.402,
+          "bottom": 0.416,
+          "x0": 58.1,
+          "cw": 3.94
+        },
+        {
+          "text": "tainly, when you print out the values you think you returned, you’ll prob-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.418,
+          "bottom": 0.432,
+          "x0": 58.1,
+          "cw": 3.89
+        },
+        {
+          "text": "ably (but not necessarily!) be surprised. Try it and ﬁnd out for yourself2!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.433,
+          "bottom": 0.449,
+          "x0": 58.1,
+          "cw": 3.84
+        },
+        {
+          "text": "Finally, you might notice that the use of pthread_create() to create",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.45,
+          "bottom": 0.465,
+          "x0": 224.9,
+          "cw": 5.05
+        },
+        {
+          "text": "a thread, followed by an immediate call to pthread_join(), is a pretty",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.465,
+          "bottom": 0.48,
+          "x0": 226.2,
+          "cw": 5.04
+        },
+        {
+          "text": "strange way to create a thread. In fact, there is an easier way to accom-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.482,
+          "bottom": 0.496,
+          "x0": 58.1,
+          "cw": 3.94
+        },
+        {
+          "text": "plish this exact task; it’s called a procedure call. Clearly, we’ll usually be",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.497,
+          "bottom": 0.511,
+          "x0": 58.1,
+          "cw": 3.52
+        },
+        {
+          "text": "creating more than just one thread and waiting for it to complete, other-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.512,
+          "bottom": 0.526,
+          "x0": 58.1,
+          "cw": 3.94
+        },
+        {
+          "text": "wise there is not much purpose to using threads at all.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.528,
+          "bottom": 0.542,
+          "x0": 58.1,
+          "cw": 3.89
+        },
+        {
+          "text": "We should note that not all code that is multi-threaded uses the join",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.543,
+          "bottom": 0.557,
+          "x0": 70.0,
+          "cw": 4.0
+        },
+        {
+          "text": "routine. For example, a multi-threaded web server might create a number",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.558,
+          "bottom": 0.572,
+          "x0": 58.1,
+          "cw": 4.06
+        },
+        {
+          "text": "of worker threads, and then use the main thread to accept requests and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.574,
+          "bottom": 0.588,
+          "x0": 58.1,
+          "cw": 4.11
+        },
+        {
+          "text": "pass them to the workers, indeﬁnitely. Such long-lived programs thus",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.589,
+          "bottom": 0.603,
+          "x0": 58.1,
+          "cw": 4.23
+        },
+        {
+          "text": "may not need to join. However, a parallel program that creates threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.605,
+          "bottom": 0.619,
+          "x0": 58.1,
+          "cw": 4.11
+        },
+        {
+          "text": "to execute a particular task (in parallel) will likely use join to make sure",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.62,
+          "bottom": 0.634,
+          "x0": 58.1,
+          "cw": 3.79
+        },
+        {
+          "text": "all such work completes before exiting or moving onto the next stage of",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.635,
+          "bottom": 0.649,
+          "x0": 58.1,
+          "cw": 4.06
+        },
+        {
+          "text": "computation.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.651,
+          "bottom": 0.665,
+          "x0": 58.1,
+          "cw": 4.41
+        },
+        {
+          "text": "27.3 Locks",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.689,
+          "bottom": 0.706,
+          "x0": 28.1,
+          "cw": 4.77
+        },
+        {
+          "text": "Beyond thread creation and join, probably the next most useful set of",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.719,
+          "bottom": 0.733,
+          "x0": 70.0,
+          "cw": 4.0
+        },
+        {
+          "text": "functions provided by the POSIX threads library are those for providing",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.735,
+          "bottom": 0.749,
+          "x0": 58.0,
+          "cw": 4.06
+        },
+        {
+          "text": "mutual exclusion to a critical section via locks. The most basic pair of",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.75,
+          "bottom": 0.764,
+          "x0": 58.0,
+          "cw": 3.91
+        },
+        {
+          "text": "routines to use for this purpose is provided by the following:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.766,
+          "bottom": 0.78,
+          "x0": 58.0,
+          "cw": 3.89
+        },
+        {
+          "text": "int pthread_mutex_lock(pthread_mutex_t *mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.793,
+          "bottom": 0.81,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int pthread_mutex_unlock(pthread_mutex_t *mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.809,
+          "bottom": 0.825,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "Fortunately the compiler gcc will likely complain when you write code like this, which",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.837,
+          "bottom": 0.851,
+          "x0": 151.5,
+          "cw": 3.61
+        },
+        {
+          "text": "is yet another reason to pay attention to compiler warnings.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.852,
+          "bottom": 0.863,
+          "x0": 58.0,
+          "cw": 3.06
+        },
+        {
+          "text": "⃝c 2008–19, ARPACI-DUSSEAU",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 139.9,
+          "cw": 9.21
+        },
+        {
+          "text": "THREE",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.914,
+          "bottom": 0.928,
+          "x0": 377.8,
+          "cw": 5.5
+        },
+        {
+          "text": "EASY",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.929,
+          "bottom": 0.943,
+          "x0": 383.6,
+          "cw": 5.48
+        },
+        {
+          "text": "PIECES",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.945,
+          "bottom": 0.959,
+          "x0": 376.9,
+          "cw": 5.42
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "6",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 85.9,
+          "cw": 4.48
+        },
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 268.7,
+          "cw": 3.02
+        },
+        {
+          "text": "The routines should be easy to understand and use. When you have a",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.143,
+          "bottom": 0.157,
+          "x0": 97.9,
+          "cw": 4.18
+        },
+        {
+          "text": "region of code that is a critical section, and thus needs to be protected to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.158,
+          "bottom": 0.172,
+          "x0": 85.9,
+          "cw": 3.75
+        },
+        {
+          "text": "ensure correct operation, locks are quite useful. You can probably imag-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.173,
+          "bottom": 0.187,
+          "x0": 86.0,
+          "cw": 4.0
+        },
+        {
+          "text": "ine what the code looks like:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.189,
+          "bottom": 0.203,
+          "x0": 86.0,
+          "cw": 3.88
+        },
+        {
+          "text": "pthread_mutex_t lock;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.211,
+          "bottom": 0.225,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "pthread_mutex_lock(&lock);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.227,
+          "bottom": 0.24,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "x = x + 1; // or whatever your critical section is",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.242,
+          "bottom": 0.256,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "pthread_mutex_unlock(&lock);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.257,
+          "bottom": 0.271,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "The intent of the code is as follows: if no other thread holds the lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.281,
+          "bottom": 0.295,
+          "x0": 97.9,
+          "cw": 3.89
+        },
+        {
+          "text": "when pthread_mutex_lock() is called, the thread will acquire the lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.296,
+          "bottom": 0.311,
+          "x0": 108.2,
+          "cw": 5.02
+        },
+        {
+          "text": "and enter the critical section. If another thread does indeed hold the lock,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.312,
+          "bottom": 0.326,
+          "x0": 86.0,
+          "cw": 3.79
+        },
+        {
+          "text": "the thread trying to grab the lock will not return from the call until it has",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.327,
+          "bottom": 0.341,
+          "x0": 86.0,
+          "cw": 3.74
+        },
+        {
+          "text": "acquired the lock (implying that the thread holding the lock has released",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.343,
+          "bottom": 0.357,
+          "x0": 86.0,
+          "cw": 3.94
+        },
+        {
+          "text": "it via the unlock call). Of course, many threads may be stuck waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.358,
+          "bottom": 0.372,
+          "x0": 86.0,
+          "cw": 4.17
+        },
+        {
+          "text": "inside the lock acquisition function at a given time; only the thread with",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.373,
+          "bottom": 0.387,
+          "x0": 86.0,
+          "cw": 3.89
+        },
+        {
+          "text": "the lock acquired, however, should call unlock.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.389,
+          "bottom": 0.403,
+          "x0": 86.0,
+          "cw": 3.96
+        },
+        {
+          "text": "Unfortunately, this code is broken, in two important ways. The ﬁrst",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.404,
+          "bottom": 0.418,
+          "x0": 97.9,
+          "cw": 4.12
+        },
+        {
+          "text": "problem is a lack of proper initialization. All locks must be properly",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.42,
+          "bottom": 0.434,
+          "x0": 86.0,
+          "cw": 4.25
+        },
+        {
+          "text": "initialized in order to guarantee that they have the correct values to begin",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.435,
+          "bottom": 0.449,
+          "x0": 86.0,
+          "cw": 3.79
+        },
+        {
+          "text": "with and thus work as desired when lock and unlock are called.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.45,
+          "bottom": 0.464,
+          "x0": 86.0,
+          "cw": 4.08
+        },
+        {
+          "text": "With POSIX threads, there are two ways to initialize locks. One way",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.466,
+          "bottom": 0.48,
+          "x0": 97.9,
+          "cw": 4.12
+        },
+        {
+          "text": "to do this is to use PTHREAD_MUTEX_INITIALIZER, as follows:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.48,
+          "bottom": 0.495,
+          "x0": 157.6,
+          "cw": 5.09
+        },
+        {
+          "text": "pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.503,
+          "bottom": 0.517,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "Doing so sets the lock to the default values and thus makes the lock",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.527,
+          "bottom": 0.541,
+          "x0": 97.9,
+          "cw": 4.06
+        },
+        {
+          "text": "usable. The dynamic way to do it (i.e., at run time) is to make a call to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.543,
+          "bottom": 0.557,
+          "x0": 85.9,
+          "cw": 3.94
+        },
+        {
+          "text": "pthread_mutex_init(), as follows:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.557,
+          "bottom": 0.572,
+          "x0": 85.9,
+          "cw": 5.16
+        },
+        {
+          "text": "int rc = pthread_mutex_init(&lock, NULL);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.58,
+          "bottom": 0.594,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "assert(rc == 0); // always check success!",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.596,
+          "bottom": 0.61,
+          "x0": 86.0,
+          "cw": 5.38
+        },
+        {
+          "text": "The ﬁrst argument to this routine is the address of the lock itself, whereas",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.62,
+          "bottom": 0.634,
+          "x0": 97.9,
+          "cw": 3.73
+        },
+        {
+          "text": "the second is an optional set of attributes. Read more about the attributes",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.635,
+          "bottom": 0.649,
+          "x0": 86.0,
+          "cw": 3.84
+        },
+        {
+          "text": "yourself; passing NULL in simply uses the defaults. Either way works, but",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.65,
+          "bottom": 0.664,
+          "x0": 153.0,
+          "cw": 4.67
+        },
+        {
+          "text": "we usually use the dynamic (latter) method. Note that a corresponding",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.666,
+          "bottom": 0.68,
+          "x0": 86.0,
+          "cw": 4.17
+        },
+        {
+          "text": "call to pthread_mutex_destroy() should also be made, when you are",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.68,
+          "bottom": 0.695,
+          "x0": 109.7,
+          "cw": 5.07
+        },
+        {
+          "text": "done with the lock; see the manual page for all of details.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.697,
+          "bottom": 0.711,
+          "x0": 85.9,
+          "cw": 3.82
+        },
+        {
+          "text": "The second problem with the code above is that it fails to check error",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.712,
+          "bottom": 0.726,
+          "x0": 97.9,
+          "cw": 3.94
+        },
+        {
+          "text": "codes when calling lock and unlock. Just like virtually any library rou-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.727,
+          "bottom": 0.741,
+          "x0": 85.9,
+          "cw": 4.0
+        },
+        {
+          "text": "tine you call in a UNIX system, these routines can also fail! If your code",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.743,
+          "bottom": 0.757,
+          "x0": 85.9,
+          "cw": 3.84
+        },
+        {
+          "text": "doesn’t properly check error codes, the failure will happen silently, which",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.758,
+          "bottom": 0.772,
+          "x0": 85.9,
+          "cw": 3.84
+        },
+        {
+          "text": "in this case could allow multiple threads into a critical section. Minimally,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.773,
+          "bottom": 0.787,
+          "x0": 85.9,
+          "cw": 3.74
+        },
+        {
+          "text": "use wrappers, which assert that the routine succeeded, as shown in Fig-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.789,
+          "bottom": 0.803,
+          "x0": 85.9,
+          "cw": 4.06
+        },
+        {
+          "text": "ure 27.4 (page 7); more sophisticated (non-toy) programs, which can’t",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.804,
+          "bottom": 0.818,
+          "x0": 85.9,
+          "cw": 4.17
+        },
+        {
+          "text": "simply exit when something goes wrong, should check for failure and do",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.82,
+          "bottom": 0.834,
+          "x0": 85.9,
+          "cw": 4.11
+        },
+        {
+          "text": "something appropriate when a call does not succeed.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.835,
+          "bottom": 0.849,
+          "x0": 85.9,
+          "cw": 4.11
+        },
+        {
+          "text": "OPERATING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.907,
+          "bottom": 0.921,
+          "x0": 28.6,
+          "cw": 7.05
+        },
+        {
+          "text": "SYSTEMS",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 28.6,
+          "cw": 4.71
+        },
+        {
+          "text": "[VERSION 1.01]",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.939,
+          "bottom": 0.951,
+          "x0": 28.5,
+          "cw": 4.4
+        },
+        {
+          "text": "WWW.OSTEP.ORG",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 195.9,
+          "cw": 7.47
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 58.3,
+          "cw": 3.02
+        },
+        {
+          "text": "7",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 341.5,
+          "cw": 4.48
+        },
+        {
+          "text": "// Keeps code clean; only use if exit() OK upon failure",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.137,
+          "bottom": 0.151,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "void Pthread_mutex_lock(pthread_mutex_t *mutex) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.153,
+          "bottom": 0.169,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int rc = pthread_mutex_lock(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.168,
+          "bottom": 0.182,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "assert(rc == 0);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.183,
+          "bottom": 0.197,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.199,
+          "bottom": 0.213,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "Figure 27.4: An Example Wrapper",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.214,
+          "bottom": 0.228,
+          "x0": 134.0,
+          "cw": 3.82
+        },
+        {
+          "text": "The lock and unlock routines are not the only routines within the",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.241,
+          "bottom": 0.255,
+          "x0": 70.0,
+          "cw": 4.25
+        },
+        {
+          "text": "pthreads library to interact with locks. Two other routines of interest:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.256,
+          "bottom": 0.27,
+          "x0": 58.0,
+          "cw": 3.79
+        },
+        {
+          "text": "int pthread_mutex_trylock(pthread_mutex_t *mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.277,
+          "bottom": 0.293,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int pthread_mutex_timedlock(pthread_mutex_t *mutex,",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.293,
+          "bottom": 0.309,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "struct timespec *abs_timeout);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.308,
+          "bottom": 0.324,
+          "x0": 208.7,
+          "cw": 5.38
+        },
+        {
+          "text": "These two calls are used in lock acquisition. The trylock version re-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.33,
+          "bottom": 0.345,
+          "x0": 261.3,
+          "cw": 5.0
+        },
+        {
+          "text": "turns failure if the lock is already held; the timedlock version of acquir-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.345,
+          "bottom": 0.36,
+          "x0": 224.1,
+          "cw": 5.05
+        },
+        {
+          "text": "ing a lock returns after a timeout or after acquiring the lock, whichever",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.361,
+          "bottom": 0.375,
+          "x0": 58.1,
+          "cw": 3.94
+        },
+        {
+          "text": "happens ﬁrst. Thus, the timedlock with a timeout of zero degenerates",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.377,
+          "bottom": 0.391,
+          "x0": 58.1,
+          "cw": 4.23
+        },
+        {
+          "text": "to the trylock case. Both of these versions should generally be avoided;",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.392,
+          "bottom": 0.406,
+          "x0": 58.1,
+          "cw": 4.0
+        },
+        {
+          "text": "however, there are a few cases where avoiding getting stuck (perhaps in-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.408,
+          "bottom": 0.422,
+          "x0": 58.1,
+          "cw": 4.0
+        },
+        {
+          "text": "deﬁnitely) in a lock acquisition routine can be useful, as we’ll see in future",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.423,
+          "bottom": 0.437,
+          "x0": 58.1,
+          "cw": 3.69
+        },
+        {
+          "text": "chapters (e.g., when we study deadlock).",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.438,
+          "bottom": 0.452,
+          "x0": 58.1,
+          "cw": 4.05
+        },
+        {
+          "text": "27.4 Condition Variables",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.477,
+          "bottom": 0.494,
+          "x0": 28.1,
+          "cw": 4.77
+        },
+        {
+          "text": "The other major component of any threads library, and certainly the",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.507,
+          "bottom": 0.521,
+          "x0": 70.0,
+          "cw": 4.12
+        },
+        {
+          "text": "case with POSIX threads, is the presence of a condition variable. Con-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.522,
+          "bottom": 0.536,
+          "x0": 58.0,
+          "cw": 4.06
+        },
+        {
+          "text": "dition variables are useful when some kind of signaling must take place",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.538,
+          "bottom": 0.552,
+          "x0": 58.0,
+          "cw": 4.06
+        },
+        {
+          "text": "between threads, if one thread is waiting for another to do something be-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.553,
+          "bottom": 0.567,
+          "x0": 58.0,
+          "cw": 3.94
+        },
+        {
+          "text": "fore it can continue. Two primary routines are used by programs wishing",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.569,
+          "bottom": 0.583,
+          "x0": 58.0,
+          "cw": 4.06
+        },
+        {
+          "text": "to interact in this way:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.584,
+          "bottom": 0.598,
+          "x0": 58.0,
+          "cw": 3.68
+        },
+        {
+          "text": "int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.605,
+          "bottom": 0.621,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "int pthread_cond_signal(pthread_cond_t *cond);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.621,
+          "bottom": 0.637,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "To use a condition variable, one has to in addition have a lock that is",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.643,
+          "bottom": 0.657,
+          "x0": 70.0,
+          "cw": 3.89
+        },
+        {
+          "text": "associated with this condition. When calling either of the above routines,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.659,
+          "bottom": 0.673,
+          "x0": 58.0,
+          "cw": 3.89
+        },
+        {
+          "text": "this lock should be held.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.674,
+          "bottom": 0.688,
+          "x0": 58.0,
+          "cw": 3.86
+        },
+        {
+          "text": "The ﬁrst routine, pthread_cond_wait(), puts the calling thread to",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.689,
+          "bottom": 0.703,
+          "x0": 137.6,
+          "cw": 5.05
+        },
+        {
+          "text": "sleep, and thus waits for some other thread to signal it, usually when",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.705,
+          "bottom": 0.719,
+          "x0": 58.1,
+          "cw": 4.11
+        },
+        {
+          "text": "something in the program has changed that the now-sleeping thread might",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.72,
+          "bottom": 0.734,
+          "x0": 58.1,
+          "cw": 4.11
+        },
+        {
+          "text": "care about. A typical usage looks like this:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.736,
+          "bottom": 0.75,
+          "x0": 58.1,
+          "cw": 3.79
+        },
+        {
+          "text": "pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.757,
+          "bottom": 0.771,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "pthread_cond_t cond = PTHREAD_COND_INITIALIZER;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.772,
+          "bottom": 0.786,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_mutex_lock(&lock);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.803,
+          "bottom": 0.817,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "while (ready == 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.818,
+          "bottom": 0.832,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_cond_wait(&cond, &lock);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.834,
+          "bottom": 0.848,
+          "x0": 79.6,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_mutex_unlock(&lock);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.849,
+          "bottom": 0.863,
+          "x0": 58.1,
+          "cw": 5.38
+        },
+        {
+          "text": "⃝c 2008–19, ARPACI-DUSSEAU",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 139.9,
+          "cw": 9.21
+        },
+        {
+          "text": "THREE",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.914,
+          "bottom": 0.928,
+          "x0": 377.8,
+          "cw": 5.5
+        },
+        {
+          "text": "EASY",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.929,
+          "bottom": 0.943,
+          "x0": 383.6,
+          "cw": 5.48
+        },
+        {
+          "text": "PIECES",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.945,
+          "bottom": 0.959,
+          "x0": 376.9,
+          "cw": 5.42
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "8",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 85.9,
+          "cw": 4.48
+        },
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 268.7,
+          "cw": 3.02
+        },
+        {
+          "text": "In this code, after initialization of the relevant lock and condition3, a",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.14,
+          "bottom": 0.157,
+          "x0": 97.9,
+          "cw": 3.81
+        },
+        {
+          "text": "thread checks to see if the variable ready has yet been set to something",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.157,
+          "bottom": 0.172,
+          "x0": 223.8,
+          "cw": 4.91
+        },
+        {
+          "text": "other than zero. If not, the thread simply calls the wait routine in order to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.173,
+          "bottom": 0.187,
+          "x0": 85.9,
+          "cw": 3.74
+        },
+        {
+          "text": "sleep until some other thread wakes it.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.189,
+          "bottom": 0.203,
+          "x0": 85.9,
+          "cw": 3.92
+        },
+        {
+          "text": "The code to wake a thread, which would run in some other thread,",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.204,
+          "bottom": 0.218,
+          "x0": 97.9,
+          "cw": 4.31
+        },
+        {
+          "text": "looks like this:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.22,
+          "bottom": 0.234,
+          "x0": 85.9,
+          "cw": 3.56
+        },
+        {
+          "text": "Pthread_mutex_lock(&lock);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.244,
+          "bottom": 0.258,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "ready = 1;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.26,
+          "bottom": 0.274,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_cond_signal(&cond);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.275,
+          "bottom": 0.289,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "Pthread_mutex_unlock(&lock);",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.291,
+          "bottom": 0.304,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "A few things to note about this code sequence. First, when signaling",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.316,
+          "bottom": 0.33,
+          "x0": 97.9,
+          "cw": 4.06
+        },
+        {
+          "text": "(as well as when modifying the global variable ready), we always make",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.331,
+          "bottom": 0.346,
+          "x0": 271.3,
+          "cw": 4.86
+        },
+        {
+          "text": "sure to have the lock held. This ensures that we don’t accidentally intro-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.347,
+          "bottom": 0.361,
+          "x0": 85.9,
+          "cw": 3.89
+        },
+        {
+          "text": "duce a race condition into our code.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.362,
+          "bottom": 0.376,
+          "x0": 85.9,
+          "cw": 3.93
+        },
+        {
+          "text": "Second, you might notice that the wait call takes a lock as its second",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.378,
+          "bottom": 0.392,
+          "x0": 97.9,
+          "cw": 3.94
+        },
+        {
+          "text": "parameter, whereas the signal call only takes a condition. The reason",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.393,
+          "bottom": 0.407,
+          "x0": 85.9,
+          "cw": 4.17
+        },
+        {
+          "text": "for this difference is that the wait call, in addition to putting the call-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.409,
+          "bottom": 0.423,
+          "x0": 85.9,
+          "cw": 3.84
+        },
+        {
+          "text": "ing thread to sleep, releases the lock when putting said caller to sleep.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.424,
+          "bottom": 0.438,
+          "x0": 85.9,
+          "cw": 3.98
+        },
+        {
+          "text": "Imagine if it did not: how could the other thread acquire the lock and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.44,
+          "bottom": 0.454,
+          "x0": 85.9,
+          "cw": 4.11
+        },
+        {
+          "text": "signal it to wake up? However, before returning after being woken, the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.455,
+          "bottom": 0.469,
+          "x0": 85.9,
+          "cw": 4.3
+        },
+        {
+          "text": "pthread_cond_wait() re-acquires the lock, thus ensuring that any time",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.47,
+          "bottom": 0.484,
+          "x0": 86.0,
+          "cw": 5.15
+        },
+        {
+          "text": "the waiting thread is running between the lock acquire at the beginning",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.486,
+          "bottom": 0.5,
+          "x0": 85.9,
+          "cw": 4.06
+        },
+        {
+          "text": "of the wait sequence, and the lock release at the end, it holds the lock.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.501,
+          "bottom": 0.515,
+          "x0": 85.9,
+          "cw": 3.76
+        },
+        {
+          "text": "One last oddity: the waiting thread re-checks the condition in a while",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.517,
+          "bottom": 0.531,
+          "x0": 97.9,
+          "cw": 3.94
+        },
+        {
+          "text": "loop, instead of a simple if statement. We’ll discuss this issue in detail",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.532,
+          "bottom": 0.546,
+          "x0": 85.9,
+          "cw": 3.89
+        },
+        {
+          "text": "when we study condition variables in a future chapter, but in general,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.548,
+          "bottom": 0.562,
+          "x0": 85.9,
+          "cw": 4.11
+        },
+        {
+          "text": "using a while loop is the simple and safe thing to do. Although it rechecks",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.563,
+          "bottom": 0.577,
+          "x0": 85.9,
+          "cw": 3.84
+        },
+        {
+          "text": "the condition (perhaps adding a little overhead), there are some pthread",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.578,
+          "bottom": 0.592,
+          "x0": 85.9,
+          "cw": 4.0
+        },
+        {
+          "text": "implementations that could spuriously wake up a waiting thread; in such",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.594,
+          "bottom": 0.608,
+          "x0": 85.9,
+          "cw": 4.06
+        },
+        {
+          "text": "a case, without rechecking, the waiting thread will continue thinking that",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.609,
+          "bottom": 0.623,
+          "x0": 85.9,
+          "cw": 3.89
+        },
+        {
+          "text": "the condition has changed even though it has not. It is safer thus to view",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.624,
+          "bottom": 0.638,
+          "x0": 85.9,
+          "cw": 3.89
+        },
+        {
+          "text": "waking up as a hint that something might have changed, rather than an",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.64,
+          "bottom": 0.654,
+          "x0": 85.9,
+          "cw": 4.17
+        },
+        {
+          "text": "absolute fact.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.655,
+          "bottom": 0.669,
+          "x0": 85.9,
+          "cw": 3.73
+        },
+        {
+          "text": "Note that sometimes it is tempting to use a simple ﬂag to signal be-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.671,
+          "bottom": 0.685,
+          "x0": 97.9,
+          "cw": 4.06
+        },
+        {
+          "text": "tween two threads, instead of a condition variable and associated lock.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.686,
+          "bottom": 0.7,
+          "x0": 85.9,
+          "cw": 4.06
+        },
+        {
+          "text": "For example, we could rewrite the waiting code above to look more like",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.702,
+          "bottom": 0.716,
+          "x0": 85.9,
+          "cw": 4.11
+        },
+        {
+          "text": "this in the waiting code:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.717,
+          "bottom": 0.731,
+          "x0": 85.9,
+          "cw": 3.8
+        },
+        {
+          "text": "while (ready == 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.742,
+          "bottom": 0.755,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "; // spin",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.757,
+          "bottom": 0.771,
+          "x0": 107.5,
+          "cw": 5.38
+        },
+        {
+          "text": "The associated signaling code would look like this:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.788,
+          "bottom": 0.802,
+          "x0": 88.2,
+          "cw": 3.94
+        },
+        {
+          "text": "ready = 1;",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.807,
+          "bottom": 0.821,
+          "x0": 85.9,
+          "cw": 5.38
+        },
+        {
+          "text": "One can use pthread_cond_init() (and pthread_cond_destroy()) instead of the",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.837,
+          "bottom": 0.851,
+          "x0": 141.0,
+          "cw": 3.92
+        },
+        {
+          "text": "static initializer PTHREAD_COND_INITIALIZER. Sound like more work? It is.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.852,
+          "bottom": 0.863,
+          "x0": 133.3,
+          "cw": 3.95
+        },
+        {
+          "text": "OPERATING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.907,
+          "bottom": 0.921,
+          "x0": 28.6,
+          "cw": 7.05
+        },
+        {
+          "text": "SYSTEMS",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 28.6,
+          "cw": 4.71
+        },
+        {
+          "text": "[VERSION 1.01]",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.939,
+          "bottom": 0.951,
+          "x0": 28.5,
+          "cw": 4.4
+        },
+        {
+          "text": "WWW.OSTEP.ORG",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 195.9,
+          "cw": 7.47
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 58.3,
+          "cw": 3.02
+        },
+        {
+          "text": "9",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 341.5,
+          "cw": 4.48
+        },
+        {
+          "text": "Don’t ever do this, for the following reasons. First, it performs poorly",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.143,
+          "bottom": 0.157,
+          "x0": 70.0,
+          "cw": 3.83
+        },
+        {
+          "text": "in many cases (spinning for a long time just wastes CPU cycles). Second,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.158,
+          "bottom": 0.172,
+          "x0": 58.0,
+          "cw": 4.0
+        },
+        {
+          "text": "it is error prone. As recent research shows [X+10], it is surprisingly easy",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.173,
+          "bottom": 0.187,
+          "x0": 58.0,
+          "cw": 3.84
+        },
+        {
+          "text": "to make mistakes when using ﬂags (as above) to synchronize between",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.189,
+          "bottom": 0.203,
+          "x0": 58.0,
+          "cw": 4.36
+        },
+        {
+          "text": "threads; in that study, roughly half the uses of these ad hoc synchroniza-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.204,
+          "bottom": 0.218,
+          "x0": 58.0,
+          "cw": 3.85
+        },
+        {
+          "text": "tions were buggy! Don’t be lazy; use condition variables even when you",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.22,
+          "bottom": 0.234,
+          "x0": 58.0,
+          "cw": 4.11
+        },
+        {
+          "text": "think you can get away without doing so.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.235,
+          "bottom": 0.249,
+          "x0": 58.0,
+          "cw": 4.12
+        },
+        {
+          "text": "If condition variables sound confusing, don’t worry too much (yet) –",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.25,
+          "bottom": 0.264,
+          "x0": 70.0,
+          "cw": 4.06
+        },
+        {
+          "text": "we’ll be covering them in great detail in a subsequent chapter. Until then,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.266,
+          "bottom": 0.28,
+          "x0": 58.0,
+          "cw": 3.84
+        },
+        {
+          "text": "it should sufﬁce to know that they exist and to have some idea how and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.281,
+          "bottom": 0.295,
+          "x0": 58.0,
+          "cw": 4.11
+        },
+        {
+          "text": "why they are used.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.296,
+          "bottom": 0.31,
+          "x0": 58.0,
+          "cw": 4.18
+        },
+        {
+          "text": "27.5 Compiling and Running",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.335,
+          "bottom": 0.352,
+          "x0": 28.1,
+          "cw": 4.77
+        },
+        {
+          "text": "All of the code examples in this chapter are relatively easy to get up",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.365,
+          "bottom": 0.379,
+          "x0": 70.0,
+          "cw": 3.94
+        },
+        {
+          "text": "and running. To compile them, you must include the header pthread.h",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.38,
+          "bottom": 0.394,
+          "x0": 295.5,
+          "cw": 5.05
+        },
+        {
+          "text": "in your code. On the link line, you must also explicitly link with the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.396,
+          "bottom": 0.41,
+          "x0": 58.0,
+          "cw": 4.11
+        },
+        {
+          "text": "pthreads library, by adding the -pthread ﬂag.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.41,
+          "bottom": 0.425,
+          "x0": 180.6,
+          "cw": 5.03
+        },
+        {
+          "text": "For example, to compile a simple multi-threaded program, all you",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.427,
+          "bottom": 0.441,
+          "x0": 70.0,
+          "cw": 4.31
+        },
+        {
+          "text": "have to do is the following:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.442,
+          "bottom": 0.456,
+          "x0": 58.0,
+          "cw": 3.85
+        },
+        {
+          "text": "prompt> gcc -o main main.c -Wall -pthread",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.464,
+          "bottom": 0.478,
+          "x0": 58.0,
+          "cw": 5.38
+        },
+        {
+          "text": "As long as main.c includes the pthreads header, you have now suc-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.488,
+          "bottom": 0.502,
+          "x0": 112.1,
+          "cw": 4.99
+        },
+        {
+          "text": "cessfully compiled a concurrent program. Whether it works or not, as",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.504,
+          "bottom": 0.518,
+          "x0": 58.0,
+          "cw": 4.23
+        },
+        {
+          "text": "usual, is a different matter entirely.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.519,
+          "bottom": 0.533,
+          "x0": 58.0,
+          "cw": 3.62
+        },
+        {
+          "text": "27.6 Summary",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.557,
+          "bottom": 0.574,
+          "x0": 28.1,
+          "cw": 4.77
+        },
+        {
+          "text": "We have introduced the basics of the pthread library, including thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.588,
+          "bottom": 0.602,
+          "x0": 70.0,
+          "cw": 3.94
+        },
+        {
+          "text": "creation, building mutual exclusion via locks, and signaling and waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.603,
+          "bottom": 0.617,
+          "x0": 58.0,
+          "cw": 4.0
+        },
+        {
+          "text": "via condition variables. You don’t need much else to write robust and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.619,
+          "bottom": 0.632,
+          "x0": 58.0,
+          "cw": 4.17
+        },
+        {
+          "text": "efﬁcient multi-threaded code, except patience and a great deal of care!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.634,
+          "bottom": 0.648,
+          "x0": 58.0,
+          "cw": 3.9
+        },
+        {
+          "text": "We now end the chapter with a set of tips that might be useful to you",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.649,
+          "bottom": 0.663,
+          "x0": 70.0,
+          "cw": 4.0
+        },
+        {
+          "text": "when you write multi-threaded code (see the aside on the following page",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.665,
+          "bottom": 0.679,
+          "x0": 58.0,
+          "cw": 4.06
+        },
+        {
+          "text": "for details). There are other aspects of the API that are interesting; if you",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.68,
+          "bottom": 0.694,
+          "x0": 58.0,
+          "cw": 3.74
+        },
+        {
+          "text": "want more information, type man -k pthread on a Linux system to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.695,
+          "bottom": 0.709,
+          "x0": 176.4,
+          "cw": 5.25
+        },
+        {
+          "text": "see over one hundred APIs that make up the entire interface. However,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.711,
+          "bottom": 0.725,
+          "x0": 58.0,
+          "cw": 4.17
+        },
+        {
+          "text": "the basics discussed herein should enable you to build sophisticated (and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.726,
+          "bottom": 0.74,
+          "x0": 58.0,
+          "cw": 3.94
+        },
+        {
+          "text": "hopefully, correct and performant) multi-threaded programs. The hard",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.742,
+          "bottom": 0.755,
+          "x0": 58.0,
+          "cw": 4.23
+        },
+        {
+          "text": "part with threads is not the APIs, but rather the tricky logic of how you",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.757,
+          "bottom": 0.771,
+          "x0": 58.0,
+          "cw": 3.94
+        },
+        {
+          "text": "build concurrent programs. Read on to learn more.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.772,
+          "bottom": 0.786,
+          "x0": 58.0,
+          "cw": 4.12
+        },
+        {
+          "text": "⃝c 2008–19, ARPACI-DUSSEAU",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 139.9,
+          "cw": 9.21
+        },
+        {
+          "text": "THREE",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.914,
+          "bottom": 0.928,
+          "x0": 377.8,
+          "cw": 5.5
+        },
+        {
+          "text": "EASY",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.929,
+          "bottom": 0.943,
+          "x0": 383.6,
+          "cw": 5.48
+        },
+        {
+          "text": "PIECES",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.945,
+          "bottom": 0.959,
+          "x0": 376.9,
+          "cw": 5.42
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "10",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 85.9,
+          "cw": 4.48
+        },
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 268.7,
+          "cw": 3.02
+        },
+        {
+          "text": "ASIDE: THREAD API GUIDELINES",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.152,
+          "bottom": 0.166,
+          "x0": 161.8,
+          "cw": 6.98
+        },
+        {
+          "text": "There are a number of small but important things to remember when",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.168,
+          "bottom": 0.182,
+          "x0": 85.9,
+          "cw": 4.43
+        },
+        {
+          "text": "you use the POSIX thread library (or really, any thread library) to build a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.183,
+          "bottom": 0.197,
+          "x0": 85.9,
+          "cw": 3.84
+        },
+        {
+          "text": "multi-threaded program. They are:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.199,
+          "bottom": 0.213,
+          "x0": 85.9,
+          "cw": 4.2
+        },
+        {
+          "text": "• Keep it simple. Above all else, any code to lock or signal between",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.227,
+          "bottom": 0.241,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "threads should be as simple as possible. Tricky thread interactions",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.243,
+          "bottom": 0.257,
+          "x0": 109.0,
+          "cw": 3.95
+        },
+        {
+          "text": "lead to bugs.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.258,
+          "bottom": 0.272,
+          "x0": 109.0,
+          "cw": 3.89
+        },
+        {
+          "text": "• Minimize thread interactions. Try to keep the number of ways",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.283,
+          "bottom": 0.298,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "in which threads interact to a minimum. Each interaction should",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.299,
+          "bottom": 0.313,
+          "x0": 109.0,
+          "cw": 4.2
+        },
+        {
+          "text": "be carefully thought out and constructed with tried and true ap-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.314,
+          "bottom": 0.328,
+          "x0": 109.0,
+          "cw": 4.14
+        },
+        {
+          "text": "proaches (many of which we will learn about in the coming chap-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.33,
+          "bottom": 0.344,
+          "x0": 109.0,
+          "cw": 4.2
+        },
+        {
+          "text": "ters).",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.345,
+          "bottom": 0.359,
+          "x0": 109.0,
+          "cw": 3.3
+        },
+        {
+          "text": "• Initialize locks and condition variables. Failure to do so will lead",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.37,
+          "bottom": 0.385,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "to code that sometimes works and sometimes fails in very strange",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.386,
+          "bottom": 0.4,
+          "x0": 109.0,
+          "cw": 4.14
+        },
+        {
+          "text": "ways.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.401,
+          "bottom": 0.415,
+          "x0": 109.0,
+          "cw": 4.6
+        },
+        {
+          "text": "• Check your return codes. Of course, in any C and UNIX program-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.427,
+          "bottom": 0.441,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "ming you do, you should be checking each and every return code,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.442,
+          "bottom": 0.456,
+          "x0": 109.0,
+          "cw": 4.2
+        },
+        {
+          "text": "and it’s true here as well. Failure to do so will lead to bizarre and",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.458,
+          "bottom": 0.472,
+          "x0": 109.0,
+          "cw": 3.84
+        },
+        {
+          "text": "hard to understand behavior, making you likely to (a) scream, (b)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.473,
+          "bottom": 0.487,
+          "x0": 109.0,
+          "cw": 4.08
+        },
+        {
+          "text": "pull some of your hair out, or (c) both.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.489,
+          "bottom": 0.503,
+          "x0": 109.0,
+          "cw": 3.79
+        },
+        {
+          "text": "• Be careful with how you pass arguments to, and return values",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.514,
+          "bottom": 0.528,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "from, threads. In particular, any time you are passing a reference to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.53,
+          "bottom": 0.544,
+          "x0": 109.0,
+          "cw": 4.06
+        },
+        {
+          "text": "a variable allocated on the stack, you are probably doing something",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.545,
+          "bottom": 0.559,
+          "x0": 109.0,
+          "cw": 3.95
+        },
+        {
+          "text": "wrong.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.56,
+          "bottom": 0.574,
+          "x0": 109.0,
+          "cw": 4.7
+        },
+        {
+          "text": "• Each thread has its own stack. As related to the point above, please",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.585,
+          "bottom": 0.6,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "remember that each thread has its own stack. Thus, if you have a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.601,
+          "bottom": 0.615,
+          "x0": 109.0,
+          "cw": 4.14
+        },
+        {
+          "text": "locally-allocated variable inside of some function a thread is exe-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.617,
+          "bottom": 0.631,
+          "x0": 109.0,
+          "cw": 3.95
+        },
+        {
+          "text": "cuting, it is essentially private to that thread; no other thread can",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.632,
+          "bottom": 0.646,
+          "x0": 109.0,
+          "cw": 3.64
+        },
+        {
+          "text": "(easily) access it. To share data between threads, the values must be",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.647,
+          "bottom": 0.661,
+          "x0": 109.0,
+          "cw": 3.84
+        },
+        {
+          "text": "in the heap or otherwise some locale that is globally accessible.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.663,
+          "bottom": 0.677,
+          "x0": 109.0,
+          "cw": 3.75
+        },
+        {
+          "text": "• Always use condition variables to signal between threads. While",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.688,
+          "bottom": 0.702,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "it is often tempting to use a simple ﬂag, don’t do it.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.704,
+          "bottom": 0.718,
+          "x0": 109.0,
+          "cw": 3.74
+        },
+        {
+          "text": "• Use the manual pages. On Linux, in particular, the pthread man",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.729,
+          "bottom": 0.743,
+          "x0": 99.8,
+          "cw": 4.6
+        },
+        {
+          "text": "pages are highly informative and discuss much of the nuances pre-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.745,
+          "bottom": 0.759,
+          "x0": 109.0,
+          "cw": 4.08
+        },
+        {
+          "text": "sented here, often in even more detail. Read them carefully!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.76,
+          "bottom": 0.774,
+          "x0": 109.0,
+          "cw": 3.94
+        },
+        {
+          "text": ".",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.829,
+          "bottom": 0.843,
+          "x0": 97.9,
+          "cw": 2.24
+        },
+        {
+          "text": "OPERATING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.907,
+          "bottom": 0.921,
+          "x0": 28.6,
+          "cw": 7.05
+        },
+        {
+          "text": "SYSTEMS",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 28.6,
+          "cw": 4.71
+        },
+        {
+          "text": "[VERSION 1.01]",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.939,
+          "bottom": 0.951,
+          "x0": 28.5,
+          "cw": 4.4
+        },
+        {
+          "text": "WWW.OSTEP.ORG",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 195.9,
+          "cw": 7.47
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 58.3,
+          "cw": 3.02
+        },
+        {
+          "text": "11",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 337.0,
+          "cw": 4.48
+        },
+        {
+          "text": "References",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.14,
+          "bottom": 0.157,
+          "x0": 58.0,
+          "cw": 5.45
+        },
+        {
+          "text": "[B89] “An Introduction to Programming with Threads” by Andrew D. Birrell. DEC Techni-",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.17,
+          "bottom": 0.181,
+          "x0": 58.0,
+          "cw": 3.39
+        },
+        {
+          "text": "cal Report, January, 1989. Available: https://birrell.org/andrew/papers/035-Threads.pdf A",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.182,
+          "bottom": 0.193,
+          "x0": 58.0,
+          "cw": 3.23
+        },
+        {
+          "text": "classic but older introduction to threaded programming. Still a worthwhile read, and freely available.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.195,
+          "bottom": 0.206,
+          "x0": 58.1,
+          "cw": 2.77
+        },
+        {
+          "text": "[B97] “Programming with POSIX Threads” by David R. Butenhof. Addison-Wesley, May 1997.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.212,
+          "bottom": 0.222,
+          "x0": 58.1,
+          "cw": 3.35
+        },
+        {
+          "text": "Another one of these books on threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.224,
+          "bottom": 0.235,
+          "x0": 58.1,
+          "cw": 2.81
+        },
+        {
+          "text": "[B+96] “PThreads Programming: by A POSIX Standard for Better Multiprocessing. ” Dick",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.241,
+          "bottom": 0.251,
+          "x0": 58.1,
+          "cw": 3.43
+        },
+        {
+          "text": "Buttlar, Jacqueline Farrell, Bradford Nichols. O’Reilly, September 1996 A reasonable book from the",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.253,
+          "bottom": 0.264,
+          "x0": 58.1,
+          "cw": 3.0
+        },
+        {
+          "text": "excellent, practical publishing house O’Reilly. Our bookshelves certainly contain a great deal of books",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.265,
+          "bottom": 0.276,
+          "x0": 58.0,
+          "cw": 2.8
+        },
+        {
+          "text": "from this company, including some excellent offerings on Perl, Python, and Javascript (particularly",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.277,
+          "bottom": 0.288,
+          "x0": 58.0,
+          "cw": 2.91
+        },
+        {
+          "text": "Crockford’s “Javascript: The Good Parts”.)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.29,
+          "bottom": 0.301,
+          "x0": 58.0,
+          "cw": 2.86
+        },
+        {
+          "text": "[K+96] “Programming With Threads” by Steve Kleiman, Devang Shah, Bart Smaalders. Pren-",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.306,
+          "bottom": 0.317,
+          "x0": 58.0,
+          "cw": 3.35
+        },
+        {
+          "text": "tice Hall, January 1996. Probably one of the better books in this space. Get it at your local library. Or",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.319,
+          "bottom": 0.33,
+          "x0": 58.0,
+          "cw": 2.96
+        },
+        {
+          "text": "steal it from your mother. More seriously, just ask your mother for it – she’ll let you borrow it, don’t",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.331,
+          "bottom": 0.342,
+          "x0": 58.0,
+          "cw": 2.77
+        },
+        {
+          "text": "worry.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.343,
+          "bottom": 0.354,
+          "x0": 58.0,
+          "cw": 3.09
+        },
+        {
+          "text": "[X+10] “Ad Hoc Synchronization Considered Harmful” by Weiwei Xiong, Soyeon Park, Jiaqi",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.36,
+          "bottom": 0.371,
+          "x0": 58.0,
+          "cw": 3.35
+        },
+        {
+          "text": "Zhang, Yuanyuan Zhou, Zhiqiang Ma. OSDI 2010, Vancouver, Canada. This paper shows how",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.372,
+          "bottom": 0.383,
+          "x0": 58.0,
+          "cw": 3.47
+        },
+        {
+          "text": "seemingly simple synchronization code can lead to a surprising number of bugs. Use condition variables",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.385,
+          "bottom": 0.396,
+          "x0": 58.0,
+          "cw": 2.82
+        },
+        {
+          "text": "and do the signaling correctly!",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.397,
+          "bottom": 0.408,
+          "x0": 58.0,
+          "cw": 2.77
+        },
+        {
+          "text": "⃝c 2008–19, ARPACI-DUSSEAU",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 139.9,
+          "cw": 9.21
+        },
+        {
+          "text": "THREE",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.914,
+          "bottom": 0.928,
+          "x0": 377.8,
+          "cw": 5.5
+        },
+        {
+          "text": "EASY",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.929,
+          "bottom": 0.943,
+          "x0": 383.6,
+          "cw": 5.48
+        },
+        {
+          "text": "PIECES",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.945,
+          "bottom": 0.959,
+          "x0": 376.9,
+          "cw": 5.42
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 12,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "12",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 85.9,
+          "cw": 4.48
+        },
+        {
+          "text": "INTERLUDE: THREAD API",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.099,
+          "bottom": 0.113,
+          "x0": 268.7,
+          "cw": 3.02
+        },
+        {
+          "text": "Homework (Code)",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.14,
+          "bottom": 0.157,
+          "x0": 85.9,
+          "cw": 6.16
+        },
+        {
+          "text": "In this section, we’ll write some simple multi-threaded programs and",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.171,
+          "bottom": 0.185,
+          "x0": 97.9,
+          "cw": 4.06
+        },
+        {
+          "text": "use a speciﬁc tool, called helgrind, to ﬁnd problems in these programs.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.186,
+          "bottom": 0.2,
+          "x0": 86.0,
+          "cw": 3.75
+        },
+        {
+          "text": "Read the README in the homework download for details on how to",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.202,
+          "bottom": 0.216,
+          "x0": 97.9,
+          "cw": 4.45
+        },
+        {
+          "text": "build the programs and run helgrind.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.216,
+          "bottom": 0.231,
+          "x0": 196.1,
+          "cw": 5.07
+        },
+        {
+          "text": "Questions",
+          "kind": "heading",
+          "level": 3,
+          "para_break": true,
+          "top": 0.254,
+          "bottom": 0.269,
+          "x0": 85.9,
+          "cw": 5.16
+        },
+        {
+          "text": "1. First build main-race.c. Examine the code so you can see the (hopefully",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.279,
+          "bottom": 0.292,
+          "x0": 145.8,
+          "cw": 4.56
+        },
+        {
+          "text": "obvious) data race in the code. Now run helgrind (by typing valgrind",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.294,
+          "bottom": 0.307,
+          "x0": 253.5,
+          "cw": 4.5
+        },
+        {
+          "text": "--tool=helgrind main-race) to see how it reports the race. Does it",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.308,
+          "bottom": 0.321,
+          "x0": 109.0,
+          "cw": 4.78
+        },
+        {
+          "text": "point to the right lines of code? What other information does it give to you?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.323,
+          "bottom": 0.336,
+          "x0": 109.0,
+          "cw": 3.44
+        },
+        {
+          "text": "2. What happens when you remove one of the offending lines of code? Now",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.341,
+          "bottom": 0.354,
+          "x0": 98.4,
+          "cw": 3.88
+        },
+        {
+          "text": "add a lock around one of the updates to the shared variable, and then around",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.356,
+          "bottom": 0.368,
+          "x0": 109.0,
+          "cw": 3.49
+        },
+        {
+          "text": "both. What does helgrind report in each of these cases?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.37,
+          "bottom": 0.383,
+          "x0": 167.1,
+          "cw": 4.47
+        },
+        {
+          "text": "3. Now let’s look at main-deadlock.c. Examine the code. This code has a",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.387,
+          "bottom": 0.4,
+          "x0": 170.2,
+          "cw": 4.63
+        },
+        {
+          "text": "problem known as deadlock (which we discuss in much more depth in a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.403,
+          "bottom": 0.415,
+          "x0": 109.0,
+          "cw": 4.2
+        },
+        {
+          "text": "forthcoming chapter). Can you see what problem it might have?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.417,
+          "bottom": 0.43,
+          "x0": 109.0,
+          "cw": 3.71
+        },
+        {
+          "text": "4. Now run helgrind on this code. What does helgrind report?",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.434,
+          "bottom": 0.447,
+          "x0": 141.1,
+          "cw": 4.47
+        },
+        {
+          "text": "5. Now run helgrind on main-deadlock-global.c. Examine the code;",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.452,
+          "bottom": 0.465,
+          "x0": 141.7,
+          "cw": 4.54
+        },
+        {
+          "text": "does it have the same problem that main-deadlock.c has? Should helgrind",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.467,
+          "bottom": 0.48,
+          "x0": 229.2,
+          "cw": 4.58
+        },
+        {
+          "text": "be reporting the same error? What does this tell you about tools like helgrind?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.481,
+          "bottom": 0.494,
+          "x0": 342.8,
+          "cw": 4.42
+        },
+        {
+          "text": "6. Let’s next look at main-signal.c. This code uses a variable (done) to",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.499,
+          "bottom": 0.512,
+          "x0": 172.1,
+          "cw": 4.65
+        },
+        {
+          "text": "signal that the child is done and that the parent can now continue. Why is",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.514,
+          "bottom": 0.526,
+          "x0": 109.0,
+          "cw": 3.58
+        },
+        {
+          "text": "this code inefﬁcient? (what does the parent end up spending its time doing,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.529,
+          "bottom": 0.541,
+          "x0": 109.0,
+          "cw": 3.53
+        },
+        {
+          "text": "particularly if the child thread takes a long time to complete?)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.543,
+          "bottom": 0.556,
+          "x0": 109.0,
+          "cw": 3.39
+        },
+        {
+          "text": "7. Now run helgrind on this program. What does it report? Is the code",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.56,
+          "bottom": 0.573,
+          "x0": 142.2,
+          "cw": 4.59
+        },
+        {
+          "text": "correct?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.576,
+          "bottom": 0.588,
+          "x0": 109.0,
+          "cw": 3.44
+        },
+        {
+          "text": "8. Now look at a slightly modiﬁed version of the code, which is found in",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.593,
+          "bottom": 0.606,
+          "x0": 98.4,
+          "cw": 3.83
+        },
+        {
+          "text": "main-signal-cv.c. This version uses a condition variable to do the sig-",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.607,
+          "bottom": 0.62,
+          "x0": 109.0,
+          "cw": 4.78
+        },
+        {
+          "text": "naling (and associated lock). Why is this code preferred to the previous",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.622,
+          "bottom": 0.635,
+          "x0": 109.0,
+          "cw": 3.68
+        },
+        {
+          "text": "version? Is it correctness, or performance, or both?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.637,
+          "bottom": 0.649,
+          "x0": 109.0,
+          "cw": 3.42
+        },
+        {
+          "text": "9. Once again run helgrind on main-signal-cv. Does it report any errors?",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.654,
+          "bottom": 0.667,
+          "x0": 162.3,
+          "cw": 4.43
+        },
+        {
+          "text": "OPERATING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.907,
+          "bottom": 0.921,
+          "x0": 28.6,
+          "cw": 7.05
+        },
+        {
+          "text": "SYSTEMS",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 28.6,
+          "cw": 4.71
+        },
+        {
+          "text": "[VERSION 1.01]",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.939,
+          "bottom": 0.951,
+          "x0": 28.5,
+          "cw": 4.4
+        },
+        {
+          "text": "WWW.OSTEP.ORG",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.922,
+          "bottom": 0.936,
+          "x0": 195.9,
+          "cw": 7.47
+        }
+      ]
+    }
+  ],
+  "page_count": 12,
+  "slide_count": null,
+  "properties": {
+    "title": "single.dvi",
+    "creator": "dvips(k) 5.995 Copyright 2015 Radical Eye Software",
+    "producer": "GPL Ghostscript 9.16",
+    "creationDate": "D:20190423111111-05'00'"
+  },
+  "master_text": []
+}

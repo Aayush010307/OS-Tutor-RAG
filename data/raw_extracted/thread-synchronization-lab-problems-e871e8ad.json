@@ -1,0 +1,3573 @@
+{
+  "document_id": "thread-synchronization-lab-problems-e871e8ad",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "1. One-Lane Bridge Synchronization",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.084,
+          "bottom": 0.103,
+          "x0": 72.0,
+          "cw": 5.46
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.117,
+          "bottom": 0.137,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "A bridge can accommodate a maximum of 3 vehicles simultaneously. Vehicles from East",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.149,
+          "bottom": 0.169,
+          "x0": 72.0,
+          "cw": 5.46
+        },
+        {
+          "text": "and West directions cannot be on the bridge at the same time.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.166,
+          "bottom": 0.186,
+          "x0": 72.0,
+          "cw": 5.2
+        },
+        {
+          "text": "Create one thread for each vehicle.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.199,
+          "bottom": 0.218,
+          "x0": 72.0,
+          "cw": 4.73
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.232,
+          "bottom": 0.252,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Number of vehicles: 6",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.265,
+          "bottom": 0.284,
+          "x0": 72.0,
+          "cw": 5.0
+        },
+        {
+          "text": "Vehicle   Direction",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.298,
+          "bottom": 0.317,
+          "x0": 72.0,
+          "cw": 4.73
+        },
+        {
+          "text": "V1        East",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.314,
+          "bottom": 0.333,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "V2        East",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.33,
+          "bottom": 0.349,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "V3        West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.347,
+          "bottom": 0.366,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "V4        East",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.363,
+          "bottom": 0.382,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "V5        West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "V6        West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.396,
+          "bottom": 0.415,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.429,
+          "bottom": 0.449,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "V1 entered the bridge from East",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.462,
+          "bottom": 0.481,
+          "x0": 72.0,
+          "cw": 4.92
+        },
+        {
+          "text": "V2 entered the bridge from East",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.478,
+          "bottom": 0.498,
+          "x0": 72.0,
+          "cw": 4.92
+        },
+        {
+          "text": "V4 entered the bridge from East",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.495,
+          "bottom": 0.514,
+          "x0": 72.0,
+          "cw": 4.92
+        },
+        {
+          "text": "V1 exited the bridge",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.528,
+          "bottom": 0.547,
+          "x0": 72.0,
+          "cw": 4.82
+        },
+        {
+          "text": "V2 exited the bridge",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.544,
+          "bottom": 0.563,
+          "x0": 72.0,
+          "cw": 4.82
+        },
+        {
+          "text": "V4 exited the bridge",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.56,
+          "bottom": 0.579,
+          "x0": 72.0,
+          "cw": 4.82
+        },
+        {
+          "text": "V3 entered the bridge from West",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.593,
+          "bottom": 0.612,
+          "x0": 72.0,
+          "cw": 5.04
+        },
+        {
+          "text": "V5 entered the bridge from West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.61,
+          "bottom": 0.629,
+          "x0": 72.0,
+          "cw": 5.04
+        },
+        {
+          "text": "V6 entered the bridge from West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.626,
+          "bottom": 0.645,
+          "x0": 72.0,
+          "cw": 5.04
+        },
+        {
+          "text": "All vehicles crossed successfully.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.659,
+          "bottom": 0.678,
+          "x0": 72.0,
+          "cw": 4.69
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.692,
+          "bottom": 0.712,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – Create one thread for each vehicle.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.725,
+          "bottom": 0.744,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_join() – Wait for all vehicle threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.741,
+          "bottom": 0.76,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect shared bridge variables.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.758,
+          "bottom": 0.777,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_t – Make vehicles wait when the bridge cannot be entered.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.774,
+          "bottom": 0.793,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Shared variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.79,
+          "bottom": 0.809,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o vehicles_on_bridge",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.807,
+          "bottom": 0.826,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o current_direction",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.823,
+          "bottom": 0.842,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " pthread_cond_wait() – Wait if:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.84,
+          "bottom": 0.859,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o Bridge already has 3 vehicles.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.856,
+          "bottom": 0.875,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o Vehicles from the opposite direction are crossing.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.872,
+          "bottom": 0.891,
+          "x0": 126.0,
+          "cw": 5.98
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": " pthread_cond_broadcast() – Notify waiting vehicles when the bridge becomes",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.083,
+          "bottom": 0.102,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "available.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.1,
+          "bottom": 0.119,
+          "x0": 108.0,
+          "cw": 4.36
+        },
+        {
+          "text": "2. Airport Runway Allocation",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.133,
+          "bottom": 0.153,
+          "x0": 72.0,
+          "cw": 5.37
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.166,
+          "bottom": 0.186,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "An airport has 2 runways. Multiple aircraft request permission to land.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.199,
+          "bottom": 0.219,
+          "x0": 72.0,
+          "cw": 4.77
+        },
+        {
+          "text": "Emergency aircraft should be given priority over normal aircraft.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.232,
+          "bottom": 0.251,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.265,
+          "bottom": 0.285,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Number of aircraft: 5",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.298,
+          "bottom": 0.317,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "Number of runways: 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.314,
+          "bottom": 0.333,
+          "x0": 72.0,
+          "cw": 5.3
+        },
+        {
+          "text": "Aircraft   Type",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.347,
+          "bottom": 0.366,
+          "x0": 72.0,
+          "cw": 4.66
+        },
+        {
+          "text": "A1         Normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.363,
+          "bottom": 0.382,
+          "x0": 72.0,
+          "cw": 4.51
+        },
+        {
+          "text": "A2         Emergency",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 4.73
+        },
+        {
+          "text": "A3         Normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.396,
+          "bottom": 0.415,
+          "x0": 72.0,
+          "cw": 4.51
+        },
+        {
+          "text": "A4         Emergency",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.413,
+          "bottom": 0.432,
+          "x0": 72.0,
+          "cw": 4.73
+        },
+        {
+          "text": "A5         Normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.429,
+          "bottom": 0.448,
+          "x0": 72.0,
+          "cw": 4.51
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.463,
+          "bottom": 0.482,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "A2 (Emergency) assigned Runway 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.495,
+          "bottom": 0.514,
+          "x0": 72.0,
+          "cw": 5.44
+        },
+        {
+          "text": "A4 (Emergency) assigned Runway 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.511,
+          "bottom": 0.53,
+          "x0": 72.0,
+          "cw": 5.44
+        },
+        {
+          "text": "A2 completed landing and released Runway 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.544,
+          "bottom": 0.563,
+          "x0": 72.0,
+          "cw": 5.22
+        },
+        {
+          "text": "A1 assigned Runway 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.561,
+          "bottom": 0.58,
+          "x0": 72.0,
+          "cw": 5.42
+        },
+        {
+          "text": "A4 completed landing and released Runway 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.593,
+          "bottom": 0.612,
+          "x0": 72.0,
+          "cw": 5.22
+        },
+        {
+          "text": "A3 assigned Runway 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.61,
+          "bottom": 0.629,
+          "x0": 72.0,
+          "cw": 5.42
+        },
+        {
+          "text": "All aircraft landed successfully.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.643,
+          "bottom": 0.662,
+          "x0": 72.0,
+          "cw": 4.58
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.676,
+          "bottom": 0.696,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread per aircraft.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.709,
+          "bottom": 0.728,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect runway availability.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.725,
+          "bottom": 0.744,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_t – Separate condition variables for:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.741,
+          "bottom": 0.76,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o Emergency aircraft",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.758,
+          "bottom": 0.777,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o Normal aircraft",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.774,
+          "bottom": 0.793,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " Shared variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.791,
+          "bottom": 0.81,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o available_runways",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.807,
+          "bottom": 0.826,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_emergency",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.823,
+          "bottom": 0.842,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.84,
+          "bottom": 0.859,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " pthread_cond_wait() – Aircraft waits when no runway is available.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.856,
+          "bottom": 0.875,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_signal() or pthread_cond_broadcast() – Notify waiting aircraft.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.873,
+          "bottom": 0.892,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Priority logic:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.889,
+          "bottom": 0.908,
+          "x0": 90.0,
+          "cw": 4.58
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "o Normal aircraft should wait if an emergency aircraft is waiting.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.083,
+          "bottom": 0.102,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "3. Parking Lot Management",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.15,
+          "bottom": 0.17,
+          "x0": 72.0,
+          "cw": 5.68
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.183,
+          "bottom": 0.203,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "A parking lot has 3 parking spaces and 5 cars. A car must wait if the parking lot is full.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.215,
+          "bottom": 0.235,
+          "x0": 72.0,
+          "cw": 4.77
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.249,
+          "bottom": 0.269,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Parking slots: 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.281,
+          "bottom": 0.3,
+          "x0": 72.0,
+          "cw": 4.57
+        },
+        {
+          "text": "Number of cars: 5",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.298,
+          "bottom": 0.317,
+          "x0": 72.0,
+          "cw": 4.99
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.331,
+          "bottom": 0.351,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "Car 1 entered. Available slots: 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.364,
+          "bottom": 0.383,
+          "x0": 72.0,
+          "cw": 4.63
+        },
+        {
+          "text": "Car 2 entered. Available slots: 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 4.63
+        },
+        {
+          "text": "Car 3 entered. Available slots: 0",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.397,
+          "bottom": 0.416,
+          "x0": 72.0,
+          "cw": 4.63
+        },
+        {
+          "text": "Car 4 is waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.429,
+          "bottom": 0.448,
+          "x0": 72.0,
+          "cw": 4.66
+        },
+        {
+          "text": "Car 5 is waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.446,
+          "bottom": 0.465,
+          "x0": 72.0,
+          "cw": 4.66
+        },
+        {
+          "text": "Car 2 left the parking lot",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.479,
+          "bottom": 0.498,
+          "x0": 72.0,
+          "cw": 4.49
+        },
+        {
+          "text": "Car 4 entered. Available slots: 0",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.495,
+          "bottom": 0.514,
+          "x0": 72.0,
+          "cw": 4.63
+        },
+        {
+          "text": "Car 1 left the parking lot",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.528,
+          "bottom": 0.547,
+          "x0": 72.0,
+          "cw": 4.49
+        },
+        {
+          "text": "Car 5 entered. Available slots: 0",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.544,
+          "bottom": 0.563,
+          "x0": 72.0,
+          "cw": 4.63
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.578,
+          "bottom": 0.597,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread for each car.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.61,
+          "bottom": 0.629,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect the parking slot count.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.627,
+          "bottom": 0.646,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " One pthread_cond_t – For waiting cars.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.643,
+          "bottom": 0.662,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Shared variable:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.659,
+          "bottom": 0.678,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o available_slots",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.676,
+          "bottom": 0.695,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " pthread_cond_wait() – When available_slots == 0.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.692,
+          "bottom": 0.711,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_signal() – When a car leaves and releases a slot.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.709,
+          "bottom": 0.728,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_join() – Wait for all cars.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.725,
+          "bottom": 0.744,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "4. Elevator Capacity Control",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.792,
+          "bottom": 0.811,
+          "x0": 72.0,
+          "cw": 5.21
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.824,
+          "bottom": 0.844,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "An elevator can accommodate a maximum of 4 passengers. There are 7 passenger threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.857,
+          "bottom": 0.877,
+          "x0": 72.0,
+          "cw": 5.4
+        },
+        {
+          "text": "A passenger must wait when the elevator is full.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.89,
+          "bottom": 0.909,
+          "x0": 72.0,
+          "cw": 4.77
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.084,
+          "bottom": 0.103,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Elevator capacity: 4",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.116,
+          "bottom": 0.135,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "Number of passengers: 7",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.133,
+          "bottom": 0.152,
+          "x0": 72.0,
+          "cw": 5.11
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.166,
+          "bottom": 0.186,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "P1 entered the elevator",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.199,
+          "bottom": 0.218,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "P2 entered the elevator",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.215,
+          "bottom": 0.234,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "P3 entered the elevator",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.232,
+          "bottom": 0.251,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "P4 entered the elevator",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.248,
+          "bottom": 0.267,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "Elevator is full",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.281,
+          "bottom": 0.3,
+          "x0": 72.0,
+          "cw": 4.37
+        },
+        {
+          "text": "P5 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.314,
+          "bottom": 0.333,
+          "x0": 72.0,
+          "cw": 4.96
+        },
+        {
+          "text": "P6 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.33,
+          "bottom": 0.349,
+          "x0": 72.0,
+          "cw": 4.96
+        },
+        {
+          "text": "P7 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.346,
+          "bottom": 0.365,
+          "x0": 72.0,
+          "cw": 4.96
+        },
+        {
+          "text": "P1 exited",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.379,
+          "bottom": 0.398,
+          "x0": 72.0,
+          "cw": 4.81
+        },
+        {
+          "text": "P5 entered",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.396,
+          "bottom": 0.415,
+          "x0": 72.0,
+          "cw": 4.9
+        },
+        {
+          "text": "P2 exited",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.428,
+          "bottom": 0.447,
+          "x0": 72.0,
+          "cw": 4.81
+        },
+        {
+          "text": "P6 entered",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.445,
+          "bottom": 0.464,
+          "x0": 72.0,
+          "cw": 4.9
+        },
+        {
+          "text": "P3 exited",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.477,
+          "bottom": 0.497,
+          "x0": 72.0,
+          "cw": 4.81
+        },
+        {
+          "text": "P7 entered",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.494,
+          "bottom": 0.513,
+          "x0": 72.0,
+          "cw": 4.9
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.527,
+          "bottom": 0.547,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread per passenger.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.56,
+          "bottom": 0.579,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect elevator occupancy.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.576,
+          "bottom": 0.595,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_t – Manage waiting passengers.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.593,
+          "bottom": 0.612,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Shared variable:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.609,
+          "bottom": 0.628,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o current_passengers",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.625,
+          "bottom": 0.644,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " pthread_cond_wait() – When elevator is full.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.642,
+          "bottom": 0.661,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_signal() – When a passenger exits.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.658,
+          "bottom": 0.677,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "Additional condition",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.692,
+          "bottom": 0.711,
+          "x0": 72.0,
+          "cw": 5.18
+        },
+        {
+          "text": "current_passengers < MAX_CAPACITY",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.724,
+          "bottom": 0.743,
+          "x0": 72.0,
+          "cw": 5.94
+        },
+        {
+          "text": "5. Railway Junction Synchronization",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.774,
+          "bottom": 0.794,
+          "x0": 72.0,
+          "cw": 5.33
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.807,
+          "bottom": 0.827,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "Trains arrive from Track A and Track B. Only one train can use the railway junction at a",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.84,
+          "bottom": 0.86,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "time.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.856,
+          "bottom": 0.875,
+          "x0": 72.0,
+          "cw": 4.56
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "The solution should ensure that trains from one track do not permanently block trains from",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.083,
+          "bottom": 0.102,
+          "x0": 72.0,
+          "cw": 4.82
+        },
+        {
+          "text": "the other track.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.1,
+          "bottom": 0.119,
+          "x0": 72.0,
+          "cw": 4.43
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.133,
+          "bottom": 0.153,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Number of trains: 5",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.166,
+          "bottom": 0.185,
+          "x0": 72.0,
+          "cw": 4.86
+        },
+        {
+          "text": "Train   Track",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.199,
+          "bottom": 0.218,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "T1      A",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.215,
+          "bottom": 0.234,
+          "x0": 72.0,
+          "cw": 4.3
+        },
+        {
+          "text": "T2      B",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.231,
+          "bottom": 0.25,
+          "x0": 72.0,
+          "cw": 4.22
+        },
+        {
+          "text": "T3      A",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.248,
+          "bottom": 0.267,
+          "x0": 72.0,
+          "cw": 4.3
+        },
+        {
+          "text": "T4      B",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.264,
+          "bottom": 0.283,
+          "x0": 72.0,
+          "cw": 4.22
+        },
+        {
+          "text": "T5      A",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.28,
+          "bottom": 0.299,
+          "x0": 72.0,
+          "cw": 4.3
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.314,
+          "bottom": 0.334,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "T1 from Track A entered the junction",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.347,
+          "bottom": 0.366,
+          "x0": 72.0,
+          "cw": 4.96
+        },
+        {
+          "text": "T2 waiting from Track B",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.379,
+          "bottom": 0.398,
+          "x0": 72.0,
+          "cw": 5.15
+        },
+        {
+          "text": "T3 waiting from Track A",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.396,
+          "bottom": 0.415,
+          "x0": 72.0,
+          "cw": 5.18
+        },
+        {
+          "text": "T1 crossed the junction",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.429,
+          "bottom": 0.448,
+          "x0": 72.0,
+          "cw": 4.8
+        },
+        {
+          "text": "T2 from Track B entered the junction",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.461,
+          "bottom": 0.48,
+          "x0": 72.0,
+          "cw": 4.95
+        },
+        {
+          "text": "T2 crossed the junction",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.478,
+          "bottom": 0.497,
+          "x0": 72.0,
+          "cw": 4.8
+        },
+        {
+          "text": "T3 from Track A entered the junction",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.51,
+          "bottom": 0.529,
+          "x0": 72.0,
+          "cw": 4.96
+        },
+        {
+          "text": "T3 crossed the junction",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.527,
+          "bottom": 0.546,
+          "x0": 72.0,
+          "cw": 4.8
+        },
+        {
+          "text": "All trains crossed safely.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.56,
+          "bottom": 0.579,
+          "x0": 72.0,
+          "cw": 4.51
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.593,
+          "bottom": 0.613,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread for each train.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.626,
+          "bottom": 0.645,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect the railway junction.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.642,
+          "bottom": 0.661,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Two condition variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.659,
+          "bottom": 0.678,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o trackA_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.675,
+          "bottom": 0.694,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o trackB_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.691,
+          "bottom": 0.71,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " Shared variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.708,
+          "bottom": 0.727,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o junction_busy",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.724,
+          "bottom": 0.743,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o last_track",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.741,
+          "bottom": 0.76,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_A",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.757,
+          "bottom": 0.776,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_B",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.773,
+          "bottom": 0.792,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " pthread_cond_wait() – When the junction is occupied.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.79,
+          "bottom": 0.809,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_signal() – Notify the next waiting train.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.806,
+          "bottom": 0.825,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Alternation/fairness logic should be implemented to reduce starvation.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.822,
+          "bottom": 0.841,
+          "x0": 90.0,
+          "cw": 4.58
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "6. Operating Room Allocation with Priority",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.084,
+          "bottom": 0.103,
+          "x0": 72.0,
+          "cw": 5.26
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.117,
+          "bottom": 0.137,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "A hospital has 2 operating rooms. Patients can be either Emergency or Normal.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.149,
+          "bottom": 0.169,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "Emergency patients should receive priority when an operating room becomes available.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.182,
+          "bottom": 0.201,
+          "x0": 72.0,
+          "cw": 4.99
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.216,
+          "bottom": 0.236,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Operating rooms: 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.248,
+          "bottom": 0.267,
+          "x0": 72.0,
+          "cw": 5.07
+        },
+        {
+          "text": "Number of patients: 5",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.265,
+          "bottom": 0.284,
+          "x0": 72.0,
+          "cw": 4.9
+        },
+        {
+          "text": "Patient   Type",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.298,
+          "bottom": 0.317,
+          "x0": 72.0,
+          "cw": 4.66
+        },
+        {
+          "text": "P1        Normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.314,
+          "bottom": 0.333,
+          "x0": 72.0,
+          "cw": 4.49
+        },
+        {
+          "text": "P2        Emergency",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.33,
+          "bottom": 0.349,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "P3        Normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.347,
+          "bottom": 0.366,
+          "x0": 72.0,
+          "cw": 4.49
+        },
+        {
+          "text": "P4        Emergency",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.363,
+          "bottom": 0.382,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "P5        Normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 4.49
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.413,
+          "bottom": 0.433,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "P2 (Emergency) assigned Operating Room 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.446,
+          "bottom": 0.465,
+          "x0": 72.0,
+          "cw": 5.32
+        },
+        {
+          "text": "P4 (Emergency) assigned Operating Room 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.462,
+          "bottom": 0.481,
+          "x0": 72.0,
+          "cw": 5.32
+        },
+        {
+          "text": "P2 completed surgery",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.495,
+          "bottom": 0.514,
+          "x0": 72.0,
+          "cw": 5.12
+        },
+        {
+          "text": "P1 assigned Operating Room 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.511,
+          "bottom": 0.53,
+          "x0": 72.0,
+          "cw": 5.26
+        },
+        {
+          "text": "P4 completed surgery",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.544,
+          "bottom": 0.563,
+          "x0": 72.0,
+          "cw": 5.12
+        },
+        {
+          "text": "P3 assigned Operating Room 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.56,
+          "bottom": 0.579,
+          "x0": 72.0,
+          "cw": 5.26
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.594,
+          "bottom": 0.614,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread per patient.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.626,
+          "bottom": 0.645,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect operating room allocation.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.643,
+          "bottom": 0.662,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Two condition variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.659,
+          "bottom": 0.678,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o emergency_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.676,
+          "bottom": 0.695,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o normal_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.692,
+          "bottom": 0.711,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " Shared variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.708,
+          "bottom": 0.727,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o available_rooms",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.725,
+          "bottom": 0.744,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_emergency",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.741,
+          "bottom": 0.76,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_normal",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.758,
+          "bottom": 0.777,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " Emergency patients should be signaled first.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.774,
+          "bottom": 0.793,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_wait() – Wait if no room is available.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.79,
+          "bottom": 0.809,
+          "x0": 90.0,
+          "cw": 4.58
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "7. Database Connection Pool",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.084,
+          "bottom": 0.103,
+          "x0": 72.0,
+          "cw": 5.35
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.117,
+          "bottom": 0.137,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "A system has 3 database connections shared among 6 client threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.149,
+          "bottom": 0.169,
+          "x0": 72.0,
+          "cw": 5.14
+        },
+        {
+          "text": "Each client must acquire one available connection, perform its operation, and release the",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.182,
+          "bottom": 0.201,
+          "x0": 72.0,
+          "cw": 4.76
+        },
+        {
+          "text": "connection.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.199,
+          "bottom": 0.218,
+          "x0": 72.0,
+          "cw": 4.88
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.232,
+          "bottom": 0.252,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Number of database connections: 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.265,
+          "bottom": 0.284,
+          "x0": 72.0,
+          "cw": 5.07
+        },
+        {
+          "text": "Number of clients: 6",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.281,
+          "bottom": 0.3,
+          "x0": 72.0,
+          "cw": 4.85
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.315,
+          "bottom": 0.334,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "Client 1 acquired Connection 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.347,
+          "bottom": 0.366,
+          "x0": 72.0,
+          "cw": 4.94
+        },
+        {
+          "text": "Client 2 acquired Connection 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.364,
+          "bottom": 0.383,
+          "x0": 72.0,
+          "cw": 4.94
+        },
+        {
+          "text": "Client 3 acquired Connection 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 4.94
+        },
+        {
+          "text": "Client 4 waiting for connection",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.413,
+          "bottom": 0.432,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "Client 5 waiting for connection",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.429,
+          "bottom": 0.448,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "Client 6 waiting for connection",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.446,
+          "bottom": 0.465,
+          "x0": 72.0,
+          "cw": 4.78
+        },
+        {
+          "text": "Client 2 released Connection 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.478,
+          "bottom": 0.498,
+          "x0": 72.0,
+          "cw": 4.87
+        },
+        {
+          "text": "Client 4 acquired Connection 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.495,
+          "bottom": 0.514,
+          "x0": 72.0,
+          "cw": 4.94
+        },
+        {
+          "text": "Client 1 released Connection 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.528,
+          "bottom": 0.547,
+          "x0": 72.0,
+          "cw": 4.87
+        },
+        {
+          "text": "Client 5 acquired Connection 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.544,
+          "bottom": 0.563,
+          "x0": 72.0,
+          "cw": 4.94
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.577,
+          "bottom": 0.597,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread for each client.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.61,
+          "bottom": 0.629,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect the connection pool.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.626,
+          "bottom": 0.645,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_t – For clients waiting for a connection.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.643,
+          "bottom": 0.662,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Shared data structure:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.659,
+          "bottom": 0.678,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "int connection_status[3];",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.692,
+          "bottom": 0.711,
+          "x0": 72.0,
+          "cw": 4.69
+        },
+        {
+          "text": "For example:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.725,
+          "bottom": 0.744,
+          "x0": 72.0,
+          "cw": 5.12
+        },
+        {
+          "text": "0 → Available",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.758,
+          "bottom": 0.777,
+          "x0": 72.0,
+          "cw": 5.25
+        },
+        {
+          "text": "1 → Busy",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.775,
+          "bottom": 0.794,
+          "x0": 72.0,
+          "cw": 5.73
+        },
+        {
+          "text": " pthread_cond_wait() – When no connection is available.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.808,
+          "bottom": 0.827,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_signal() – When a connection is released.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.824,
+          "bottom": 0.843,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "Important",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.858,
+          "bottom": 0.877,
+          "x0": 72.0,
+          "cw": 5.63
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "Students must ensure that the same connection is not assigned to two clients",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.083,
+          "bottom": 0.103,
+          "x0": 72.0,
+          "cw": 4.85
+        },
+        {
+          "text": "simultaneously.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.1,
+          "bottom": 0.12,
+          "x0": 72.0,
+          "cw": 5.47
+        },
+        {
+          "text": "8. Computer Lab Allocation with Priority",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.166,
+          "bottom": 0.186,
+          "x0": 72.0,
+          "cw": 5.27
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.199,
+          "bottom": 0.219,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "A computer lab has 3 computers shared by students and faculty.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.232,
+          "bottom": 0.252,
+          "x0": 72.0,
+          "cw": 5.08
+        },
+        {
+          "text": "Faculty members should receive priority over waiting students.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.265,
+          "bottom": 0.284,
+          "x0": 72.0,
+          "cw": 4.86
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.298,
+          "bottom": 0.318,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Number of computers: 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.331,
+          "bottom": 0.35,
+          "x0": 72.0,
+          "cw": 5.24
+        },
+        {
+          "text": "Number of users: 6",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.347,
+          "bottom": 0.366,
+          "x0": 72.0,
+          "cw": 5.01
+        },
+        {
+          "text": "User    Type",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 4.79
+        },
+        {
+          "text": "U1      Student",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.397,
+          "bottom": 0.416,
+          "x0": 72.0,
+          "cw": 4.52
+        },
+        {
+          "text": "U2      Faculty",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.413,
+          "bottom": 0.432,
+          "x0": 72.0,
+          "cw": 4.47
+        },
+        {
+          "text": "U3      Student",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.429,
+          "bottom": 0.448,
+          "x0": 72.0,
+          "cw": 4.52
+        },
+        {
+          "text": "U4      Faculty",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.446,
+          "bottom": 0.465,
+          "x0": 72.0,
+          "cw": 4.47
+        },
+        {
+          "text": "U5      Student",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.462,
+          "bottom": 0.481,
+          "x0": 72.0,
+          "cw": 4.52
+        },
+        {
+          "text": "U6      Student",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.478,
+          "bottom": 0.498,
+          "x0": 72.0,
+          "cw": 4.52
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.512,
+          "bottom": 0.532,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "U2 (Faculty) assigned Computer 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.545,
+          "bottom": 0.564,
+          "x0": 72.0,
+          "cw": 5.12
+        },
+        {
+          "text": "U4 (Faculty) assigned Computer 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.561,
+          "bottom": 0.58,
+          "x0": 72.0,
+          "cw": 5.12
+        },
+        {
+          "text": "U1 (Student) assigned Computer 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.577,
+          "bottom": 0.596,
+          "x0": 72.0,
+          "cw": 5.14
+        },
+        {
+          "text": "U3 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.61,
+          "bottom": 0.629,
+          "x0": 72.0,
+          "cw": 5.15
+        },
+        {
+          "text": "U5 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.626,
+          "bottom": 0.645,
+          "x0": 72.0,
+          "cw": 5.15
+        },
+        {
+          "text": "U6 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.643,
+          "bottom": 0.662,
+          "x0": 72.0,
+          "cw": 5.15
+        },
+        {
+          "text": "U2 released Computer 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.676,
+          "bottom": 0.695,
+          "x0": 72.0,
+          "cw": 5.21
+        },
+        {
+          "text": "U3 assigned Computer 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.692,
+          "bottom": 0.711,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": "U4 released Computer 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.725,
+          "bottom": 0.744,
+          "x0": 72.0,
+          "cw": 5.21
+        },
+        {
+          "text": "U5 assigned Computer 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.741,
+          "bottom": 0.76,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.775,
+          "bottom": 0.794,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread per user.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.807,
+          "bottom": 0.826,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect computer allocation.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.824,
+          "bottom": 0.843,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Two condition variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.84,
+          "bottom": 0.859,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o faculty_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.856,
+          "bottom": 0.875,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o student_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.873,
+          "bottom": 0.892,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " Shared variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.889,
+          "bottom": 0.908,
+          "x0": 90.0,
+          "cw": 4.58
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "o available_computers",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.083,
+          "bottom": 0.102,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_faculty",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.1,
+          "bottom": 0.119,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o waiting_students",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.116,
+          "bottom": 0.135,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " Priority condition:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.133,
+          "bottom": 0.152,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o A student should wait if a faculty member is waiting.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.149,
+          "bottom": 0.168,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "9. Traffic Intersection Synchronization",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.215,
+          "bottom": 0.235,
+          "x0": 72.0,
+          "cw": 5.06
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.248,
+          "bottom": 0.268,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "Vehicles arrive from North, South, East, and West.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.281,
+          "bottom": 0.301,
+          "x0": 72.0,
+          "cw": 4.87
+        },
+        {
+          "text": "Rules:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.314,
+          "bottom": 0.333,
+          "x0": 72.0,
+          "cw": 4.82
+        },
+        {
+          "text": " North and South vehicles may pass simultaneously.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.347,
+          "bottom": 0.366,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " East and West vehicles may pass simultaneously.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.363,
+          "bottom": 0.382,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " North/South traffic cannot pass together with East/West traffic.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.413,
+          "bottom": 0.433,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Number of vehicles: 6",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.446,
+          "bottom": 0.465,
+          "x0": 72.0,
+          "cw": 5.0
+        },
+        {
+          "text": "Vehicle   Direction",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.479,
+          "bottom": 0.498,
+          "x0": 72.0,
+          "cw": 4.73
+        },
+        {
+          "text": "V1        North",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.495,
+          "bottom": 0.514,
+          "x0": 72.0,
+          "cw": 4.35
+        },
+        {
+          "text": "V2        South",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.511,
+          "bottom": 0.53,
+          "x0": 72.0,
+          "cw": 4.36
+        },
+        {
+          "text": "V3        East",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.528,
+          "bottom": 0.547,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "V4        West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.544,
+          "bottom": 0.563,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "V5        North",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.561,
+          "bottom": 0.58,
+          "x0": 72.0,
+          "cw": 4.35
+        },
+        {
+          "text": "V6        East",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.577,
+          "bottom": 0.596,
+          "x0": 72.0,
+          "cw": 4.15
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.61,
+          "bottom": 0.63,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "V1 entered from North",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.643,
+          "bottom": 0.662,
+          "x0": 72.0,
+          "cw": 5.15
+        },
+        {
+          "text": "V2 entered from South",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.659,
+          "bottom": 0.678,
+          "x0": 72.0,
+          "cw": 5.15
+        },
+        {
+          "text": "V3 waiting from East",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.692,
+          "bottom": 0.711,
+          "x0": 72.0,
+          "cw": 5.07
+        },
+        {
+          "text": "V4 waiting from West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.709,
+          "bottom": 0.728,
+          "x0": 72.0,
+          "cw": 5.27
+        },
+        {
+          "text": "V1 exited",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.741,
+          "bottom": 0.76,
+          "x0": 72.0,
+          "cw": 5.0
+        },
+        {
+          "text": "V2 exited",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.758,
+          "bottom": 0.777,
+          "x0": 72.0,
+          "cw": 5.0
+        },
+        {
+          "text": "V3 entered from East",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.791,
+          "bottom": 0.81,
+          "x0": 72.0,
+          "cw": 5.04
+        },
+        {
+          "text": "V4 entered from West",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.807,
+          "bottom": 0.826,
+          "x0": 72.0,
+          "cw": 5.23
+        },
+        {
+          "text": "V3 exited",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.84,
+          "bottom": 0.859,
+          "x0": 72.0,
+          "cw": 5.0
+        },
+        {
+          "text": "V4 exited",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.856,
+          "bottom": 0.875,
+          "x0": 72.0,
+          "cw": 5.0
+        },
+        {
+          "text": "V5 entered from North",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.889,
+          "bottom": 0.908,
+          "x0": 72.0,
+          "cw": 5.15
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.084,
+          "bottom": 0.103,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – One thread per vehicle.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.116,
+          "bottom": 0.135,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect intersection state.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.133,
+          "bottom": 0.152,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " At least two condition variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.149,
+          "bottom": 0.169,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o north_south_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.166,
+          "bottom": 0.185,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o east_west_cond",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.182,
+          "bottom": 0.201,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " Shared variables:",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.198,
+          "bottom": 0.217,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "o ns_count",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.215,
+          "bottom": 0.234,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": "o ew_count",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.231,
+          "bottom": 0.25,
+          "x0": 126.0,
+          "cw": 5.98
+        },
+        {
+          "text": " pthread_cond_wait() – When conflicting traffic is using the intersection.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.248,
+          "bottom": 0.267,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_broadcast() – When an entire direction group finishes.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.264,
+          "bottom": 0.283,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "This is one of the more challenging questions because students must identify compatible",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.297,
+          "bottom": 0.317,
+          "x0": 72.0,
+          "cw": 4.54
+        },
+        {
+          "text": "and conflicting threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.313,
+          "bottom": 0.333,
+          "x0": 72.0,
+          "cw": 5.13
+        },
+        {
+          "text": "10. Shared Resource Pool",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.38,
+          "bottom": 0.4,
+          "x0": 72.0,
+          "cw": 5.35
+        },
+        {
+          "text": "Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.413,
+          "bottom": 0.433,
+          "x0": 72.0,
+          "cw": 5.86
+        },
+        {
+          "text": "A system contains 3 identical resources shared among 7 threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.445,
+          "bottom": 0.465,
+          "x0": 72.0,
+          "cw": 5.05
+        },
+        {
+          "text": "Each thread must:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.478,
+          "bottom": 0.498,
+          "x0": 72.0,
+          "cw": 4.98
+        },
+        {
+          "text": "1. Request a resource.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.511,
+          "bottom": 0.53,
+          "x0": 90.0,
+          "cw": 4.5
+        },
+        {
+          "text": "2. Use the resource.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.528,
+          "bottom": 0.547,
+          "x0": 90.0,
+          "cw": 4.5
+        },
+        {
+          "text": "3. Release the resource.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.544,
+          "bottom": 0.563,
+          "x0": 90.0,
+          "cw": 4.5
+        },
+        {
+          "text": "Sample Input",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.578,
+          "bottom": 0.597,
+          "x0": 72.0,
+          "cw": 5.59
+        },
+        {
+          "text": "Number of resources: 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.61,
+          "bottom": 0.629,
+          "x0": 72.0,
+          "cw": 5.04
+        },
+        {
+          "text": "Number of threads: 7",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.627,
+          "bottom": 0.646,
+          "x0": 72.0,
+          "cw": 5.01
+        },
+        {
+          "text": "Sample Output",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.66,
+          "bottom": 0.68,
+          "x0": 72.0,
+          "cw": 5.81
+        },
+        {
+          "text": "T1 acquired Resource 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.693,
+          "bottom": 0.712,
+          "x0": 72.0,
+          "cw": 5.1
+        },
+        {
+          "text": "T2 acquired Resource 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.709,
+          "bottom": 0.728,
+          "x0": 72.0,
+          "cw": 5.1
+        },
+        {
+          "text": "T3 acquired Resource 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.726,
+          "bottom": 0.745,
+          "x0": 72.0,
+          "cw": 5.1
+        },
+        {
+          "text": "T4 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.758,
+          "bottom": 0.777,
+          "x0": 72.0,
+          "cw": 5.02
+        },
+        {
+          "text": "T5 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.775,
+          "bottom": 0.794,
+          "x0": 72.0,
+          "cw": 5.02
+        },
+        {
+          "text": "T6 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.791,
+          "bottom": 0.81,
+          "x0": 72.0,
+          "cw": 5.02
+        },
+        {
+          "text": "T7 waiting",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.808,
+          "bottom": 0.827,
+          "x0": 72.0,
+          "cw": 5.02
+        },
+        {
+          "text": "T2 released Resource 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.84,
+          "bottom": 0.859,
+          "x0": 72.0,
+          "cw": 5.01
+        },
+        {
+          "text": "T4 acquired Resource 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.857,
+          "bottom": 0.876,
+          "x0": 72.0,
+          "cw": 5.1
+        },
+        {
+          "text": "T1 released Resource 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.889,
+          "bottom": 0.908,
+          "x0": 72.0,
+          "cw": 5.01
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "T5 acquired Resource 1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.083,
+          "bottom": 0.102,
+          "x0": 72.0,
+          "cw": 5.1
+        },
+        {
+          "text": "T3 released Resource 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.116,
+          "bottom": 0.135,
+          "x0": 72.0,
+          "cw": 5.01
+        },
+        {
+          "text": "T6 acquired Resource 3",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.133,
+          "bottom": 0.152,
+          "x0": 72.0,
+          "cw": 5.1
+        },
+        {
+          "text": "Students must use",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.166,
+          "bottom": 0.186,
+          "x0": 72.0,
+          "cw": 5.31
+        },
+        {
+          "text": " pthread_create() – Create 7 worker threads.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.199,
+          "bottom": 0.218,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_join() – Wait for completion.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.215,
+          "bottom": 0.234,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_mutex_t – Protect the resource pool.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.231,
+          "bottom": 0.25,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_t – Wait for resource availability.",
+          "kind": "text",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.248,
+          "bottom": 0.267,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " Shared array:",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.264,
+          "bottom": 0.283,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": "int resource[3];",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.297,
+          "bottom": 0.316,
+          "x0": 72.0,
+          "cw": 4.51
+        },
+        {
+          "text": "Example:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.33,
+          "bottom": 0.349,
+          "x0": 72.0,
+          "cw": 5.45
+        },
+        {
+          "text": "resource[i] = 0 → Free",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.363,
+          "bottom": 0.382,
+          "x0": 72.0,
+          "cw": 4.91
+        },
+        {
+          "text": "resource[i] = 1 → Allocated",
+          "kind": "code",
+          "level": 0,
+          "para_break": "line",
+          "top": 0.38,
+          "bottom": 0.399,
+          "x0": 72.0,
+          "cw": 4.94
+        },
+        {
+          "text": " pthread_cond_wait() – If all resources are busy.",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.413,
+          "bottom": 0.432,
+          "x0": 90.0,
+          "cw": 4.58
+        },
+        {
+          "text": " pthread_cond_signal() – When a resource is released.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.429,
+          "bottom": 0.448,
+          "x0": 90.0,
+          "cw": 4.58
+        }
+      ]
+    }
+  ],
+  "page_count": 11,
+  "slide_count": null,
+  "properties": {
+    "author": "Microsoft account",
+    "creator": "Microsoft® Word 2013",
+    "producer": "Microsoft® Word 2013",
+    "creationDate": "D:20260828080234+05'30'"
+  },
+  "master_text": []
+}

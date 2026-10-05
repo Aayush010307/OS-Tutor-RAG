@@ -1,0 +1,100 @@
+{
+  "document_id": "dining-philospher-d60a5fa0",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "FIRST ATTEMPT:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "#DEFINE N5\nVoid philosopher (int i)\n{\nWhile true\n{\nThink (); // for some time\nTake_fork (Ri)\nTake_fork (Li)\nEat ();\nPut_fork (Li)\nPut_fork (Ri)\n}\n}",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "SECOND ATTEMPT:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "#DEFINE N5\nVoid philosopher (int i)\n{\nWhile true\n{\nThink ();\nTake_fork (Ri)\nIf (available (Li)\n{\nTake_fork (Li)\nEat ();\nPut_fork (Ri)\nPut_fork (Li)\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "code",
+          "text": "Else\n{\nPut_fork (Ri)\nSleep (T)\n}\n}",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "In the solution two instead of sleep we can change to sleep (random_time), still is not guarantee that the starvation will not occur.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "THIRD ATTEMPT:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "#DEFINE N5\nVoid philosopher (int i)\n{\nWhile true\n{\nThink ();\nLock (mutex)\nTake_fork (Ri)\nTake_fork (Li)\nEat ();\nPut_fork (Li)\nPut_fork (Ri)\nUnlock (mutex)\n}\n}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "FOURTH ATTEMPT USING SEMAPHORES",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "Void philosopher (int i)\n                                        void take_forks (int i)\n                                        void put_forks (int i)\n{\n                                        {\n                                        lock(mutex)\nWhile (TRUE)\n                                        lock (mutex);\n                                        state [i] = THINKING\n{\n                                        state [i] = HUNGRY\n                                        test (LEFT)\nThink ();\n                                        test (i);\n                                        test (RIGHT)\nTake_forks (i);\n                                       unlock (mutex)\n                                        unlock (mutex);\nEat ();\n                                        down (s[i])\n                                        }",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Put_forks (); }",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "}\n}\nVoid test (int i)\n{",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "If (state [i] = HUNGRY && state [LEFT]! = EATING && state [RIGHT]! = EATING)",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "{\nState [i] = EATING\nUP (S[i]);\n}\n}",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

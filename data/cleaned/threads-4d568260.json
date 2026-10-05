@@ -1,0 +1,660 @@
+{
+  "document_id": "threads-4d568260",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Threads and concurrency",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Mythili Vutukuru CSE, IIT Bombay",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Threads and concurrency",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "Processes and threads",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Processes and threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "So, far we have studied single threaded programs",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Recap: process execution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "CPU executes instruction by instruction, traps to OS as needed",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "PC points to next instruction to run",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "SP points to current top of stack",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Other registers also with process context SP",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A program can also have multiple threads of execution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "What is a thread?",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "PC",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "What are threads?",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "What are threads?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Threads = light weight processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Why? A process may want to run multiple copies of itself",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If one copy blocks due to blocking system call, another copy can still run",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Multiple copies can run in parallel on multiple CPU cores to speed up work",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Why not have multiple child processes running the same program?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Too much memory consumed by identical memory images",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Needs IPC to share information across processes",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A process can create multiple threads (default: single thread)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Multiple threads share same memory image of process, saves memory",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Threads run independently on same code (if one blocks, another can still run)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Threads can run in parallel on multiple cores at same time",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Threads can share data more easily",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Multi-threaded process",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Multi-threaded process",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A thread is like another copy of a process that executes independently from parent",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Threads shares the same code, global/static data, heap",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each thread has separate stack for independent function calls",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each thread has separate PC, running different code",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each thread has separate CPU context during execution",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "PC1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "PC2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "SP2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "SP1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Image credit: OSTEP",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "Concurrency vs. parallelism",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Concurrency vs. parallelism",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Understand the difference between concurrency and parallelism",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Concurrency: running multiple threads/processes at the same time, even on single CPU core, by interleaving their executions",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parallelism: running multiple threads/processes in parallel over different CPU cores",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "With multiple threads, process can get better performance on multicore systems via parallelism",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Example: matrix multiplication can be easily parallelized, with different threads operating on different parts of the matrix",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Even if no parallelism (single core), concurrency of threads ensures effective use of CPU when one of the threads blocks",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Example: if one thread of a server blocks on I/O read, another can still run",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "POSIX threads",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "POSIX threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "In Linux, POSIX threads (pthreads) library allows creation of multiple threads in a process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Each thread is given a start function where its execution begins",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Threads execute independently from parent after creation",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parent can wait for threads to finish (optional)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Several such threading libraries exist in different programming languages",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "void f1() {\n …\n}\nvoid f2() {\n …\n}\nmain() {\n …\n  pthread_t t1, t2",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "pthread_create(&t1, .., f1,..) pthread_create(&t2, .., f2,..) …",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "pthread_join(t1, ..) pthread_join(t2, ..)",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "}",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": "Creating threads using pthreads API",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Creating threads using pthreads API",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": "Scheduling threads",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Scheduling threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "OS schedules threads that are ready to run independently, like processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "The context of a thread (PC, registers) is saved into/restored from thread control block (TCB)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Every PCB has one or more linked TCBs",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Threads that are scheduled independently by kernel are called kernel threads",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "E.g., Linux pthreads are kernel threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "In contrast, some libraries provide user-level threads",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "User program sees multiple threads, but kernel is aware of fewer threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Multiple such user threads are seen as one thread by kernel, may not be scheduled in parallel for this reason",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Why use user threads then? Ease of programming",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": "Example: threads with shared data",
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Example: threads with shared data",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Shared global counter",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two threads update same counter 10^7 times",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "What is expected output after both threads finish?",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": "Threads with shared data: what happens?",
+      "images": 2,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Threads with shared data: what happens?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "What do we expect? Two threads, each increments counter by 10^7, so 2X10^7",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Sometimes, a lower value. Why?",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": "Understanding shared data access",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Understanding shared data access",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "The C code “counter = counter + 1” is compiled into multiple instructions",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Load counter variable from memory into register",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Increment register",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Store register back into memory of counter variable",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "load counter → reg",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "reg = reg + 1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "store reg → counter",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 12,
+      "title": "Understanding shared data access",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Understanding shared data access",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "What happens when two threads run this line of code concurrently?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Counter is 0 initially",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "T1 loads counter into register, increment reg",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Context switch, register (value 1) saved",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "T2 runs, loads counter 0 from memory",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "T2 increments register, stores to memory",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "T1 resumes, stores register value to counter",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Counter value rewritten to 1 again",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Final counter value is 1, expected value is 2",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "load counter → reg",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "reg = reg + 1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "(context switch, save reg)",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "(resume, restore reg) store reg → counter",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "load counter → reg",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "reg = reg + 1",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "store reg → counter",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "T2",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 13,
+      "title": "Race conditions, critical sections",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Race conditions, critical sections",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Incorrect execution of code due to concurrency is called race condition",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Due to unfortunate timing of context switches, atomicity of data update violated",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Race conditions happen when we have concurrent execution on shared data",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Threads sharing common data in memory image of user processes",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Processes in kernel mode sharing OS data structures",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "We require mutual exclusion on some parts of user or OS code",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Concurrent execution by multiple threads/processes should not be permitted",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Parts of program that need to be executed with mutual exclusion for correct operation are called critical sections",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Present in multi-threaded programs, OS code",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "How to access critical sections with mutual exclusion? Using locks (next topic)",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

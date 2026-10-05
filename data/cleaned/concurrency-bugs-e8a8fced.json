@@ -1,0 +1,345 @@
+{
+  "document_id": "concurrency-bugs-e8a8fced",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "slide",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Concurrency Bugs",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 2,
+      "title": "Bugs in concurrent programs",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Bugs in concurrent programs",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Writing multi-threaded programs is tricky",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Bugs are non-deterministic and occur based on execution order of threads – very hard to debug",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two types of bugs",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Deadlocks: threads cannot execute any further and wait for each other",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Non-deadlock bugs: non deadlock but incorrect results when threads execute",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 3,
+      "title": "Non deadlock bugs",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Non deadlock bugs",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Atomicity bugs – atomicity assumptions made by programmer are violated during execution of concurrent threads",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Fix: locks for mutual exclusion",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Order-violation bugs – desired order of memory accesses is flipped during concurrent execution",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Fix: condition variables",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 4,
+      "title": "Atomicity bug: example",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Atomicity bug: example",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "One thread reads and prints a shared data item, while another concurrently modifies it",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Atomicity bugs can occur, not just when writing to shared data, but even when reading it",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 5,
+      "title": "Atomicity bug example: fix",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Atomicity bug example: fix",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Always use locks when accessing shared data",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 6,
+      "title": "Order violation bug: example",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Order violation bug: example",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Thread1 assumes Thread2 has already run",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "No assumptions can be made on order of execution of concurrent threads",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 7,
+      "title": "Ordering violation bug example: fix",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Ordering violation bug example: fix",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Use condition variables or semaphores",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 8,
+      "title": "Deadlock bugs",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Deadlock bugs",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Classic example: Thread1 holds lock L1 and is waiting for lock L2. Thread2 holds L2 and is waiting for L1.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Deadlock need not always occur. Only occurs if executions overlap and context switch from a thread after acquiring only one lock.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 9,
+      "title": "Deadlock: a visual representation",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Deadlock: a visual representation",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Cycle in a dependency graph",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 10,
+      "title": "Conditions for deadlock",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Conditions for deadlock",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Mutual exclusion: a thread claims exclusive control of a resource (e.g., lock)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Hold-and-wait: thread holds a resource and is waiting for another",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "No preemption: thread cannot be made to give up its resource (e.g., cannot take back a lock)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Circular wait: there exists a cycle in the resource dependency graph",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "ALL four of the above conditions must hold for a deadlock to occur",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 11,
+      "title": "Preventing circular wait",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Preventing circular wait",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Acquire locks in a certain fixed order",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "E.g., both threads acquire L1 before L2",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Total ordering (or even a partial ordering on related locks) must be followed",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "E.g., order locks by address of lock variable",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 12,
+      "title": "Preventing hold-and-wait",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Preventing hold-and-wait",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Acquire all locks at once, say, by acquiring a master lock first",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "But this method may reduce concurrent execution and performance gains",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 13,
+      "title": "Other solutions to deadlocks",
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Other solutions to deadlocks",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Deadlock avoidance: if OS knew which process needs which locks, it can schedule the processes in that deadlock will not occur",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Banker’s algorithm is very popular, but impractical in real life to assume this knowledge",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Example, below are locks needed by threads and a possible schedule decided by OS",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Detect and recover: reboot system or kill deadlocked processes",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "13",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "document_id": "lecture15-918b182c",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Lecture 15: Semaphores",
+      "images": 8,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Lecture 15: Semaphores",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Mythili Vutukuru IIT Bombay",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "What is a semaphore?",
+      "images": 8,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "What is a semaphore?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Synchronization primitive like condition variables",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Semaphore is a variable with an underlying counter",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Two functions on a semaphore variable",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Up/post increments the counter",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Down/wait decrements the counter and blocks the calling thread if the resulting value is negative",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A semaphore with init value 1 acts as a simple lock (binary semaphore = mutex)",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "Semaphores for ordering",
+      "images": 8,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Semaphores for ordering",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Can be used to set order of execution between threads like CV",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Example: parent waiting for child (init = 0)",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Example: Producer/Consumer (1)",
+      "images": 8,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Example: Producer/Consumer (1)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Need two semaphores for signaling",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "One to track empty slots, and make producer wait if no more empty slots",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "One to track full slots, and make consumer wait if no more full slots",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "One semaphore to act as mutex for buffer",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "Example: Producer/Consumer (2)",
+      "images": 8,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Example: Producer/Consumer (2)",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "Incorrect solution with deadlock",
+      "images": 8,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Incorrect solution with deadlock",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "What if lock is acquired before signaling?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Waiting thread sleeps with mutex and the signaling thread can never wake it up",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

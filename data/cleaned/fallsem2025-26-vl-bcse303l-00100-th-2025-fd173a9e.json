@@ -1,0 +1,427 @@
+{
+  "document_id": "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "1.Producer & Consumer problem using Semaphores",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Producer consumer problem is a classical synchronization problem. We can solve this problem by using semaphores.\nA semaphore S is an integer variable that can be accessed only through two standard operations : wait() and signal().\nThe wait() operation reduces the value of semaphore by 1 and the signal() operation increases its value by 1.",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "wait(S){\nwhile(S<=0);   // busy waiting\nS--;\n}\nsignal(S){\nS++;\n}",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Semaphores are of two types:",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Binary Semaphore – This is also known as mutex lock. It can have only two values – 0 and 1. Its value is initialized to 1. It is used to implement solution of critical section problem with multiple processes.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Counting Semaphore – Its value can range over an unrestricted domain. It is used to control access to a resource that has multiple instances.\nProblem Statement – We have a buffer of fixed size. A producer can produce an item and can place in the buffer. A consumer can pick items and can consume them. We need to ensure that when a producer is placing an item in the buffer, then at the same time consumer should not consume any item. In this problem, buffer is the critical section.\nTo solve this problem, we need two counting semaphores – Full and Empty. “Full” keeps track of number of items in the buffer at any given time and “Empty” keeps track of number of unoccupied slots.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Initialization of semaphores –",
+          "level": 2
+        },
+        {
+          "type": "code",
+          "text": "mutex = 1\nFull = 0 // Initially, all slots are empty. Thus full slots are 0\nEmpty = n // All slots are empty initially\nSolution for Producer –\n                  do{\n                    //produce an item\n                   wait(empty);\n                   wait(mutex);\n                      //place in buffer\n                    signal(mutex);\n                      signal(full);\n                    }while(true)",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "When producer produces an item then the value of “empty” is reduced by 1 because one slot will be filled now. The value of mutex is also reduced to prevent consumer to access the buffer. Now, the producer has placed the item and thus the value of “full” is increased by 1. The value of mutex is also increased by 1 beacuse the task of producer has been completed and consumer can access the buffer.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Solution for Consumer –",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "do{\nwait(full);\nwait(mutex);\n// remove item from buffer\nsignal(mutex);\nsignal(empty);\n// consumes item\n}while(true)",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "As the consumer is removing an item from buffer, therefore the value of “full” is reduced by 1 and the value is mutex is also reduced so that the producer cannot access the buffer at this moment.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "list_item",
+          "text": "Now, the consumer has consumed the item, thus increasing the value of “empty” by 1. The value of mutex is also increased so that producer can access the buffer now.",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "#include<stdio.h>\n#include<stdlib.h>\n int mutex=1,full=0,empty=3,x=0;\n int main()\n{\n    int n;\n    void producer();\n    void consumer();\n    int wait(int);\n    int signal(int);\n    printf(\"\\n1.Producer\\n2.Consumer\\n3.Exit\");\n    while(1)\n    {\n        printf(\"\\nEnter your choice:\");\n        scanf(\"%d\",&n);\n        switch(n)\n        {\n            case 1:    if((mutex==1)&&(empty!=0))\n                        producer();\n                    else\n                        printf(\"Buffer is full!!\");\n                    break;\n            case 2:    if((mutex==1)&&(full!=0))\n                        consumer();\n                    else\n                        printf(\"Buffer is empty!!\");\n                    break;",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "case 3:",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "                    exit(0);\n                    break;\n        }\n    }\n    return 0;\n}\nint wait(int s)\n{\n    return (--s);\n}\nint signal(int s)\n{\n    return(++s);\n}\nvoid producer()\n{\n    mutex=wait(mutex);\n    full=signal(full);\n    empty=wait(empty);\n    x++;\n    printf(\"\\nProducer produces the item %d\",x);\n    mutex=signal(mutex);",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "code",
+          "text": "void consumer()\n{\n    mutex=wait(mutex);\n    full=wait(full);\n    empty=signal(empty);\n    printf(\"\\nConsumer consumes item %d\",x);\n    x--;\n    mutex=signal(mutex);\n}",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Output",
+          "level": 2
+        },
+        {
+          "type": "paragraph",
+          "text": "1.Producer",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "2.Consumer",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "3.Exit\nEnter your choice:1\nProducer produces the item 1\nEnter your choice:2\nConsumer consumes item 1\nEnter your choice:2\nBuffer is empty!!\nEnter your choice:1\nProducer produces the item 1\nEnter your choice:1\nProducer produces the item 2\nEnter your choice:1\nProducer produces the item 3\nEnter your choice:1\nBuffer is full!!\nEnter your choice:3",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "2.Write a program to implement producer consumer Shared memory",
+          "level": 2
+        },
+        {
+          "type": "code",
+          "text": "#include <sys/types.h>\n#include <sys/ipc.h>\n#include <sys/shm.h>\n#include <stdio.h>\n#include<stdlib.h>\n#include<unistd.h>\n#define PERMS 0666\n#define mkey 45787\nfile 2: sender.c\n#include \"shmem.h\"\nint main()\n{\nint shmemid,n;\nchar *pshmem;\nif((shmemid=shmget(mkey,10,PERMS|IPC_CREAT))<0)\n{\nprintf(\"\\n Sender: Cant get shared memory\");\nexit(1);\n}\npshmem=shmat(shmemid,(char *) 0,0);\nif(pshmem < 0)\n{",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "code",
+          "text": "perror(\"Sender: Cant attach shared memory\");\nexit(1);\nn=read(0,pshmem,10);\npshmem[n]='\\0';\nexit(0);\n}\nfile 3: receiver.c\n#include \"shmem.h\"\nint main()\n{\nint shmemid,n;\nchar *pshmem;\nif((shmemid=shmget(mkey,10,PERMS|IPC_CREAT))<0)\n{\nprintf(\"\\nReceiver: Error opening shared memory\");\nexit(1);\n}\npshmem=shmat(shmemid,(char *) 0,0);\nif(pshmem < 0)\n{\nprintf(\"\\n Receiver : Can't attach shared memory\");\nexit(1);\n}\nprintf(\"%s\",pshmem);\nshmctl(shmemid,IPC_RMID,NULL);\nexit(0);\n}",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "output",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "cc sender.c\n$ ./a.out\nhi",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": null,
+      "images": 1,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "3. Dining Philosophers problem using Semaphores",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Prerequisite – Process Synchronization, Semaphores, Dining-Philosophers Solution Using Monitors The Dining Philosopher Problem – The Dining Philosopher Problem states that K philosophers seated around a circular table with one chopstick between each pair of philosophers. There is one chopstick between each philosopher. A philosopher may eat if he can pickup the two chopsticks adjacent to him. One chopstick may be picked up by any one of its adjacent followers but not both.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Semaphore Solution to Dining Philosopher –",
+          "level": 2
+        },
+        {
+          "type": "paragraph",
+          "text": "Each philosopher is represented by the following pseudocode:",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "process P[i]",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "while true do",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "   {  THINK;\n      PICKUP(CHOPSTICK[i], CHOPSTICK[i+1 mod 5]);\n      EAT;\n      PUTDOWN(CHOPSTICK[i], CHOPSTICK[i+1 mod 5])\n   }",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "There are three states of philosopher : THINKING, HUNGRY and EATING. Here there are two semaphores : Mutex and a semaphore array for the philosophers. Mutex is used such that no two philosophers may access the pickup or putdown at the same time. The array is used to control the behavior of each philosopher. But, semaphores can result in deadlock due to programming errors.",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "#include<stdio.h>\n#include<semaphore.h>\n#include<pthread.h>\n#define N 5\n#define THINKING 0\n#define HUNGRY 1\n#define EATING 2\n#define LEFT (ph_num+4)%N\n#define RIGHT (ph_num+1)%N\nsem_t mutex;\nsem_t S[N];",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "code",
+          "text": "void * philospher(void *num);\nvoid take_fork(int);\nvoid put_fork(int);\nvoid test(int);\nint state[N];\nint phil_num[N]={0,1,2,3,4};\nint main()\n{\n    int i;\n    pthread_t thread_id[N];\n    sem_init(&mutex,0,1);\n    for(i=0;i<N;i++)\n        sem_init(&S[i],0,0);\n    for(i=0;i<N;i++)\n    {\n        pthread_create(&thread_id[i],NULL,philospher,&phil_num[i]);\n        printf(\"Philosopher %d is thinking\\n\",i+1);\n    }\n    for(i=0;i<N;i++)\n        pthread_join(thread_id[i],NULL);\n}\nvoid *philospher(void *num)\n{\n    while(1)\n    {\n        int *i = num;\n        sleep(1);\n        take_fork(*i);\n        sleep(0);\n        put_fork(*i);\n    }\n}\nvoid take_fork(int ph_num)\n{\n    sem_wait(&mutex);\n    state[ph_num] = HUNGRY;\n    printf(\"Philosopher %d is Hungry\\n\",ph_num+1);\n    test(ph_num);\n    sem_post(&mutex);\n    sem_wait(&S[ph_num]);\n    sleep(1);\n}\nvoid test(int ph_num)\n{\n    if (state[ph_num] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING)\n    {\n        state[ph_num] = EATING;\n        sleep(2);\n        printf(\"Philosopher %d takes fork %d and %d\\n\",ph_num+1,LEFT+1,ph_num+1);\n        printf(\"Philosopher %d is Eating\\n\",ph_num+1);\n        sem_post(&S[ph_num]);\nvoid  put_fork(int ph_num)",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "code",
+          "text": "{\n    sem_wait(&mutex);\n    state[ph_num] = THINKING;\n    printf(\"Philosopher %d putting fork %d and %d down\\n\",ph_num+1,LEFT+1,ph_num+1);\n    printf(\"Philosopher %d is thinking\\n\",ph_num+1);\n    test(LEFT);\n    test(RIGHT);\n    sem_post(&mutex);\n}",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "4. Readers and Writers problem using Semaphores",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Consider a situation where we have a file shared between many people.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "If one of the people tries editing the file, no other person should be reading or writing at the same time, otherwise changes will not be visible to him/her.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "However if some person is reading the file, then others may read it at the same time.\nPrecisely in OS we call this situation as the readers-writers problem\nProblem parameters:",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "One set of data is shared among a number of processes",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Once a writer is ready, it performs its write. Only one writer may write at a time",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If a process is writing, no other process can read it",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If at least one reader is reading, no other process can write",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Readers may not write and only read",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Solution when Reader has the Priority over Writer Here priority means, no reader should wait if the share is currently opened for reading.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Three variables are used: mutex, wrt, readcnt to implement solution",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "1. semaphore mutex, wrt; // semaphore mutex is used to ensure mutual exclusion when readcnt is updated i.e. when any reader enters or exit from the critical section and semaphore wrt is used by both readers and writers",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "2. int readcnt; // readcnt tells the number of processes performing read in the critical section, initially 0",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Functions for sempahore :",
+          "level": 2
+        },
+        {
+          "type": "list_item",
+          "text": "wait() : decrements the semaphore value.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "signal() : increments the semaphore value.",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Writer process:",
+          "level": 2
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Writer requests the entry to critical section.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "2. If allowed i.e. wait() gives a true value, it enters and performs the write. If not allowed, it keeps on waiting.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "3. It exits the critical section.",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "do {\n    // writer requests for critical section\n    wait(wrt);\n      // performs the write\n    // leaves the critical section\n    signal(wrt);\n} while(true);",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "Reader process:",
+          "level": 2
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Reader requests the entry to critical section.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": null,
+      "images": 0,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "2. If allowed:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "it increments the count of number of readers inside the critical section. If this reader is the first reader entering, it locks the wrt semaphore to restrict the entry of writers if any reader is inside.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "It then, signals mutex as any other reader is allowed to enter while others are already reading.",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "After performing reading, it exits the critical section. When exiting, it checks if no more reader is inside, it signals the semaphore “wrt” as now, writer can enter the critical section.",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "3. If not allowed, it keeps on waiting.",
+          "level": 0
+        },
+        {
+          "type": "code",
+          "text": "do {\n       // Reader wants to enter the critical section\n   wait(mutex);\n   // The number of readers has now increased by 1\n   readcnt++;\n   // there is atleast one reader in the critical section",
+          "level": 0
+        },
+        {
+          "type": "heading",
+          "text": "// this ensure no writer can enter if there is even one reader",
+          "level": 2
+        },
+        {
+          "type": "heading",
+          "text": "// thus we give preference to readers here",
+          "level": 2
+        },
+        {
+          "type": "code",
+          "text": "   if (readcnt==1)\n      wait(wrt);\n   // other readers can enter while this current reader is inside\n   // the critical section\n   signal(mutex);\n   // current reader performs reading here\n   wait(mutex);   // a reader wants to leave\n   readcnt--;\n   // that is, no reader is left in the critical section,\n   if (readcnt == 0)\n       signal(wrt);         // writers can enter\n   signal(mutex); // reader leaves\n} while(true);",
+          "level": 0
+        },
+        {
+          "type": "paragraph",
+          "text": "Thus, the semaphore ‘wrt‘ is queued on both readers and writers in a manner such that preference is given to readers if writers are also there. Thus, no reader is waiting simply because a writer has requested to enter the critical section.",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": null,
+      "images": 0,
+      "blocks": []
+    }
+  ]
+}

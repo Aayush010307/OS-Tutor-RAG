@@ -1,0 +1,58 @@
+[
+  {
+    "level": "warning",
+    "code": "image_only_content",
+    "document_id": "fallsem2025-26-vl-bcse303l-00100-th-2025-975bc607",
+    "chunk_id": null,
+    "message": "4 page(s)/slide(s) have images but almost no text (no OCR): [5, 7, 34, 36]"
+  },
+  {
+    "level": "warning",
+    "code": "image_only_content",
+    "document_id": "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114",
+    "chunk_id": null,
+    "message": "8 page(s)/slide(s) have images but almost no text (no OCR): [12, 22, 23, 28, 33, 40, 42, 70]"
+  },
+  {
+    "level": "warning",
+    "code": "image_only_content",
+    "document_id": "lecture14-a8135675",
+    "chunk_id": null,
+    "message": "2 page(s)/slide(s) have images but almost no text (no OCR): [4, 8]"
+  },
+  {
+    "level": "info",
+    "code": "near_duplicate",
+    "document_id": "lecture15-918b182c",
+    "chunk_id": null,
+    "message": "with semaphore-ppt-copy-0dcb4a42 (jaccard=0.949, containment=0.993)"
+  },
+  {
+    "level": "warning",
+    "code": "image_only_content",
+    "document_id": "lecture15-918b182c",
+    "chunk_id": null,
+    "message": "1 page(s)/slide(s) have images but almost no text (no OCR): [5]"
+  },
+  {
+    "level": "warning",
+    "code": "image_only_content",
+    "document_id": "fallsem2025-26-vl-bcse303l-00100-th-2025-170d2f74",
+    "chunk_id": null,
+    "message": "9 page(s)/slide(s) have images but almost no text (no OCR): [4, 7, 8, 9, 14, 16, 18, 20, 33]"
+  },
+  {
+    "level": "warning",
+    "code": "image_only_content",
+    "document_id": "lecture12-4288650c",
+    "chunk_id": null,
+    "message": "3 page(s)/slide(s) have images but almost no text (no OCR): [7, 8, 10]"
+  },
+  {
+    "level": "warning",
+    "code": "image_only_content",
+    "document_id": "threads-4d568260",
+    "chunk_id": null,
+    "message": "1 page(s)/slide(s) have images but almost no text (no OCR): [7]"
+  }
+]

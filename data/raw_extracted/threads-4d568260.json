@@ -1,0 +1,1609 @@
+{
+  "document_id": "threads-4d568260",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Threads and concurrency",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Mythili Vutukuru",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.465,
+          "bottom": 0.505,
+          "x0": 280.9,
+          "cw": 8.5
+        },
+        {
+          "text": "CSE, IIT Bombay",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.514,
+          "bottom": 0.553,
+          "x0": 284.8,
+          "cw": 8.56
+        },
+        {
+          "text": "Threads and concurrency",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.281,
+          "bottom": 0.36,
+          "x0": 190.7,
+          "cw": 17.44
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "Processes and threads",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Processes and threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 15.45
+        },
+        {
+          "text": "• So, far we have studied single threaded",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.308,
+          "bottom": 0.354,
+          "x0": 73.6,
+          "cw": 8.11
+        },
+        {
+          "text": "programs",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.349,
+          "bottom": 0.395,
+          "x0": 88.4,
+          "cw": 10.46
+        },
+        {
+          "text": "• Recap: process execution",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.403,
+          "bottom": 0.449,
+          "x0": 73.6,
+          "cw": 8.11
+        },
+        {
+          "text": "• CPU executes instruction by instruction,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.451,
+          "bottom": 0.491,
+          "x0": 103.3,
+          "cw": 6.93
+        },
+        {
+          "text": "traps to OS as needed",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.486,
+          "bottom": 0.526,
+          "x0": 118.1,
+          "cw": 8.35
+        },
+        {
+          "text": "• PC points to next instruction to run",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.528,
+          "bottom": 0.567,
+          "x0": 103.3,
+          "cw": 6.93
+        },
+        {
+          "text": "• SP points to current top of stack",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.57,
+          "bottom": 0.609,
+          "x0": 103.3,
+          "cw": 6.93
+        },
+        {
+          "text": "• Other registers also with process context SP",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.593,
+          "bottom": 0.651,
+          "x0": 103.3,
+          "cw": 6.93
+        },
+        {
+          "text": "• A program can also have multiple",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.659,
+          "bottom": 0.705,
+          "x0": 73.6,
+          "cw": 8.11
+        },
+        {
+          "text": "threads of execution",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.7,
+          "bottom": 0.746,
+          "x0": 88.4,
+          "cw": 9.63
+        },
+        {
+          "text": "• What is a thread?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.754,
+          "bottom": 0.8,
+          "x0": 73.6,
+          "cw": 8.11
+        },
+        {
+          "text": "PC",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.424,
+          "bottom": 0.463,
+          "x0": 461.4,
+          "cw": 10.42
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "What are threads?",
+      "images": 0,
+      "lines": [
+        {
+          "text": "What are threads?",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 15.92
+        },
+        {
+          "text": "• Threads = light weight processes",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.296,
+          "bottom": 0.342,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "• Why? A process may want to run multiple copies of itself",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.35,
+          "bottom": 0.396,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "• If one copy blocks due to blocking system call, another copy can still run",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.398,
+          "bottom": 0.438,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Multiple copies can run in parallel on multiple CPU cores to speed up work",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.44,
+          "bottom": 0.479,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Why not have multiple child processes running the same program?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.488,
+          "bottom": 0.534,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "• Too much memory consumed by identical memory images",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.536,
+          "bottom": 0.575,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Needs IPC to share information across processes",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.578,
+          "bottom": 0.617,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• A process can create multiple threads (default: single thread)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.625,
+          "bottom": 0.671,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "• Multiple threads share same memory image of process, saves memory",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.674,
+          "bottom": 0.713,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Threads run independently on same code (if one blocks, another can still run)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.715,
+          "bottom": 0.755,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Threads can run in parallel on multiple cores at same time",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.757,
+          "bottom": 0.796,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Threads can share data more easily",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.799,
+          "bottom": 0.838,
+          "x0": 90.1,
+          "cw": 6.93
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Multi-threaded process",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Multi-threaded process",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 15.53
+        },
+        {
+          "text": "• A thread is like another copy of a",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.296,
+          "bottom": 0.342,
+          "x0": 81.8,
+          "cw": 8.11
+        },
+        {
+          "text": "process that executes",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.337,
+          "bottom": 0.383,
+          "x0": 96.7,
+          "cw": 9.45
+        },
+        {
+          "text": "independently from parent",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.377,
+          "bottom": 0.424,
+          "x0": 96.7,
+          "cw": 10.15
+        },
+        {
+          "text": "• Threads shares the same code,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.432,
+          "bottom": 0.478,
+          "x0": 81.8,
+          "cw": 8.11
+        },
+        {
+          "text": "global/static data, heap",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.472,
+          "bottom": 0.519,
+          "x0": 96.7,
+          "cw": 9.15
+        },
+        {
+          "text": "• Each thread has separate stack for",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.527,
+          "bottom": 0.573,
+          "x0": 81.8,
+          "cw": 8.11
+        },
+        {
+          "text": "independent function calls",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.568,
+          "bottom": 0.614,
+          "x0": 96.7,
+          "cw": 9.59
+        },
+        {
+          "text": "• Each thread has separate PC,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.622,
+          "bottom": 0.668,
+          "x0": 81.8,
+          "cw": 8.11
+        },
+        {
+          "text": "running different code",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.663,
+          "bottom": 0.709,
+          "x0": 96.7,
+          "cw": 9.53
+        },
+        {
+          "text": "• Each thread has separate CPU",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.717,
+          "bottom": 0.763,
+          "x0": 81.8,
+          "cw": 8.11
+        },
+        {
+          "text": "context during execution",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.757,
+          "bottom": 0.804,
+          "x0": 96.7,
+          "cw": 9.7
+        },
+        {
+          "text": "PC1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.359,
+          "bottom": 0.398,
+          "x0": 441.6,
+          "cw": 10.27
+        },
+        {
+          "text": "PC2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.424,
+          "bottom": 0.463,
+          "x0": 446.5,
+          "cw": 10.27
+        },
+        {
+          "text": "SP2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.593,
+          "bottom": 0.633,
+          "x0": 466.3,
+          "cw": 9.81
+        },
+        {
+          "text": "SP1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.682,
+          "bottom": 0.721,
+          "x0": 461.4,
+          "cw": 9.81
+        },
+        {
+          "text": "Image credit: OSTEP",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.829,
+          "bottom": 0.859,
+          "x0": 18.8,
+          "cw": 6.4
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "Concurrency vs. parallelism",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Concurrency vs. parallelism",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 14.72
+        },
+        {
+          "text": "• Understand the difference between concurrency and parallelism",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.298,
+          "bottom": 0.344,
+          "x0": 66.8,
+          "cw": 8.11
+        },
+        {
+          "text": "• Concurrency: running multiple threads/processes at the same time, even on",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.346,
+          "bottom": 0.385,
+          "x0": 96.6,
+          "cw": 6.93
+        },
+        {
+          "text": "single CPU core, by interleaving their executions",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.381,
+          "bottom": 0.42,
+          "x0": 111.4,
+          "cw": 7.86
+        },
+        {
+          "text": "• Parallelism: running multiple threads/processes in parallel over different CPU",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.423,
+          "bottom": 0.462,
+          "x0": 96.6,
+          "cw": 6.93
+        },
+        {
+          "text": "cores",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.457,
+          "bottom": 0.497,
+          "x0": 111.4,
+          "cw": 8.6
+        },
+        {
+          "text": "• With multiple threads, process can get better performance on multicore",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.505,
+          "bottom": 0.551,
+          "x0": 66.8,
+          "cw": 8.11
+        },
+        {
+          "text": "systems via parallelism",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.546,
+          "bottom": 0.592,
+          "x0": 81.7,
+          "cw": 9.27
+        },
+        {
+          "text": "• Example: matrix multiplication can be easily parallelized, with different threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.594,
+          "bottom": 0.634,
+          "x0": 96.6,
+          "cw": 6.93
+        },
+        {
+          "text": "operating on different parts of the matrix",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.629,
+          "bottom": 0.668,
+          "x0": 111.4,
+          "cw": 7.88
+        },
+        {
+          "text": "• Even if no parallelism (single core), concurrency of threads ensures",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.677,
+          "bottom": 0.723,
+          "x0": 66.8,
+          "cw": 8.11
+        },
+        {
+          "text": "effective use of CPU when one of the threads blocks",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.718,
+          "bottom": 0.764,
+          "x0": 81.7,
+          "cw": 9.56
+        },
+        {
+          "text": "• Example: if one thread of a server blocks on I/O read, another can still run",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.766,
+          "bottom": 0.805,
+          "x0": 96.6,
+          "cw": 6.93
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "POSIX threads",
+      "images": 0,
+      "lines": [
+        {
+          "text": "POSIX threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 15.76
+        },
+        {
+          "text": "• In Linux, POSIX threads (pthreads) library allows",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.329,
+          "bottom": 0.376,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "creation of multiple threads in a process",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.37,
+          "bottom": 0.416,
+          "x0": 75.2,
+          "cw": 9.19
+        },
+        {
+          "text": "• Each thread is given a start function where its",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.425,
+          "bottom": 0.471,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "execution begins",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.465,
+          "bottom": 0.512,
+          "x0": 75.2,
+          "cw": 9.84
+        },
+        {
+          "text": "• Threads execute independently from parent after",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.514,
+          "bottom": 0.553,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "creation",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.549,
+          "bottom": 0.588,
+          "x0": 104.9,
+          "cw": 8.28
+        },
+        {
+          "text": "• Parent can wait for threads to finish (optional)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.59,
+          "bottom": 0.63,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Several such threading libraries exist in different",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.638,
+          "bottom": 0.684,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "programming languages",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.678,
+          "bottom": 0.725,
+          "x0": 75.2,
+          "cw": 10.74
+        },
+        {
+          "text": "void f1() {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.273,
+          "bottom": 0.302,
+          "x0": 556.8,
+          "cw": 5.29
+        },
+        {
+          "text": "…",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.302,
+          "bottom": 0.331,
+          "x0": 570.4,
+          "cw": 10.27
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.331,
+          "bottom": 0.361,
+          "x0": 556.8,
+          "cw": 4.67
+        },
+        {
+          "text": "void f2() {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.389,
+          "bottom": 0.419,
+          "x0": 556.8,
+          "cw": 5.29
+        },
+        {
+          "text": "…",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.418,
+          "bottom": 0.448,
+          "x0": 570.4,
+          "cw": 10.27
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.447,
+          "bottom": 0.477,
+          "x0": 556.8,
+          "cw": 4.67
+        },
+        {
+          "text": "main() {",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.506,
+          "bottom": 0.535,
+          "x0": 556.8,
+          "cw": 5.92
+        },
+        {
+          "text": "…",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.535,
+          "bottom": 0.564,
+          "x0": 570.4,
+          "cw": 10.27
+        },
+        {
+          "text": "pthread_t t1, t2",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.564,
+          "bottom": 0.594,
+          "x0": 570.4,
+          "cw": 5.99
+        },
+        {
+          "text": "pthread_create(&t1, .., f1,..)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.593,
+          "bottom": 0.623,
+          "x0": 570.4,
+          "cw": 5.66
+        },
+        {
+          "text": "pthread_create(&t2, .., f2,..)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.622,
+          "bottom": 0.652,
+          "x0": 570.4,
+          "cw": 5.66
+        },
+        {
+          "text": "…",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.651,
+          "bottom": 0.681,
+          "x0": 570.4,
+          "cw": 10.27
+        },
+        {
+          "text": "pthread_join(t1, ..)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.709,
+          "bottom": 0.739,
+          "x0": 570.4,
+          "cw": 5.7
+        },
+        {
+          "text": "pthread_join(t2, ..)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.739,
+          "bottom": 0.768,
+          "x0": 570.4,
+          "cw": 5.7
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.797,
+          "bottom": 0.827,
+          "x0": 556.8,
+          "cw": 4.67
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": "Creating threads using pthreads API",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Creating threads using pthreads API",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.181,
+          "bottom": 0.253,
+          "x0": 134.6,
+          "cw": 14.85
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": "Scheduling threads",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Scheduling threads",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 15.42
+        },
+        {
+          "text": "• OS schedules threads that are ready to run independently, like processes",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.312,
+          "bottom": 0.358,
+          "x0": 56.3,
+          "cw": 8.11
+        },
+        {
+          "text": "• The context of a thread (PC, registers) is saved into/restored from thread",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.361,
+          "bottom": 0.407,
+          "x0": 56.3,
+          "cw": 8.11
+        },
+        {
+          "text": "control block (TCB)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.398,
+          "bottom": 0.444,
+          "x0": 71.2,
+          "cw": 9.3
+        },
+        {
+          "text": "• Every PCB has one or more linked TCBs",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.442,
+          "bottom": 0.481,
+          "x0": 86.0,
+          "cw": 6.93
+        },
+        {
+          "text": "• Threads that are scheduled independently by kernel are called kernel",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.485,
+          "bottom": 0.531,
+          "x0": 56.3,
+          "cw": 8.11
+        },
+        {
+          "text": "threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.521,
+          "bottom": 0.567,
+          "x0": 71.2,
+          "cw": 10.19
+        },
+        {
+          "text": "• E.g., Linux pthreads are kernel threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.565,
+          "bottom": 0.605,
+          "x0": 86.0,
+          "cw": 6.93
+        },
+        {
+          "text": "• In contrast, some libraries provide user-level threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.609,
+          "bottom": 0.655,
+          "x0": 56.3,
+          "cw": 8.11
+        },
+        {
+          "text": "• User program sees multiple threads, but kernel is aware of fewer threads",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.653,
+          "bottom": 0.693,
+          "x0": 86.0,
+          "cw": 6.93
+        },
+        {
+          "text": "• Multiple such user threads are seen as one thread by kernel, may not be",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.691,
+          "bottom": 0.73,
+          "x0": 86.0,
+          "cw": 6.93
+        },
+        {
+          "text": "scheduled in parallel for this reason",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.722,
+          "bottom": 0.761,
+          "x0": 100.8,
+          "cw": 7.72
+        },
+        {
+          "text": "• Why use user threads then? Ease of programming",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.76,
+          "bottom": 0.799,
+          "x0": 86.0,
+          "cw": 6.93
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": "Example: threads with shared data",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Example: threads with shared data",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.149,
+          "bottom": 0.221,
+          "x0": 134.6,
+          "cw": 15.25
+        },
+        {
+          "text": "• Shared global counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.329,
+          "bottom": 0.376,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "• Two threads update same",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.384,
+          "bottom": 0.43,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "counter 10^7 times",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.425,
+          "bottom": 0.471,
+          "x0": 75.2,
+          "cw": 10.13
+        },
+        {
+          "text": "• What is expected output",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.479,
+          "bottom": 0.525,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "after both threads finish?",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.519,
+          "bottom": 0.566,
+          "x0": 75.2,
+          "cw": 9.15
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": "Threads with shared data: what happens?",
+      "images": 2,
+      "lines": [
+        {
+          "text": "Threads with shared data: what happens?",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.185,
+          "bottom": 0.25,
+          "x0": 114.8,
+          "cw": 14.17
+        },
+        {
+          "text": "• What do we expect? Two threads, each increments counter by 10^7,",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.27,
+          "bottom": 0.316,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "so 2X10^7",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.311,
+          "bottom": 0.357,
+          "x0": 75.2,
+          "cw": 10.77
+        },
+        {
+          "text": "• Sometimes, a lower value. Why?",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.582,
+          "bottom": 0.628,
+          "x0": 60.4,
+          "cw": 8.11
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": "Understanding shared data access",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Understanding shared data access",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 15.51
+        },
+        {
+          "text": "• The C code “counter = counter + 1” is compiled into multiple",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.315,
+          "bottom": 0.361,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "instructions",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.356,
+          "bottom": 0.402,
+          "x0": 75.2,
+          "cw": 9.21
+        },
+        {
+          "text": "• Load counter variable from memory into register",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.404,
+          "bottom": 0.444,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Increment register",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.446,
+          "bottom": 0.485,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Store register back into memory of counter variable",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.488,
+          "bottom": 0.527,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "load counter  reg",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.6,
+          "bottom": 0.639,
+          "x0": 252.7,
+          "cw": 8.17
+        },
+        {
+          "text": "reg = reg + 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.638,
+          "bottom": 0.678,
+          "x0": 252.7,
+          "cw": 7.62
+        },
+        {
+          "text": "store reg  counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.677,
+          "bottom": 0.717,
+          "x0": 252.7,
+          "cw": 7.92
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 12,
+      "title": "Understanding shared data access",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Understanding shared data access",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 15.51
+        },
+        {
+          "text": "• What happens when two threads run this line of code concurrently?",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.315,
+          "bottom": 0.361,
+          "x0": 60.4,
+          "cw": 8.11
+        },
+        {
+          "text": "• Counter is 0 initially",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.364,
+          "bottom": 0.403,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• T1 loads counter into register, increment reg",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.405,
+          "bottom": 0.445,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Context switch, register (value 1) saved",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.447,
+          "bottom": 0.486,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• T2 runs, loads counter 0 from memory",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.489,
+          "bottom": 0.528,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• T2 increments register, stores to memory",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.53,
+          "bottom": 0.57,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• T1 resumes, stores register value to counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.572,
+          "bottom": 0.611,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Counter value rewritten to 1 again",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.614,
+          "bottom": 0.653,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "• Final counter value is 1, expected value is 2",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.655,
+          "bottom": 0.695,
+          "x0": 90.1,
+          "cw": 6.93
+        },
+        {
+          "text": "load counter  reg",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.427,
+          "bottom": 0.456,
+          "x0": 526.1,
+          "cw": 6.15
+        },
+        {
+          "text": "reg = reg + 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.455,
+          "bottom": 0.485,
+          "x0": 526.1,
+          "cw": 5.75
+        },
+        {
+          "text": "(context switch, save reg)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.485,
+          "bottom": 0.514,
+          "x0": 526.1,
+          "cw": 5.99
+        },
+        {
+          "text": "(resume, restore reg)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.63,
+          "bottom": 0.66,
+          "x0": 526.1,
+          "cw": 6.14
+        },
+        {
+          "text": "store reg  counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.66,
+          "bottom": 0.689,
+          "x0": 526.1,
+          "cw": 5.94
+        },
+        {
+          "text": "T1",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.402,
+          "bottom": 0.441,
+          "x0": 498.4,
+          "cw": 9.76
+        },
+        {
+          "text": "load counter  reg",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.527,
+          "bottom": 0.557,
+          "x0": 626.6,
+          "cw": 6.15
+        },
+        {
+          "text": "reg = reg + 1",
+          "kind": "code",
+          "level": 0,
+          "para_break": false,
+          "top": 0.556,
+          "bottom": 0.586,
+          "x0": 626.6,
+          "cw": 5.75
+        },
+        {
+          "text": "store reg  counter",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.585,
+          "bottom": 0.615,
+          "x0": 626.6,
+          "cw": 5.94
+        },
+        {
+          "text": "T2",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.502,
+          "bottom": 0.542,
+          "x0": 763.8,
+          "cw": 9.76
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 13,
+      "title": "Race conditions, critical sections",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Race conditions, critical sections",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true,
+          "top": 0.205,
+          "bottom": 0.278,
+          "x0": 60.4,
+          "cw": 13.84
+        },
+        {
+          "text": "• Incorrect execution of code due to concurrency is called race condition",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.33,
+          "bottom": 0.373,
+          "x0": 60.4,
+          "cw": 7.52
+        },
+        {
+          "text": "• Due to unfortunate timing of context switches, atomicity of data update violated",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.375,
+          "bottom": 0.411,
+          "x0": 90.1,
+          "cw": 6.34
+        },
+        {
+          "text": "• Race conditions happen when we have concurrent execution on shared data",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.42,
+          "bottom": 0.463,
+          "x0": 60.4,
+          "cw": 7.52
+        },
+        {
+          "text": "• Threads sharing common data in memory image of user processes",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.465,
+          "bottom": 0.501,
+          "x0": 90.1,
+          "cw": 6.34
+        },
+        {
+          "text": "• Processes in kernel mode sharing OS data structures",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.504,
+          "bottom": 0.54,
+          "x0": 90.1,
+          "cw": 6.34
+        },
+        {
+          "text": "• We require mutual exclusion on some parts of user or OS code",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.549,
+          "bottom": 0.592,
+          "x0": 60.4,
+          "cw": 7.52
+        },
+        {
+          "text": "• Concurrent execution by multiple threads/processes should not be permitted",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.594,
+          "bottom": 0.63,
+          "x0": 90.1,
+          "cw": 6.34
+        },
+        {
+          "text": "• Parts of program that need to be executed with mutual exclusion for correct",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.639,
+          "bottom": 0.682,
+          "x0": 60.4,
+          "cw": 7.52
+        },
+        {
+          "text": "operation are called critical sections",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.677,
+          "bottom": 0.72,
+          "x0": 75.2,
+          "cw": 8.53
+        },
+        {
+          "text": "• Present in multi-threaded programs, OS code",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.722,
+          "bottom": 0.758,
+          "x0": 90.1,
+          "cw": 6.34
+        },
+        {
+          "text": "• How to access critical sections with mutual exclusion? Using locks (next topic)",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.767,
+          "bottom": 0.81,
+          "x0": 60.4,
+          "cw": 7.52
+        }
+      ]
+    }
+  ],
+  "page_count": 13,
+  "slide_count": null,
+  "properties": {
+    "title": "Microsoft PowerPoint - 12-threads.pptx",
+    "author": "Mythili Vutukuru",
+    "producer": "Microsoft: Print To PDF",
+    "creationDate": "D:20250628220415+05'30'"
+  },
+  "master_text": []
+}

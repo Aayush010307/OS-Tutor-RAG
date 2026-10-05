@@ -1,0 +1,899 @@
+{
+  "document_id": "dining-philospher-d60a5fa0",
+  "layout": "document",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "FIRST ATTEMPT:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.088,
+          "bottom": 0.101,
+          "x0": 72.0,
+          "cw": 5.01
+        },
+        {
+          "text": "#DEFINE N5",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.115,
+          "bottom": 0.128,
+          "x0": 72.0,
+          "cw": 5.06
+        },
+        {
+          "text": "Void philosopher (int i)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.141,
+          "bottom": 0.155,
+          "x0": 72.0,
+          "cw": 4.2
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "While true",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 72.0,
+          "cw": 4.54
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.222,
+          "bottom": 0.235,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "Think (); // for some time",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.248,
+          "bottom": 0.261,
+          "x0": 72.0,
+          "cw": 4.27
+        },
+        {
+          "text": "Take_fork (Ri)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.275,
+          "bottom": 0.288,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "Take_fork (Li)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.302,
+          "bottom": 0.315,
+          "x0": 72.0,
+          "cw": 4.6
+        },
+        {
+          "text": "Eat ();",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.328,
+          "bottom": 0.342,
+          "x0": 72.0,
+          "cw": 3.63
+        },
+        {
+          "text": "Put_fork (Li)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.355,
+          "bottom": 0.368,
+          "x0": 72.0,
+          "cw": 4.47
+        },
+        {
+          "text": "Put_fork (Ri)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.382,
+          "bottom": 0.395,
+          "x0": 72.0,
+          "cw": 4.59
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.409,
+          "bottom": 0.422,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.435,
+          "bottom": 0.448,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "SECOND ATTEMPT:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.515,
+          "bottom": 0.529,
+          "x0": 72.0,
+          "cw": 5.53
+        },
+        {
+          "text": "#DEFINE N5",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.542,
+          "bottom": 0.555,
+          "x0": 72.0,
+          "cw": 5.06
+        },
+        {
+          "text": "Void philosopher (int i)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.569,
+          "bottom": 0.582,
+          "x0": 72.0,
+          "cw": 4.2
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.596,
+          "bottom": 0.609,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "While true",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.622,
+          "bottom": 0.635,
+          "x0": 72.0,
+          "cw": 4.54
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.649,
+          "bottom": 0.662,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "Think ();",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.676,
+          "bottom": 0.689,
+          "x0": 72.0,
+          "cw": 3.91
+        },
+        {
+          "text": "Take_fork (Ri)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.702,
+          "bottom": 0.716,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "If (available (Li)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.729,
+          "bottom": 0.742,
+          "x0": 72.0,
+          "cw": 3.88
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.756,
+          "bottom": 0.769,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "Take_fork (Li)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.783,
+          "bottom": 0.796,
+          "x0": 72.0,
+          "cw": 4.6
+        },
+        {
+          "text": "Eat ();",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.809,
+          "bottom": 0.822,
+          "x0": 72.0,
+          "cw": 3.63
+        },
+        {
+          "text": "Put_fork (Ri)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.836,
+          "bottom": 0.849,
+          "x0": 72.0,
+          "cw": 4.59
+        },
+        {
+          "text": "Put_fork (Li)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.863,
+          "bottom": 0.876,
+          "x0": 72.0,
+          "cw": 4.47
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.89,
+          "bottom": 0.903,
+          "x0": 72.0,
+          "cw": 2.99
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "Else",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.088,
+          "bottom": 0.101,
+          "x0": 72.0,
+          "cw": 4.05
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.115,
+          "bottom": 0.128,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "Put_fork (Ri)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.141,
+          "bottom": 0.155,
+          "x0": 72.0,
+          "cw": 4.59
+        },
+        {
+          "text": "Sleep (T)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 72.0,
+          "cw": 4.14
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.222,
+          "bottom": 0.235,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "In the solution two instead of sleep we can change to sleep (random_time), still is not guarantee",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.275,
+          "bottom": 0.288,
+          "x0": 72.0,
+          "cw": 4.42
+        },
+        {
+          "text": "that the starvation will not occur.",
+          "kind": "text",
+          "level": 0,
+          "para_break": false,
+          "top": 0.292,
+          "bottom": 0.305,
+          "x0": 72.0,
+          "cw": 4.21
+        },
+        {
+          "text": "THIRD ATTEMPT:",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.346,
+          "bottom": 0.359,
+          "x0": 72.0,
+          "cw": 5.25
+        },
+        {
+          "text": "#DEFINE N5",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.372,
+          "bottom": 0.385,
+          "x0": 72.0,
+          "cw": 5.06
+        },
+        {
+          "text": "Void philosopher (int i)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.399,
+          "bottom": 0.412,
+          "x0": 72.0,
+          "cw": 4.2
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.426,
+          "bottom": 0.439,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "While true",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.452,
+          "bottom": 0.466,
+          "x0": 72.0,
+          "cw": 4.54
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.479,
+          "bottom": 0.492,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "Think ();",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.506,
+          "bottom": 0.519,
+          "x0": 72.0,
+          "cw": 3.91
+        },
+        {
+          "text": "Lock (mutex)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.533,
+          "bottom": 0.546,
+          "x0": 72.0,
+          "cw": 4.64
+        },
+        {
+          "text": "Take_fork (Ri)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.559,
+          "bottom": 0.572,
+          "x0": 72.0,
+          "cw": 4.71
+        },
+        {
+          "text": "Take_fork (Li)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.586,
+          "bottom": 0.599,
+          "x0": 72.0,
+          "cw": 4.6
+        },
+        {
+          "text": "Eat ();",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.613,
+          "bottom": 0.626,
+          "x0": 72.0,
+          "cw": 3.63
+        },
+        {
+          "text": "Put_fork (Li)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.639,
+          "bottom": 0.653,
+          "x0": 72.0,
+          "cw": 4.47
+        },
+        {
+          "text": "Put_fork (Ri)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.666,
+          "bottom": 0.679,
+          "x0": 72.0,
+          "cw": 4.59
+        },
+        {
+          "text": "Unlock (mutex)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.693,
+          "bottom": 0.706,
+          "x0": 72.0,
+          "cw": 4.73
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.72,
+          "bottom": 0.733,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.746,
+          "bottom": 0.76,
+          "x0": 72.0,
+          "cw": 2.99
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": null,
+      "images": 0,
+      "lines": [
+        {
+          "text": "FOURTH ATTEMPT USING SEMAPHORES",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.088,
+          "bottom": 0.101,
+          "x0": 72.0,
+          "cw": 5.68
+        },
+        {
+          "text": "Void philosopher (int i)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 72.0,
+          "cw": 4.25
+        },
+        {
+          "text": "void take_forks (int i)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 252.1,
+          "cw": 4.06
+        },
+        {
+          "text": "void put_forks (int i)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.168,
+          "bottom": 0.181,
+          "x0": 432.1,
+          "cw": 4.05
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 252.1,
+          "cw": 2.99
+        },
+        {
+          "text": "lock(mutex)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.195,
+          "bottom": 0.208,
+          "x0": 432.1,
+          "cw": 4.64
+        },
+        {
+          "text": "While (TRUE)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.222,
+          "bottom": 0.235,
+          "x0": 72.0,
+          "cw": 4.73
+        },
+        {
+          "text": "lock (mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.222,
+          "bottom": 0.235,
+          "x0": 252.1,
+          "cw": 4.36
+        },
+        {
+          "text": "state [i] = THINKING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.222,
+          "bottom": 0.235,
+          "x0": 432.1,
+          "cw": 4.37
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.248,
+          "bottom": 0.261,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "state [i] = HUNGRY",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.248,
+          "bottom": 0.261,
+          "x0": 252.1,
+          "cw": 4.55
+        },
+        {
+          "text": "test (LEFT)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.248,
+          "bottom": 0.261,
+          "x0": 432.1,
+          "cw": 4.1
+        },
+        {
+          "text": "Think ();",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.275,
+          "bottom": 0.288,
+          "x0": 72.0,
+          "cw": 3.91
+        },
+        {
+          "text": "test (i);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.275,
+          "bottom": 0.288,
+          "x0": 252.1,
+          "cw": 3.5
+        },
+        {
+          "text": "test (RIGHT)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.275,
+          "bottom": 0.288,
+          "x0": 432.1,
+          "cw": 4.37
+        },
+        {
+          "text": "Take_forks (i);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.302,
+          "bottom": 0.315,
+          "x0": 72.0,
+          "cw": 4.38
+        },
+        {
+          "text": "unlock (mutex)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.302,
+          "bottom": 0.315,
+          "x0": 252.1,
+          "cw": 4.66
+        },
+        {
+          "text": "unlock (mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.302,
+          "bottom": 0.315,
+          "x0": 432.1,
+          "cw": 4.54
+        },
+        {
+          "text": "Eat ();",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.328,
+          "bottom": 0.342,
+          "x0": 72.0,
+          "cw": 4.28
+        },
+        {
+          "text": "down (s[i])",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.328,
+          "bottom": 0.342,
+          "x0": 252.1,
+          "cw": 4.21
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.328,
+          "bottom": 0.342,
+          "x0": 432.1,
+          "cw": 2.99
+        },
+        {
+          "text": "Put_forks ();                                                  }",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.355,
+          "bottom": 0.368,
+          "x0": 72.0,
+          "cw": 2.85
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.382,
+          "bottom": 0.395,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.409,
+          "bottom": 0.422,
+          "x0": 72.0,
+          "cw": 2.83
+        },
+        {
+          "text": "Void test (int i)",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.489,
+          "bottom": 0.502,
+          "x0": 72.0,
+          "cw": 3.82
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.515,
+          "bottom": 0.529,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "If (state [i] = HUNGRY && state [LEFT]! = EATING && state [RIGHT]! = EATING)",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.542,
+          "bottom": 0.555,
+          "x0": 72.0,
+          "cw": 4.54
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.569,
+          "bottom": 0.582,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "State [i] = EATING",
+          "kind": "text",
+          "level": 0,
+          "para_break": true,
+          "top": 0.596,
+          "bottom": 0.609,
+          "x0": 72.0,
+          "cw": 4.31
+        },
+        {
+          "text": "UP (S[i]);",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.622,
+          "bottom": 0.635,
+          "x0": 72.0,
+          "cw": 3.79
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.649,
+          "bottom": 0.662,
+          "x0": 72.0,
+          "cw": 2.99
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": true,
+          "top": 0.676,
+          "bottom": 0.689,
+          "x0": 72.0,
+          "cw": 2.99
+        }
+      ]
+    }
+  ],
+  "page_count": 3,
+  "slide_count": null,
+  "properties": {
+    "author": "Admin",
+    "creator": "Microsoft® Word 2013",
+    "producer": "Microsoft® Word 2013",
+    "creationDate": "D:20200511105626+05'30'"
+  },
+  "master_text": []
+}

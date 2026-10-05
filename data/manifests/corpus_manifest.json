@@ -1,0 +1,108 @@
+{
+  "generated_at": "2026-09-21T12:40:10+00:00",
+  "pipeline_version": "1.0.0",
+  "source_root": "Docs",
+  "chunking": {
+    "tokenizer": "tiktoken cl100k_base",
+    "target_tokens": 350,
+    "max_tokens": 600,
+    "qa_max_tokens": 1000,
+    "min_tokens": 40
+  },
+  "totals": {
+    "documents": 22,
+    "extracted": 22,
+    "failed": 0,
+    "duplicate_documents": 0,
+    "near_duplicate_pairs": 1,
+    "pages": 234,
+    "slides": 247,
+    "chunks": 463,
+    "duplicate_chunks": 4,
+    "chunk_tokens": 99322,
+    "document_tokens": 99535,
+    "errors": 0,
+    "warnings": 7,
+    "infos": 1
+  },
+  "documents_by_topic": {
+    "Synchronisation": 17,
+    "Threads": 5
+  },
+  "documents_by_source": {
+    "IIT Bombay": 7,
+    "OSTEP (Operating Systems: Three Easy Pieces)": 6,
+    "VIT": 5,
+    "unknown": 4
+  },
+  "documents_by_type": {
+    "lab": 2,
+    "lecture": 11,
+    "notes": 1,
+    "practice_problems": 1,
+    "programming_examples": 1,
+    "textbook": 6
+  },
+  "documents_by_file_type": {
+    "pdf": 16,
+    "ppt": 1,
+    "pptx": 5
+  },
+  "chunks_by_type": {
+    "problem": 13,
+    "qa_pair": 60,
+    "section": 204,
+    "slide": 186
+  },
+  "chunks_by_content_type": {
+    "code": 39,
+    "mixed": 147,
+    "text": 277
+  },
+  "chunk_token_stats": {
+    "min": 21,
+    "median": 186,
+    "mean": 214.5,
+    "max": 913
+  },
+  "supported_files": [
+    "Docs/Synchronisation/Concurrency bugs.pptx",
+    "Docs/Synchronisation/FALLSEM2025-26_VL_BCSE303L_00100_TH_2025-09-11_process-Synchronization_locks_semaphores_monitors.ppt",
+    "Docs/Synchronisation/FALLSEM2025-26_VL_BCSE303L_00100_TH_2025-09-16_Process-synchronization.pptx",
+    "Docs/Synchronisation/FALLSEM2025-26_VL_BCSE303L_00100_TH_2025-09-23_Classical-problem-of-synchronization.pdf",
+    "Docs/Synchronisation/SUMSEM2025-26_VL_BCSE303L_00100_TH_2026-06-15_Module-4---Process-Synchronization.pptx",
+    "Docs/Synchronisation/Semaphore.ppt - Copy.pptx",
+    "Docs/Synchronisation/Thread_Synchronization_Lab_Problems.pdf",
+    "Docs/Synchronisation/dining philospher.pdf",
+    "Docs/Synchronisation/lecture13.pdf",
+    "Docs/Synchronisation/lecture14.pdf",
+    "Docs/Synchronisation/lecture15.pdf",
+    "Docs/Synchronisation/ps-concurrency.pdf",
+    "Docs/Synchronisation/pthreads-sync.pdf",
+    "Docs/Synchronisation/threads-bugs.pdf",
+    "Docs/Synchronisation/threads-cv.pdf",
+    "Docs/Synchronisation/threads-locks.pdf",
+    "Docs/Synchronisation/threads-sema.pdf",
+    "Docs/Threads/FALLSEM2025-26_VL_BCSE303L_00100_TH_2025-08-03_Threads.pptx",
+    "Docs/Threads/lecture12.pdf",
+    "Docs/Threads/threads-api.pdf",
+    "Docs/Threads/threads-intro.pdf",
+    "Docs/Threads/threads.pdf"
+  ],
+  "unsupported_files": [],
+  "ignored_files": [
+    ".DS_Store",
+    "Synchronisation/.DS_Store"
+  ],
+  "duplicate_files": [],
+  "near_duplicates": [
+    {
+      "a": "lecture15-918b182c",
+      "b": "semaphore-ppt-copy-0dcb4a42",
+      "relation": "near_duplicate",
+      "jaccard": 0.949,
+      "containment": 0.993
+    }
+  ],
+  "extraction_failures": []
+}

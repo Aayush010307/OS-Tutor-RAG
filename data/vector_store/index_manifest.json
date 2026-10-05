@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-09-21T13:12:08+00:00",
+  "phase": 2,
+  "corpus": {
+    "chunks_path": "data/chunks/chunks.jsonl",
+    "chunks_sha256": "90d1e88ef552dfb32b5a8c2d4845cd20399eca82f6669bd184d08eaad8fcbe16",
+    "documents_path": "data/manifests/documents.json",
+    "source_chunks": 463
+  },
+  "embedding": {
+    "model": "nomic-embed-text-v1.5",
+    "repo": "nomic-ai/nomic-embed-text-v1.5",
+    "revision": "e9b6763023c676ca8431644204f50c2b100d9aab",
+    "weights_file": "onnx/model.onnx",
+    "weights_sha256": "147d5aa88c2101237358e17796cf3a227cead1ec304ec34b465bb08e9d952965",
+    "dim": 768,
+    "max_tokens": 2048,
+    "license": "apache-2.0",
+    "document_prefix": "search_document: ",
+    "query_prefix": "search_query: ",
+    "pooling": "mean over tokens, then L2 normalisation",
+    "embedded_text": "document_prefix + canonical chunk text, unmodified (no truncation, no added context)",
+    "runtime": {
+      "onnxruntime": "1.30.0",
+      "tokenizers": "0.23.2",
+      "numpy": "2.5.3",
+      "provider": "CPUExecutionProvider",
+      "intra_op_threads": 4,
+      "batch_size": 1
+    },
+    "input_tokens": {
+      "max": 1045,
+      "median": 204,
+      "over_512": 31,
+      "over_max": 0
+    }
+  },
+  "vector_store": {
+    "engine": "qdrant",
+    "mode": "local embedded mode (QdrantClient(path=...)), persisted on disk",
+    "client": "qdrant-client 1.19.0",
+    "path": "data/vector_store/qdrant",
+    "collection": "os_tutor_chunks__nomic_embed_text_v1_5",
+    "dim": 768,
+    "distance": "Cosine",
+    "point_id": "uuid5(6ba7b811-9dad-11d1-80b4-00c04fd430c8, 'os-tutor-rag:' + chunk_id)",
+    "text_storage": "not in payload; resolved from chunks.jsonl by chunk_id and verified against text_hash"
+  },
+  "counts": {
+    "source_chunks": 463,
+    "embedded": 463,
+    "indexed": 463,
+    "failures": []
+  },
+  "digests": {
+    "vectors_sha256": "1d65a77704cc5ecff3fbdd58df2f83570ce1c1d448d4483cdf419de18971d99f",
+    "payloads_sha256": "3885d239bde0846758c721997b3ce7040a9d62da0dd98ad3406de719d2b4d12e"
+  }
+}

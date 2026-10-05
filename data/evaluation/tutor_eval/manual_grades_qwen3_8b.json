@@ -1,0 +1,726 @@
+{
+ "annotator": "Claude (single annotator), 2026-10-05",
+ "rubric": "0-2 each: correct = OS facts right; grounded = supported by the 5 given sources; pedagogy = DIAGNOSE probes without giving the answer (one question), EXPLAIN targets the student's actual gap with an example and does not misstate what the student said, CHECK tests the idea on a new case, WRAP_UP/ANSWER confirm or answer clearly. Flow errors caused by a wrong analysis lower pedagogy of the resulting turn.",
+ "grades": [
+  {
+   "id": "q005-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q005-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q005-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q005-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q005-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "says 'You're right that threads share the address space' when the student claimed the opposite"
+  },
+  {
+   "id": "q005-misconception",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'partial'; tells a correct student they missed the stack's role"
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "'You're right that memory speed isn't the reason' misattributes"
+  },
+  {
+   "id": "q005-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q007-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "generic probe, not about join"
+  },
+  {
+   "id": "q007-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q007-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q007-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "generic probe"
+  },
+  {
+   "id": "q007-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 0,
+   "note": "'You're right that join doesn't start the thread' misattributes; web-server counterexample not in sources"
+  },
+  {
+   "id": "q007-misconception",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'partial'; repeats previous turn verbatim"
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "generic probe"
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 1,
+   "pedagogy": 2,
+   "note": "web-server counterexample not in sources"
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 1,
+   "pedagogy": 2,
+   "note": "clear correction; same ungrounded counterexample"
+  },
+  {
+   "id": "q007-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q023-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q023-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "same question with smaller numbers, not a new situation"
+  },
+  {
+   "id": "q023-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q023-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q023-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q023-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q023-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q023-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q023-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "good worked example 10 -> 11"
+  },
+  {
+   "id": "q023-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q031-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "probes lock purpose, generic"
+  },
+  {
+   "id": "q031-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "check describes the whole failure before asking"
+  },
+  {
+   "id": "q031-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q031-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "generic probe"
+  },
+  {
+   "id": "q031-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "explicitly rejects volatile"
+  },
+  {
+   "id": "q031-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "generic probe"
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q031-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "question hints the answer (wait/post placement, 0 vs 1)"
+  },
+  {
+   "id": "q054-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "hints the answer"
+  },
+  {
+   "id": "q054-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "does not address the swapped sem_post/sem_wait roles"
+  },
+  {
+   "id": "q054-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q054-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "hints the answer"
+  },
+  {
+   "id": "q054-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "calls 'all threads blocked' a deadlock"
+  },
+  {
+   "id": "q054-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "'deadlock' again; 'number of available locks' odd"
+  },
+  {
+   "id": "q054-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "'deadlock' terminology"
+  },
+  {
+   "id": "q047-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "question hints the answer (spurious wakeup)"
+  },
+  {
+   "id": "q047-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q047-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q047-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "hints the answer"
+  },
+  {
+   "id": "q047-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "only spurious wakeups; misses the main reason (another thread runs first, Mesa semantics)"
+  },
+  {
+   "id": "q047-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "mentions 'the context'"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "hints the answer"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "'You're right to think if and while seem similar'; spurious wakeups only"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "spurious wakeups only"
+  },
+  {
+   "id": "q047-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "spurious wakeups only"
+  },
+  {
+   "id": "q072-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q072-solid",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "analysis wrongly 'partial'; tells a correct student they missed the circular wait"
+  },
+  {
+   "id": "q072-solid",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 1,
+   "pedagogy": 0,
+   "note": "implies the student's correct asymmetric-order fix is insufficient"
+  },
+  {
+   "id": "q072-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q072-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 0,
+   "note": "'You're right that deadlock happens...' misattributes; check switches to a different fix"
+  },
+  {
+   "id": "q072-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "picking both forks at once removes hold-and-wait, not circular wait; ignores the student's fix"
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "restates the question"
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "near-verbatim repeat"
+  },
+  {
+   "id": "q072-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q075-solid",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "yes/no question"
+  },
+  {
+   "id": "q075-solid",
+   "turn": 1,
+   "kind": "CHECK",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q075-solid",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "mentions 'the context'"
+  },
+  {
+   "id": "q075-misconception",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "yes/no question"
+  },
+  {
+   "id": "q075-misconception",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  },
+  {
+   "id": "q075-misconception",
+   "turn": 2,
+   "kind": "WRAP_UP",
+   "correct": 1,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": "'no thread can wait for a lock another thread is waiting for' is wrong"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 0,
+   "kind": "DIAGNOSE",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "yes/no question"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 1,
+   "kind": "EXPLAIN",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "check is 'Does this make sense?'"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 2,
+   "kind": "EXPLAIN",
+   "correct": 0,
+   "grounded": 2,
+   "pedagogy": 1,
+   "note": "'no thread can wait for L2 while holding L1' is wrong (they can; the impossible case is holding L2 while waiting for L1)"
+  },
+  {
+   "id": "q075-unsure",
+   "turn": 3,
+   "kind": "ANSWER",
+   "correct": 2,
+   "grounded": 2,
+   "pedagogy": 2,
+   "note": ""
+  }
+ ]
+}

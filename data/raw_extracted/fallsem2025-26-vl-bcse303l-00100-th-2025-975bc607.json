@@ -1,0 +1,2746 @@
+{
+  "document_id": "fallsem2025-26-vl-bcse303l-00100-th-2025-975bc607",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "slide",
+      "number": 1,
+      "title": "Synchronization Tools",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Synchronization Tools",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 2,
+      "title": "Outline",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Outline",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Background",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "The Critical-Section Problem",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Peterson’s Solution",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Hardware Support for Synchronization",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Mutex Locks",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Semaphores",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Monitors",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Liveness",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Evaluation",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 3,
+      "title": "Objectives",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Objectives",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Describe the critical-section problem and illustrate a race condition",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Illustrate hardware solutions to the critical-section problem using memory barriers, compare-and-swap operations, and atomic variables",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Demonstrate how mutex locks, semaphores, monitors, and condition variables can be used to solve the critical section problem",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Evaluate tools that solve the critical-section problem in low-, Moderate-, and high-contention scenarios",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 4,
+      "title": "Background",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Background",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Processes can execute concurrently",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "May be interrupted at any time, partially completing execution",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Concurrent access to shared data may result in data inconsistency",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Maintaining data consistency requires mechanisms to ensure the orderly execution of cooperating processes",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "We illustrated in problem when we considered the Bounded Buffer problem with use of a counter that is updated concurrently by the producer and consumer,. Which lead to race condition.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 5,
+      "title": "Race Condition",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Race Condition",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 6,
+      "title": "Critical Section Problem",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Critical Section Problem",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Consider system of n processes {p0, p1, … pn-1}",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Each process has critical section segment of code",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Process may be changing common variables, updating table, writing file, etc.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "When one process in critical section, no other may be in its critical section",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Critical section problem is to design protocol to solve this",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Each process must ask permission to enter critical section in entry section, may follow critical section with exit section, then remainder section",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 7,
+      "title": "Critical Section",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Critical Section",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "General structure of process Pi",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 8,
+      "title": "Critical-Section Problem (Cont.)",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Critical-Section Problem (Cont.)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Requirements for solution to critical-section problem",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "1. Mutual Exclusion - If process Pi is executing in its critical section, then no other processes can be executing in their critical sections",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "2. Progress - If no process is executing in its critical section and there exist some processes that wish to enter their critical section, then the selection of the process that will enter the critical section next cannot be postponed indefinitely",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "3. Bounded Waiting - A bound must exist on the number of times that other processes are allowed to enter their critical sections after a process has made a request to enter its critical section and before that request is granted",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Assume that each process executes at a nonzero speed",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "No assumption concerning relative speed of the n processes",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 9,
+      "title": "Interrupt-based Solution",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Interrupt-based Solution",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Entry section: disable interrupts",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Exit section: enable interrupts",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Will this solve the problem?",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "What if the critical section is code that runs for an hour?",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Can some processes starve – never enter their critical section.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "What if there are two CPUs?",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 10,
+      "title": "Software Solution 1",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Software Solution 1",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Two process solution",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Assume that the load and store machine-language instructions are atomic; that is, cannot be interrupted",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "The two processes share one variable:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "int turn;",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "The variable turn indicates whose turn it is to enter the critical section",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 11,
+      "title": "Algorithm for Process Pi",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Algorithm for Process Pi",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "while (true){",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tturn = i;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\twhile (turn = = j);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t/* critical section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tturn = j;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t/* remainder section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 12,
+      "title": "Correctness of the Software Solution",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Correctness of the Software Solution",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Mutual exclusion is preserved",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Pi enters critical section only if:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "                      turn = I",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "and turn cannot be both 0 and 1 at the same time",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "What about the Progress requirement?",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "FOObar",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "What about the Bounded-waiting requirement?",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 13,
+      "title": "Peterson’s Solution",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Peterson’s Solution",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Software Solution",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Two process solution",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Assume that the load and store machine-language instructions are atomic; that is, cannot be interrupted",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "The two processes share two variables:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "int turn;",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "boolean flag[2]",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "The variable turn indicates whose turn it is to enter the critical section",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "The flag array is used to indicate if a process is ready to enter the critical section.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "flag[i] = true  implies that process Pi is ready!",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 14,
+      "title": "Algorithm for Process Pi",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Algorithm for Process Pi",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "while (true){",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tflag[i] = true;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tturn = j;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\twhile (flag[j] && turn = = j)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t   /* critical section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tflag[i] = false;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t/* remainder section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 15,
+      "title": "Correctness of Peterson’s Solution",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Correctness of Peterson’s Solution",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Provable that the three CS requirement are met:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "1. Mutual exclusion is preserved",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Pi enters CS only if:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "either flag[j] = false or turn = i",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "2. Progress requirement is satisfied",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "3. Bounded-waiting requirement is met",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 16,
+      "title": "Bakery Algorithm",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Bakery Algorithm",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 17,
+      "title": "Synchronization Hardware",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Synchronization Hardware",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Many systems provide hardware support for implementing the critical section code.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Uniprocessors – could disable interrupts",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Currently running code would execute without preemption",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Generally too inefficient on multiprocessor systems",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Operating systems using this not broadly scalable",
+          "kind": "bullet",
+          "level": 2,
+          "para_break": true
+        },
+        {
+          "text": "We will look at three forms of hardware support:\n\n1. Hardware instructions\n\n2. Atomic variables",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 18,
+      "title": "Hardware Instructions",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Hardware Instructions",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Special hardware instructions that allow us to either test-and-modify the content of a word, or two swap the contents of two words atomically (uninterruptedly.)",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Test-and-Set instruction",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Compare-and-Swap instruction",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 19,
+      "title": "The test_and_set Instruction",
+      "images": 0,
+      "lines": [
+        {
+          "text": "The test_and_set Instruction",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Definition",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "      boolean test_and_set (boolean *target)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "        {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "               boolean rv = *target;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "               *target = true;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "               return rv:",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "        }",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Properties",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Executed atomically",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Returns the original value of passed parameter",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Set the new value of passed parameter to true",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 20,
+      "title": "Solution Using test_and_set()",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Solution Using test_and_set()",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Shared boolean variable lock, initialized to false",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Solution:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "       do {\n          while (test_and_set(&lock))",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "             ; /* do nothing */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "                 /* critical section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "          lock = false;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "                 /* remainder section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "       } while (true);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Does it solve the critical-section problem?",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 21,
+      "title": "Swap Instruction",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Swap Instruction",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Definition",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "    void swap( boolean *a, boolean *b)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "      {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\tboolean temp = *a   ;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t*a = *b;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t*b = temp;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": ".",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 22,
+      "title": "Solution using swap",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Solution using swap",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Shared integer  lock  initialized to false;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Solution:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "      do {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t\t\tkey = true;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t\t\twhile (key == true)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t\t\t{\n    \t\t\t\tswap (&lock, &key);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t\t\t)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t\t\t/* critical section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "       \t\t\tlock = false;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "          /* remainder section */",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "      } while (true)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 23,
+      "title": "Mutex Locks",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Mutex Locks",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Previous solutions are complicated and generally inaccessible to application programmers",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "OS designers build software tools to solve critical section problem",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Simplest is mutex lock",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Boolean variable indicating if lock is available or not",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Protect a critical section by",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "First acquire() a lock",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Then release() the lock",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Calls to acquire() and release() must be atomic",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Usually implemented via hardware atomic instructions such as compare-and-swap.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "But this solution requires busy waiting",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "This lock therefore called a spinlock",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 24,
+      "title": "Solution to CS Problem Using Mutex Locks",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Solution to CS Problem Using Mutex Locks",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "while (true) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tacquire lock",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t   critical section",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\trelease lock",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "remainder section",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 25,
+      "title": "Semaphore",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Semaphore",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Synchronization tool that provides more sophisticated ways (than Mutex locks) for processes to synchronize their activities.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Semaphore S – integer variable",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Can only be accessed via two indivisible (atomic) operations",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "wait() and signal()",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Originally called P() and V()",
+          "kind": "bullet",
+          "level": 2,
+          "para_break": true
+        },
+        {
+          "text": "Definition of the wait() operation",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "wait(S) {",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "    while (S <= 0)",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "       ; // busy wait",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "    S--;",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "Definition of the signal() operation",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "signal(S) {",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "    S++;",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 26,
+      "title": "Semaphore (Cont.)",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Semaphore (Cont.)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Counting semaphore – integer value can range over an unrestricted domain",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Binary semaphore – integer value can range only between 0 and 1",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Same as a mutex lock",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Can implement a counting semaphore S as a binary semaphore",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "With semaphores we can solve various synchronization problems",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 27,
+      "title": "Semaphore Usage Example",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Semaphore Usage Example",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Solution to the CS Problem",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Create a semaphore “mutex” initialized to 1",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "wait(mutex);",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "   CS",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "signal(mutex);",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "Consider P1 and P2 that with two statements S1 and S2 and the requirement that S1 to happen before S2",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Create a semaphore “synch” initialized to 0",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "P1:",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "   S1;",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "   signal(synch);",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "P2:",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "   wait(synch);",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "   S2;",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 28,
+      "title": "Semaphore Implementation",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Semaphore Implementation",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Must guarantee that no two processes can execute the wait() and signal() on the same semaphore at the same time",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Thus, the implementation becomes the critical section problem where the wait and signal code are placed in the critical section",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Could now have busy waiting in critical section implementation",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "But implementation code is short",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Little busy waiting if critical section rarely occupied",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Note that applications may spend lots of time in critical sections and therefore this is not a good solution",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 29,
+      "title": "Semaphore Implementation with no Busy waiting",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Semaphore Implementation with no Busy waiting",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "With each semaphore there is an associated waiting queue",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Each entry in a waiting queue has two data items:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Value (of type integer)",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Pointer to next record in the list",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Two operations:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "block – place the process invoking the operation on the appropriate waiting queue",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "wakeup – remove one of processes in the waiting queue and place it in the ready queue",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 30,
+      "title": "Implementation with no Busy waiting (Cont.)",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Implementation with no Busy waiting (Cont.)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Waiting queue",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "    typedef struct {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   \tint value;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   \tstruct process *list;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "    } semaphore;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 31,
+      "title": "Implementation with no Busy waiting (Cont.)",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Implementation with no Busy waiting (Cont.)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "wait(semaphore *S) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   S->value--;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   if (S->value < 0) {\n      add this process to S->list;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "      block();",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   }",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "signal(semaphore *S) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   S->value++;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   if (S->value <= 0) {\n      remove a process P from S->list;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "      wakeup(P);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   }",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 32,
+      "title": "Problems with Semaphores",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Problems with Semaphores",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Incorrect use of semaphore operations:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": " signal(mutex)  ….  wait(mutex)",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": " wait(mutex)  …  wait(mutex)",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "Omitting of wait (mutex) and/or signal (mutex)",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "These – and others – are examples of what can occur when semaphores and other synchronization tools are used incorrectly.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 33,
+      "title": "Monitors",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Monitors",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "A high-level abstraction that provides a convenient and effective mechanism for process synchronization",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Abstract data type, internal variables only accessible by code within the procedure",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Only one process may be active within the monitor at a time",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Pseudocode syntax of a monitor:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "monitor monitor-name",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "\t// shared variable declarations",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "\tfunction P1 (…) { …. }",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "\tfunction P2 (…) { …. }",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "\tfunction Pn (…) {……}",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "  initialization code (…) { … }",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 2,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 34,
+      "title": "Schematic view of a Monitor",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Schematic view of a Monitor",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 35,
+      "title": "Condition Variables",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Condition Variables",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "condition x, y;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Two operations are allowed on a condition variable:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "x.wait() – a process that invokes the operation is suspended until x.signal()",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "x.signal() – resumes one of processes (if any) that invoked x.wait()",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "If no x.wait() on the variable, then it has no effect on the variable",
+          "kind": "bullet",
+          "level": 2,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 36,
+      "title": "Monitor with Condition Variables",
+      "images": 1,
+      "lines": [
+        {
+          "text": "Monitor with Condition Variables",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 37,
+      "title": "Condition Variables Choices",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Condition Variables Choices",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "If process P invokes x.signal(), and process Q is suspended in x.wait(), what should happen next?",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Both Q and P cannot execute in parallel. If Q is resumed, then P must wait",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Options include",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Signal and wait – P waits until Q either leaves the monitor or it waits for another condition",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Signal and continue – Q waits until P either leaves the monitor or it waits for another condition",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Both have pros and cons – language implementer can decide",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Monitors implemented in Concurrent Pascal compromise",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "P executing signal immediately leaves the monitor, Q is resumed",
+          "kind": "bullet",
+          "level": 2,
+          "para_break": true
+        },
+        {
+          "text": "Implemented in other languages including Mesa, C#, Java",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 38,
+      "title": "Monitor Implementation Using Semaphores",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Monitor Implementation Using Semaphores",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Variables",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "\t semaphore mutex;  // (initially  = 1)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t semaphore next;   // (initially  = 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t int next_count = 0; // number of processes waiting",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "                          inside the monitor",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Each function F will be replaced by",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "\t\t\twait(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t     …",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "                    body of F;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t     …",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\tif (next_count > 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t\tsignal(next)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\telse",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t\tsignal(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Mutual exclusion within a monitor is ensured",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 39,
+      "title": "Implementation – Condition Variables",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Implementation – Condition Variables",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "For each condition variable x, we have:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "\t\tsemaphore x_sem; // (initially  = 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\tint x_count = 0;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "The operation x.wait() can be implemented as:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "\t\tx_count++;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\tif (next_count > 0)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\t signal(next);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\telse",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\tsignal(mutex);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\twait(x_sem);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\tx_count--;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 40,
+      "title": "Implementation (Cont.)",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Implementation (Cont.)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "The operation x.signal() can be implemented as:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "\t\tif (x_count > 0) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\tnext_count++;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\tsignal(x_sem);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\twait(next);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\tnext_count--;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 41,
+      "title": "Resuming Processes within a Monitor",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Resuming Processes within a Monitor",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "If several processes queued on condition variable x, and x.signal() is executed, which process should be resumed?",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "FCFS frequently not adequate",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "conditional-wait construct of the form x.wait(c)",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Where c is priority number",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Process with lowest number (highest priority) is scheduled next",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 42,
+      "title": "Single Resource allocation",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Single Resource allocation",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Allocate a single resource among competing processes using priority numbers that specify the maximum time a process plans to use the resource",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "              R.acquire(t);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "                   ...",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "                access the resurce;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "                   ...",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "              R.release;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Where R is an instance of type ResourceAllocator",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 43,
+      "title": "A Monitor to Allocate Single Resource",
+      "images": 0,
+      "lines": [
+        {
+          "text": "A Monitor to Allocate Single Resource",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "monitor ResourceAllocator",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "{",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tboolean busy;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tcondition x;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tvoid acquire(int time) {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\tif (busy)",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t\tx.wait(time);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\tbusy = true;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\tvoid release() {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\tbusy = FALSE;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\tx.signal();",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "   initialization code() {",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t busy = false;",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "}",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 44,
+      "title": "Single Resource Monitor (Cont.)",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Single Resource Monitor (Cont.)",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Usage:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "     acquire",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "      ...",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "     release",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Incorrect use of monitor operations",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": " release()  …  acquire()",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": " acquire()  …  acquire())",
+          "kind": "code",
+          "level": 1,
+          "para_break": false
+        },
+        {
+          "text": "Omitting of acquire() and/or release()",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 45,
+      "title": "Liveness",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Liveness",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Processes may have to wait indefinitely while trying to acquire a synchronization tool such as a mutex lock or semaphore.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Waiting indefinitely violates the progress and bounded-waiting criteria discussed at the beginning of this chapter.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Liveness refers to a set of properties that a system must satisfy to ensure processes make progress.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Indefinite waiting is an example of a liveness failure.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 46,
+      "title": "Liveness",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Liveness",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Deadlock – two or more processes are waiting indefinitely for an event that can be caused by only one of the waiting processes",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Let S and Q be two semaphores initialized to 1",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "P0 P1",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "\t          wait(S); \t              wait(Q);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t           wait(Q); \t              wait(S);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t\t ...\t\t     ...",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "\t           signal(S);                 signal(Q);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "              signal(Q);                 signal(S);",
+          "kind": "code",
+          "level": 0,
+          "para_break": false
+        },
+        {
+          "text": "Consider if P0 executes wait(S) and P1 wait(Q). When P0 executes wait(Q), it must wait until P1 executes signal(Q)",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "However, P1 is waiting until P0 execute signal(S).",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Since these signal() operations will never be executed, P0 and P1 are deadlocked.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 47,
+      "title": "Liveness",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Liveness",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Other forms of deadlock:",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Starvation – indefinite blocking",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "A process may never be removed from the semaphore queue in which it is suspended",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Priority Inversion – Scheduling problem when lower-priority process holds a lock needed by higher-priority process",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Solved via priority-inheritance protocol",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 48,
+      "title": "End of Chapter 6",
+      "images": 0,
+      "lines": [
+        {
+          "text": "End of Chapter 6",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 49,
+      "title": "Priority Inheritance Protocol",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Priority Inheritance Protocol",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Consider the scenario with three processes P1, P2, and P3. P1 has the highest priority, P2 the next highest, and P3 the lowest.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Assume a resource P3 is assigned a resource R that P1 wants.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Thus, P1 must wait for P3 to finish using the resource. However, P2 becomes runnable and preempts P3.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "What has happened is that P2 - a process with a lower priority than P1 - has indirectly prevented P3 from gaining access to the resource.",
+          "kind": "bullet",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "To prevent this from occurring, a priority inheritance protocol is used. This simply allows the priority of the highest thread waiting to access a shared resource to be assigned to the thread currently using the resource. Thus, the current owner of the resource is assigned the priority of the highest priority thread wishing to acquire the resource.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    },
+    {
+      "kind": "slide",
+      "number": 50,
+      "title": "Priority Inheritance Protocol",
+      "images": 0,
+      "lines": [
+        {
+          "text": "Priority Inheritance Protocol",
+          "kind": "heading",
+          "level": 1,
+          "para_break": true
+        },
+        {
+          "text": "Consider the scenario with three processes P1, P2, and P3. P1 has the highest priority, P2 the next highest, and P3 the lowest.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "Assume a resource P3 is assigned a resource R that P1 wants. Thus, P1 must wait for P3 to finish using the resource. However, P2 becomes runnable and preempts P3. What has happened is that P2 - a process with a lower priority than P1 - has indirectly prevented P3 from gaining access to the resource.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        },
+        {
+          "text": "To prevent this from occurring, a priority inheritance protocol is used. This simply allows the priority of the highest thread waiting to access a shared resource to be assigned to the thread currently using the resource. Thus, the current owner of the resource is assigned the priority of the highest priority thread wishing to acquire the resource.",
+          "kind": "bullet",
+          "level": 0,
+          "para_break": true
+        }
+      ]
+    }
+  ],
+  "page_count": null,
+  "slide_count": 50,
+  "properties": {
+    "title": "2.01",
+    "author": "Lucent End User",
+    "last_modified_by": "Admin"
+  },
+  "master_text": [
+    "6.‹#›",
+    "Silberschatz, Galvin and Gagne ©2018",
+    "Operating System Concepts – 10th Edition"
+  ]
+}

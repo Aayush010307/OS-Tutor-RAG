@@ -1,0 +1,417 @@
+{
+  "document_id": "lecture13-0af66874",
+  "layout": "slides",
+  "units": [
+    {
+      "kind": "page",
+      "number": 1,
+      "title": "Lecture 13: Locks",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Lecture 13: Locks",
+          "level": 1
+        },
+        {
+          "type": "paragraph",
+          "text": "Mythili Vutukuru IIT Bombay",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 2,
+      "title": "Locks: Basic idea",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Locks: Basic idea",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Consider update of shared variable",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "We can use a special lock variable to protect it",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "All threads accessing a critical section share a lock",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "One threads succeeds in locking – owner of lock",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Other threads that try to lock cannot proceed further until lock is released by the owner",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Pthreads library in Linux provides such locks",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 3,
+      "title": "Building a lock",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Building a lock",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Goals of a lock implementation",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Mutual exclusion (obviously!)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Fairness: all threads should eventually get the lock, and no thread should starve Low overhead: acquiring, releasing, and waiting for lock should not consume too many resources",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Implementation of locks are needed for both userspace programs (e.g., pthreads library) and kernel code",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Implementing locks needs support from hardware and OS",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 4,
+      "title": "Is disabling interrupts enough?",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Is disabling interrupts enough?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Is this enough?",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "No, not always!",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Many issues here:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Disabling interrupts is a privileged instruction and program can misuse it (e.g., run forever)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Will not work on multiprocessor systems, since another thread on another core can enter critical section",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "This technique is used to implement locks on single processor systems inside the OS",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Need better solution for other situations",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 5,
+      "title": "A failed lock implementation (1)",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "A failed lock implementation (1)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Lock: spin on a flag variable until it is unset, then set it to acquire lock",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Unlock: unset flag variable",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 6,
+      "title": "A failed lock implementation (2)",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "A failed lock implementation (2)",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Thread 1 spins, lock is released, ends spin",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Thread 1 interrupted just before setting flag",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Race condition has moved to the lock acquisition code!",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 7,
+      "title": "Solution: Hardware atomic instructions",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Solution: Hardware atomic instructions",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Very hard to ensure atomicity only in software",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Modern architectures provide hardware atomic instructions",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Example of an atomic instruction: test-and-set",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Update a variable and return old value, all in one hardware instruction",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 8,
+      "title": "Simple lock using test-and-set",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Simple lock using test-and-set",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "If TestAndSet(flag,1) returns 1, it means the lock is held by someone else, so wait busily",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "This lock is called a spinlock – spins until lock is acquired",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 9,
+      "title": "Spinlock using compare-and-swap",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Spinlock using compare-and-swap",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Another atomic instruction: compare-and-swap",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Spinlock using compare-and-swap",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 10,
+      "title": "Alternative to spinning",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Alternative to spinning",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Alternative to spinlock: a (sleeping) mutex",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Instead of spinning for a lock, a contending thread could simply give up the CPU and check back later",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "yield() moves thread from running to ready state",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 11,
+      "title": "Spinlock vs. sleeping mutex",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "Spinlock vs. sleeping mutex",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Most userspace lock implementations are of the sleeping mutex kind",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "CPU wasted by spinning contending threads",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "More so if a thread holds spinlock and blocks for long",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Locks inside the OS are always spinlocks",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Why? Who will the OS yield to?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "When OS acquires a spinlock:",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "It must disable interrupts (on that processor core) while the lock is held. Why? An interrupt handler could request the same lock, and spin for it forever.",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "It must not perform any blocking operation – never go to sleep with a locked spinlock!",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "In general, use spinlocks with care, and release as soon as possible",
+          "level": 0
+        }
+      ]
+    },
+    {
+      "kind": "page",
+      "number": 12,
+      "title": "How should locks be used?",
+      "images": 15,
+      "blocks": [
+        {
+          "type": "heading",
+          "text": "How should locks be used?",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "A lock should be acquired before accessing any variable or data structure that is shared between multiple threads of a process",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "“Thread-safe” data structures",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "All shared kernel data structures must also be accessed only after locking",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Coarse-grained vs. fine-grained locking: one big lock for all shared data vs. separate locks",
+          "level": 0
+        },
+        {
+          "type": "list_item",
+          "text": "Fine-grained allows more parallelism",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "Multiple fine-grained locks may be harder to manage",
+          "level": 1
+        },
+        {
+          "type": "list_item",
+          "text": "OS only provides locks, correct locking discipline is left to the user",
+          "level": 0
+        }
+      ]
+    }
+  ]
+}

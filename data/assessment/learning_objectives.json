@@ -1,0 +1,31 @@
+{
+  "version": "0.1-draft",
+  "status": "DRAFT: written for the Review 2 evaluation framework; not yet reviewed by the course instructor",
+  "scope": "Threads and Synchronisation (the current corpus scope)",
+  "objectives": [
+    {"objective_id": "LO1", "topic": "Threads fundamentals",
+     "objective": "Explain what a thread is, what threads of one process share and what each thread has privately (stack, registers, program counter).",
+     "subtopics": ["Thread Fundamentals", "Multithreading", "User-Level Threads", "Kernel Threads", "Thread Models"]},
+    {"objective_id": "LO2", "topic": "Thread APIs",
+     "objective": "Use pthread_create and pthread_join correctly, including passing arguments to and returning results from a thread.",
+     "subtopics": ["Pthreads", "Thread Creation", "Thread Join"]},
+    {"objective_id": "LO3", "topic": "Race conditions",
+     "objective": "Identify a race condition on shared data, explain why a non-atomic update such as counter++ loses updates, and define a critical section.",
+     "subtopics": ["Race Conditions", "Critical Sections", "Mutual Exclusion"]},
+    {"objective_id": "LO4", "topic": "Locks / mutexes",
+     "objective": "Explain how a lock enforces mutual exclusion, how hardware primitives (test-and-set, compare-and-swap) build one, and when to spin versus sleep.",
+     "subtopics": ["Locks", "Mutex", "Spinlocks", "Test-and-Set", "Compare-and-Swap"]},
+    {"objective_id": "LO5", "topic": "Semaphores",
+     "objective": "Describe sem_wait and sem_post, and use a semaphore as a lock (initial value 1) and for ordering (initial value 0).",
+     "subtopics": ["Semaphores"]},
+    {"objective_id": "LO6", "topic": "Condition variables",
+     "objective": "Use a condition variable with its mutex, and explain why waiting must re-check the condition in a while loop.",
+     "subtopics": ["Condition Variables", "Monitors"]},
+    {"objective_id": "LO7", "topic": "Classical synchronization problems",
+     "objective": "Explain and solve producer-consumer, readers-writers and dining philosophers, including the ordering pitfalls of each.",
+     "subtopics": ["Producer-Consumer", "Readers-Writers", "Dining Philosophers"]},
+    {"objective_id": "LO8", "topic": "Concurrency bugs",
+     "objective": "Recognise deadlock (its four conditions), atomicity-violation and order-violation bugs, and apply a prevention technique such as lock ordering.",
+     "subtopics": ["Deadlock", "Concurrency Bugs", "Starvation"]}
+  ]
+}
