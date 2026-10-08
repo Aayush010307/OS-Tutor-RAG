@@ -2313,3 +2313,129 @@ project.
   - `data/tutor_logs/`, because chat transcripts may contain student answers.
 - Added `README.md`, covering what the project is, its results, how to run it and the corpus note.
 - Initial commit: `5f1342c`, 167 files.
+
+### 2026-10-05 — Review 2 document rewritten as a staged report
+
+- On the owner's instruction, `Review2_OS-Tutor-RAG.docx` was regenerated as the document to mail for Review 2.
+- **Shown as complete:** work up to the hybrid retriever. That covers:
+  - corpus and processing;
+  - dense, BM25 and hybrid retrieval, with their results and error analysis;
+  - benchmark v1.1.
+- **Written as design and plan, with no results:**
+  - the tutor flow and stages;
+  - the local open language model;
+  - the student chat page;
+  - the tutor quality check;
+  - the learning objectives and the pre/post protocol.
+- The text was reworded throughout so that it differs from `OS-Tutor-RAG_Case_Study.docx`, which keeps the full
+  current status.
+- The test count stated in the document is 85. That is the ingestion, retrieval, evaluation, BM25 and hybrid suites,
+  verified passing.
+- No results were invented. Every number comes from the retrieval results files.
+- The document passed the docx XSD validator.
+- The file was regenerated locally only; the changed document has not been pushed to GitHub.
+
+---
+
+## Phase 4.1 — Tutor Behaviour Alignment (LabTutor-inspired) and Laptop Checkpoint
+
+**Status: IMPLEMENTED; quality evaluation IN PROGRESS** (2026-10-08, on the owner's instruction)
+
+Scope: language-model behaviour, prompting and tutor response generation only. Retrieval was not touched.
+`Docs/`, `chunks.jsonl`, the Qdrant index, benchmark v1.1, the judgments, the embedding configuration, BM25 and the
+hybrid RRF retriever are all byte-identical; no new retrieval experiment and no new phase was started.
+
+### 2026-10-08 — What was inspected
+
+- OS-Tutor-RAG: `src/tutor/llm.py`, `controller.py`, `server.py`, `src/retrieval/`, `src/evaluation/tutor_eval.py`,
+  the tests, `web/index.html`, this log and the existing tutor evaluation report.
+- LabTutor (`~/Desktop/Projects/lab-tutor`, the owner's chemistry RAG): `backend/config.py`, `backend/llm/client.py`,
+  `backend/socratic_engine/chat.py`, `backend/rag/phrasing.py`, `backend/socratic_engine/walkthrough/grader.py` and
+  `backend/tests/test_reflection_routing.py`.
+- Only domain-independent behaviour was carried over. No chemistry logic, routing, calculation or terminology.
+
+### 2026-10-08 — Changes
+
+- **Generation settings, one place** (`src/tutor/llm.py`): `TEMPERATURE = 0.3` (was 0.0), `SEED = 42`,
+  `NUM_CTX = 8192` as module constants used as the `OllamaLLM` defaults.
+  - Why: LabTutor runs its student-facing generation at 0.3. At 0 the tutor recited the source wording; 0.3 keeps it
+    controlled but lets it phrase an explanation. The fixed seed keeps a given model, prompt and Ollama version
+    reproducible, so evaluation runs stay comparable.
+  - Unchanged: `think: false`, JSON mode for the analysis call, streaming for student-facing text. No other sampling
+    parameter was introduced.
+- **Layered prompts** (`src/tutor/controller.py`): every prompt is built in one fixed order,
+  `TUTOR POLICY -> GROUNDING -> HOW TO WRITE TO THE STUDENT -> TASK (stage) -> COURSE CONTEXT -> STUDENT QUESTION ->
+  CONVERSATION -> STUDENT'S LAST MESSAGE`, from shared `POLICY`, `GROUNDING` and `STYLE` constants, so a stage task
+  cannot contradict the general policy. The analysis call omits the student-facing style block, which would
+  contradict "reply with JSON only".
+- **Grounding policy:** the retrieved context is the only source of OS facts; never invent definitions, semantics,
+  API behaviour, numbers, code or claims about the course material; say plainly when the material does not specify
+  something; mark an explanation that goes beyond the source wording as the tutor's own; cite only listed sources;
+  judge student statements against the context and never call a wrong statement right; be strict about
+  synchronisation semantics, semaphores, mutexes, condition variables, thread lifecycle, pthread calls, races,
+  deadlock, atomics, scheduling and code.
+- **Student-facing style:** warm and direct, at most 120 words but never cut off mid-explanation (a compact
+  structured explanation instead), no preamble or restating the question, no headings on small answers, identifiers
+  kept as the material writes them, no mention of context, sources, retrieval, scores, prompts or model limitations,
+  and English-only output while informal, abbreviated or Hinglish input is understood.
+- **Stage prompts:** DIAGNOSE must ask exactly one question that does not contain, restate or hint at the answer;
+  EXPLAIN must name what was wrong before explaining and must end with one check question; CHECK must test
+  application, prediction or comparison rather than repetition; WRAP_UP introduces no new material; citations are
+  required for EXPLAIN, WRAP_UP, ANSWER and the new ASIDE.
+- **Analysis prompt:** a correct but brief, informal or differently worded answer is `solid`; it is not marked down
+  for detail the question did not ask for, for not using the source's words, or for sounding unsure. This addresses
+  the correct-marked-partial cases in the Phase 4 evaluation.
+- **Citation validation** (`validated()`): `[S1, S2]` is expanded, citations outside the retrieved source list
+  (`[S9]`) and invented ones (`[Wikipedia]`, `[Source]`, `[general knowledge]`) are removed before the text reaches
+  the student. Provenance comes from the retriever, not from the model's wording. `chunk_id`, filename,
+  page/slide and section continue to come from the retriever unchanged.
+- **Deterministic new-question routing** (`is_new_question()`, ported from LabTutor's `grader.is_new_request`): a
+  student message that asks something new while DIAGNOSE or CHECK is pending is answered from its own retrieved
+  context (`ASIDE`, reported as stage `ANSWER`), and the stage, round count, gaps and pending question are left
+  untouched. No model decides this. A demand for the answer ("just tell me the answer", "skip") is not a new
+  question, so the teaching flow cannot be bypassed. Verified against all 56 scripted evaluation replies: none is
+  misrouted.
+  - Correction to the task description: OS-Tutor-RAG had no pending-reflection behaviour to preserve. That fix
+    belongs to LabTutor (`backend/tests/test_reflection_routing.py`); the pattern was ported here.
+- `web/index.html`: renders an `ANSWER` aside turn and leaves the stage indicator on the pending stage.
+- `src/evaluation/tutor_eval.py`: the report now prints the actual generation settings of each run instead of the
+  hard-coded "temperature 0, seed 42".
+
+### 2026-10-08 — Tests
+
+- New `tests/test_tutor_policy.py` (31 tests): central settings; the Ollama request body carries temperature 0.3,
+  seed 42, `num_ctx` 8192, `think: false`, the right stream flag and JSON mode; the shared policy and its order in
+  every student-facing prompt; English-only, grounding and no-false-agreement rules present; the analysis prompt
+  grounded but not student-facing; stage requirements; citation validation, including through the controller;
+  new-question recognition, answers not mistaken for questions, no scripted reply misrouted, the pending check
+  surviving an aside, and aside sources/tokens emitted.
+- No existing test was weakened, changed or removed.
+- `python3 -m pytest tests -q` before the change: **96 passed**. After: **127 passed**.
+- Re-run during the evaluation: 1 failed, 108 passed, 18 errors. Every one is Qdrant's local-mode single-client
+  lock, held by the evaluation process running at the same time (Phase 2 limitation 2), not a code failure. With the
+  index free the suite passes 127/127; the index-independent suites (ingestion, tutor policy, server, tutor and
+  assessment) pass 57/57 while the evaluation runs.
+
+### 2026-10-08 — Evaluation status
+
+- **IN PROGRESS, no results yet.** `python3 -m src.evaluation.tutor_eval run --model qwen3:8b --output-dir
+  data/evaluation/tutor_eval_v2` is still running on this machine; `llama3.1:8b` has not been run. The transcripts
+  file is written only when a run finishes, so `data/evaluation/tutor_eval_v2/` does not exist yet and nothing from
+  it is committed.
+- The Phase 4 figures in `data/evaluation/tutor_eval/report.md` remain the only measured tutor numbers. They
+  describe the previous behaviour (temperature 0, the earlier prompts) and are untouched, so they are the "before"
+  side of the comparison.
+- Still to do after the runs finish: run both models, grade the new transcripts with the same rubric and single
+  annotator, and compare before and after. No claim about the new behaviour's quality can be made until then, and
+  no claim about student learning can be made at all: no study has been run.
+
+### 2026-10-08 — Git checkpoint for the laptop move
+
+- Branch `main`, remote `https://github.com/Aayush010307/OS-Tutor-RAG.git`.
+- Committed: the tutor behaviour work, the new test file, the evaluation report change, the page change, this log
+  entry, the README test count (96 -> 127) and the regenerated `Review2_OS-Tutor-RAG.docx` from 2026-10-05.
+- `.gitignore` gained `.agents/` and `skills-lock.json`: agent tooling installed per machine, not project source.
+  No existing ignore rule was weakened.
+- Audited before staging: no API keys, tokens, passwords, `.env` or credential files; no caches, Qdrant lock or
+  chat transcripts; `Docs/`, `chunks.jsonl`, the vector store, benchmark v1.1, the judgments and `src/retrieval/`
+  unmodified.

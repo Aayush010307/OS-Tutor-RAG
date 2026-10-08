@@ -5,18 +5,24 @@
     llm("prompt", json_mode=True)          # Ollama constrains the reply to valid JSON
     llm("prompt", on_token=print)          # streams tokens to the callback, returns the full reply
 
-Temperature 0 and a fixed seed make replies repeatable for a given model, prompt and Ollama version.
-`think: false` turns off qwen3's hidden reasoning (slow on a laptop); models without it ignore the flag.
+Generation settings live in one place (the constants below) so every caller gets the same production defaults.
+TEMPERATURE 0.3 (Phase 4.1; was 0.0) keeps answers controlled but lets the tutor phrase an explanation naturally
+instead of reciting the source. The fixed seed keeps a given model, prompt and Ollama version reproducible, so the
+quality evaluation stays comparable between runs. `think: false` turns off qwen3's hidden reasoning (slow on a
+laptop); models without it ignore the flag.
 """
 import json
 import urllib.request
 
 HOST = "http://localhost:11434"
 DEFAULT_MODEL = "qwen3:8b"
+TEMPERATURE = 0.3  # production default for tutor generation and analysis
+SEED = 42
+NUM_CTX = 8192
 
 
 class OllamaLLM:
-    def __init__(self, model=DEFAULT_MODEL, host=HOST, temperature=0.0, seed=42, num_ctx=8192, timeout=600):
+    def __init__(self, model=DEFAULT_MODEL, host=HOST, temperature=TEMPERATURE, seed=SEED, num_ctx=NUM_CTX, timeout=600):
         self.model, self.host, self.timeout = model, host, timeout
         self.options = {"temperature": temperature, "seed": seed, "num_ctx": num_ctx}
 

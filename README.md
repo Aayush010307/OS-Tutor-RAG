@@ -19,7 +19,7 @@ Course project for BCSE303P Operating Systems Lab: Aayush Jaiswal (24BCI0042), S
 | `src/assessment/` | Pre-test / post-test learning-gain analysis |
 | `web/index.html` | Student chat page |
 | `data/` | Processed chunks, vector index, benchmarks, evaluation results, draft assessment items |
-| `tests/` | 96 automated tests |
+| `tests/` | 127 automated tests |
 | `PROJECT_LOG.md` | Full development history, decisions and results |
 | `OS-Tutor-RAG_Case_Study.docx` | Case study report |
 

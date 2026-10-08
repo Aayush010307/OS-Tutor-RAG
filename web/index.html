@@ -185,7 +185,7 @@ aside .sub { font-size: 14px; color: var(--muted); margin: 0 0 16px; }
 <script>
 const $ = s => document.querySelector(s);
 const inner = $("#inner"), logEl = $("#log"), input = $("#input"), send = $("#send"), form = $("#form");
-const STAGE = { DIAGNOSE: ["Diagnose", "var(--diagnose)"], EXPLAIN: ["Explain", "var(--explain)"], CHECK: ["Check", "var(--check)"], DONE: ["Done", "var(--done)"] };
+const STAGE = { DIAGNOSE: ["Diagnose", "var(--diagnose)"], EXPLAIN: ["Explain", "var(--explain)"], CHECK: ["Check", "var(--check)"], DONE: ["Done", "var(--done)"], ANSWER: ["Answer", "var(--done)"] };
 const LEVEL = { solid: "Solid understanding", partial: "Partly there", misconception: "Misconception", unclear: "Unclear or unsure" };
 let sessionId = null, stage = null, busy = false, explainRounds = 0, visited = new Set();
 
@@ -281,12 +281,12 @@ async function stream(url, body) {
     else if (type === "turn") {
       turnStage = data.stage;
       if (data.stage === "EXPLAIN") explainRounds++;
-      const [name, color] = STAGE[data.stage];
+      const [name, color] = STAGE[data.stage] || ["Answer", "var(--done)"];
       pending.style.setProperty("--c", color);
       pending.querySelector(".stage").textContent = name;
       const body = pending.querySelector(".body");
       body.classList.remove("typing", "waiting"); body.innerHTML = render(data.message || text);
-      setStage(data.stage);
+      if (data.stage !== "ANSWER") setStage(data.stage);  // side answer: the tutor's own question stays pending
     }
     else if (type === "error") {
       pending.querySelector(".body").classList.remove("typing", "waiting");

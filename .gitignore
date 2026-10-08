@@ -7,3 +7,6 @@ data/vector_store/qdrant/.lock
 # chat transcripts may contain student answers
 data/tutor_logs/
 ~$*.docx
+# agent tooling installed per machine, not project source
+.agents/
+skills-lock.json

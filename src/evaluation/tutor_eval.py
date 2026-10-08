@@ -165,8 +165,8 @@ def report(models, out_dir=OUT, benchmark=BENCHMARK):
     out_dir = Path(out_dir)
     L = ["# Tutor Quality Evaluation", "",
          "Scripted student dialogues (data/evaluation/tutor_scenarios_v1.json: 8 questions x 3 profiles) run through the "
-         "tutor with the E2 hybrid retriever and a local Ollama model (temperature 0, seed 42). Measurements only.", ""]
-    summary = {}
+         "tutor with the E2 hybrid retriever and a local Ollama model. Measurements only.", ""]
+    summary, options = {}, {}
     for model in models:
         tr = json.loads((out_dir / f"{model.replace(':', '_')}_transcripts.json").read_text(encoding="utf-8"))
         d_rows, t_rows, lat = score(tr, grade2)
@@ -190,6 +190,8 @@ def report(models, out_dir=OUT, benchmark=BENCHMARK):
         manual = out_dir / f"manual_grades_{model.replace(':', '_')}.json"
         grades = json.loads(manual.read_text(encoding="utf-8"))["grades"] if manual.exists() else None
         summary[model] = (s, by_profile, lat, len(t_rows), grades, t_rows)
+        options[model] = tr["run"].get("llm_options")
+    L += ["Generation settings: " + "; ".join(f"{m} {o}" for m, o in options.items()), ""]
     L += ["## Automatic checks", "", "| Check | " + " | ".join(models) + " |", "| --- | " + " | ".join("---" for _ in models) + " |"]
     for key in next(iter(summary.values()))[0]:
         L.append(f"| {key} | " + " | ".join(_fmt(summary[m][0][key]) for m in models) + " |")
