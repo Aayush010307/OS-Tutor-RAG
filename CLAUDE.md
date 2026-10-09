@@ -24,8 +24,11 @@
   before evaluation). Outputs in `data/evaluation/e2_hybrid/`. BM25/hybrid v1.1 metrics are lower bounds (dense-only pooling).
 - Tutor (Phase 4, approved 2026-10-04): `src/tutor/controller.py` + local Ollama (`src/tutor/llm.py`, default qwen3:8b).
   Chat page: `python3 -m src.tutor.server` then http://localhost:8000 (needs Ollama running; cannot run at the same time as
-  other Qdrant users). Quality evaluation: `python3 -m src.evaluation.tutor_eval run --model <m>` / `report <models>`;
-  scenarios `data/evaluation/tutor_scenarios_v1.json` are frozen; outputs and manual grades in `data/evaluation/tutor_eval/`.
+  other Qdrant users). Quality evaluation: qwen3:8b is the primary model, llama3.1:8b an optional comparison.
+  Routine check: `tutor_eval run --model qwen3:8b --output-dir data/evaluation/tutor_eval_v2` then
+  `tutor_eval report qwen3:8b --output-dir data/evaluation/tutor_eval_v2` (-> `report_qwen3_8b.md`). Name more models on
+  `report` only for an explicit comparison (-> `report_<a>_vs_<b>.md`); only named models are read. Scenarios
+  `data/evaluation/tutor_scenarios_v1.json` are frozen; Phase 4 results in `data/evaluation/tutor_eval/`, Phase 4.1 in `tutor_eval_v2/`.
 - Assessment framework: `data/assessment/` (DRAFT objectives and item bank; never report fabricated student results),
   analysis `python3 -m src.assessment.learning_gain responses.json`.
 - Interpreter: plain `python3` may resolve to miniconda without the project's dependencies; use `/usr/local/bin/python3`

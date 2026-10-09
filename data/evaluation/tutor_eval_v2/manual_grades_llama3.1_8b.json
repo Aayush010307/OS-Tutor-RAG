@@ -1,0 +1,726 @@
+{
+  "annotator": "Claude (single annotator, not blinded), 2026-10-10",
+  "rubric": "0-2 each: correct = OS facts right; grounded = supported by the 5 given sources; pedagogy = DIAGNOSE probes without giving the answer (one question), EXPLAIN targets the student's actual gap with an example and does not misstate what the student said, CHECK tests the idea on a new case, WRAP_UP/ANSWER confirm or answer clearly. Flow errors caused by a wrong analysis lower pedagogy of the resulting turn.",
+  "grades": [
+    {
+      "id": "q005-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q005-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q005-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "exposes the prompt instructions"
+    },
+    {
+      "id": "q005-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q005-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 1,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration; shared-stack example is confused (one variable shared between threads)"
+    },
+    {
+      "id": "q005-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 1,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "scaffolding / meta narration; tells a correct student they are 'still not quite correct'"
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "negates the student's 'I don't know' as if it were a false claim"
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "exposes the prompt instructions; 0 questions in a CHECK turn"
+    },
+    {
+      "id": "q007-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q007-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q023-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q023-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q023-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 0,
+      "note": "scaffolding / meta narration; no citation; calls a correct answer 'not entirely accurate'"
+    },
+    {
+      "id": "q023-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q023-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 1,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": "muddled: says the second thread will see the new value"
+    },
+    {
+      "id": "q023-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 1,
+      "grounded": 1,
+      "pedagogy": 0,
+      "note": "scaffolding / meta narration; no citation; claims the context does not mention locks or critical sections; calls a correct answer inaccurate"
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration; no citation"
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "exposes the prompt instructions; 0 questions in a CHECK turn"
+    },
+    {
+      "id": "q031-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "exposes the prompt instructions"
+    },
+    {
+      "id": "q031-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 1,
+      "grounded": 1,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration; no citation; wrong mechanism ('intermediate value'); the interleaving example contradicts itself"
+    },
+    {
+      "id": "q031-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 0,
+      "note": "scaffolding / meta narration; no citation; tells a correct student their answer 'doesn't quite capture the essence'"
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "scaffolding / meta narration; 'said something wrong, specifically that they are unsure'"
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 0,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "exposes the prompt instructions; 0 questions in a CHECK turn; wrong: claims sem_wait returns immediately at -1; contradicts a correct answer"
+    },
+    {
+      "id": "q054-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 0,
+      "note": "scaffolding / meta narration; no citation; treats 'I don't remember' as a wrong statement"
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q047-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 0,
+      "note": "exposes the prompt instructions; invents the citation label [TIP]"
+    },
+    {
+      "id": "q047-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q047-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration; no citation"
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 1,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "quotes a sentence the student never wrote and calls it incorrect"
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q072-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "exposes the prompt instructions; 2 questions in a CHECK turn"
+    },
+    {
+      "id": "q072-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 1,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration; vague fix: 'a mutex to synchronize access to the right fork'"
+    },
+    {
+      "id": "q072-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 1,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration; recasts deadlock as starvation"
+    },
+    {
+      "id": "q072-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q075-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "confusing follow-up question"
+    },
+    {
+      "id": "q075-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 0,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": "claims opposite lock orders still prevent deadlock"
+    },
+    {
+      "id": "q075-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "scaffolding / meta narration"
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 0,
+      "note": "no citation; negates the student's 'I'm not sure'"
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 1,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": "misapplies 'acquire all locks at once' to lock ordering"
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    }
+  ]
+}

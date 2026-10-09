@@ -1,0 +1,1880 @@
+{
+  "run": {
+    "generated_at": "2026-10-09T18:54:05+00:00",
+    "model": "qwen3:8b",
+    "llm_options": {
+      "temperature": 0.3,
+      "seed": 42,
+      "num_ctx": 8192
+    },
+    "scenarios": "data/evaluation/tutor_scenarios_v1.json",
+    "scenarios_sha256": "2ad8973f60eb8e9c006f328dec53858eab1898c563c5d891ed3387d3e9c9a3f0",
+    "retriever": "hybrid RRF (E2), top 5"
+  },
+  "dialogues": [
+    {
+      "id": "q005-solid",
+      "objective": "LO1",
+      "query_id": "q005",
+      "profile": "solid",
+      "question": "Why does every thread get its own stack even though threads share the heap and code?",
+      "context": [
+        "threads-intro-c1df7202::c0001",
+        "threads-4d568260::c0002",
+        "threads-intro-c1df7202::c0002",
+        "lecture12-4288650c::c0001",
+        "threads-api-8ce54688::c0018"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why do threads share the code and heap but not the stack?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "What happens if two threads try to use the same stack?",
+          "student": "Each thread runs its own sequence of function calls, so it needs its own stack for its local variables, return addresses and saved registers. The heap, globals and code can be shared because they are not tied to one call sequence.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that each thread needs its own stack to manage its own function calls and local variables. This ensures thread-local storage is isolated, preventing interference between threads. The heap and code are shared because they are not tied to a single call sequence, as explained in [S2] and [S5].",
+          "student": "Local variables live on the stack of the thread that declared them, so another thread cannot see or overwrite them, while heap and global data are visible to every thread of the process.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 33.4,
+          "prompt_chars": 8157
+        },
+        {
+          "kind": "analysis",
+          "seconds": 10.87,
+          "prompt_chars": 7875
+        },
+        {
+          "kind": "tutor",
+          "seconds": 9.49,
+          "prompt_chars": 8348
+        },
+        {
+          "kind": "analysis",
+          "seconds": 1.83,
+          "prompt_chars": 8133
+        },
+        {
+          "kind": "tutor",
+          "seconds": 13.26,
+          "prompt_chars": 8541
+        }
+      ]
+    },
+    {
+      "id": "q005-misconception",
+      "objective": "LO1",
+      "query_id": "q005",
+      "profile": "misconception",
+      "question": "Why does every thread get its own stack even though threads share the heap and code?",
+      "context": [
+        "threads-intro-c1df7202::c0001",
+        "threads-4d568260::c0002",
+        "threads-intro-c1df7202::c0002",
+        "lecture12-4288650c::c0001",
+        "threads-api-8ce54688::c0018"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why do threads share the code and heap but not the stack?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "That is not correct. Threads do not have their own separate address space; they share the address space with other threads in the same process. The stack is separate per thread because each thread needs its own execution context, including its own program counter and stack pointer. This allows threads to run independently and manage their own function calls and local variables. For example, in a multi-threaded process, each thread has its own stack for local variables, while sharing the heap and code. A counterexample would be a process with multiple threads all using the same stack, which would cause conflicts and incorrect behavior. What is the purpose of having separate stacks for each thread?",
+          "student": "Threads get their own stack because each thread has its own separate address space, just like a process.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "Threads do not have their own separate address space; they share the address space with other threads in the same process, unlike processes which have separate address spaces."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your explanation is not correct. You incorrectly state that threads share one address space, but you also say only the stack, registers, and program counter are private — this is misleading. Threads **do not** have their own separate address space; they **share** the same address space as other threads in the same process [S1], [S4]. The stack is private per thread because it is needed to manage the execution context of each thread independently, including local variables and function call frames [S2], [S4], [S5]. For example, in a multi-threaded web server, each thread has its own stack to handle client requests without interfering with others. A counterexample would be a single-threaded program, where there is only one stack. What is the key difference between a thread's stack and a process's stack?",
+          "student": "Threads share one address space; only the stack, registers and program counter are private, because each thread runs its own chain of function calls with its own local variables.",
+          "analysis": {
+            "level": "partial",
+            "gap": "The student correctly identifies that threads share the address space but fails to explain why the stack is private. The course material states that each thread has its own stack for local variables and function calls, which is necessary for managing execution context independently [S2], [S4], [S5]."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"Threads do not have their own separate address space; they share the address space with other threads in the same process, unlike processes which have separate address spaces.\"\n}",
+        "{\n  \"level\": \"partial\",\n  \"gap\": \"The student correctly identifies that threads share the address space but fails to explain why the stack is private. The course material states that each thread has its own stack for local variables and function calls, which is necessary for managing execution context independently [S2], [S4], [S5].\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 9.79,
+          "prompt_chars": 8157
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.57,
+          "prompt_chars": 7749
+        },
+        {
+          "kind": "tutor",
+          "seconds": 19.7,
+          "prompt_chars": 8578
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.24,
+          "prompt_chars": 8650
+        },
+        {
+          "kind": "tutor",
+          "seconds": 22.43,
+          "prompt_chars": 9604
+        }
+      ]
+    },
+    {
+      "id": "q005-unsure",
+      "objective": "LO1",
+      "query_id": "q005",
+      "profile": "unsure",
+      "question": "Why does every thread get its own stack even though threads share the heap and code?",
+      "context": [
+        "threads-intro-c1df7202::c0001",
+        "threads-4d568260::c0002",
+        "threads-intro-c1df7202::c0002",
+        "lecture12-4288650c::c0001",
+        "threads-api-8ce54688::c0018"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why do threads share the code and heap but not the stack?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Threads share the code and heap because these resources are used for shared logic and dynamic memory, respectively. However, each thread needs its own stack to manage its own function call context, local variables, and return addresses. The stack is essential for maintaining the execution state of each thread independently. For example, if two threads call the same function, they will each have their own stack frames for the function call, ensuring that local variables and return addresses are isolated. If threads shared the stack, one thread’s function call could overwrite another’s data, leading to incorrect behavior. A counterexample is a single-threaded program, where a single stack suffices. \nWhy do you think sharing the stack would cause problems in a multi-threaded program?",
+          "student": "I'm not sure, I don't really know why.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student indicates they do not know and does not provide an attempt to answer the question."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your answer touches on performance considerations but misses the key technical reason: threads need separate stacks to maintain independent execution contexts, including function call frames, local variables, and return addresses, which would be overwritten if shared [S2], [S3]. \n\nFor example, if two threads call the same function, each will have its own stack frame for that function, ensuring local variables and return addresses are isolated. If they shared a stack, one thread’s function call could overwrite another’s data, leading to incorrect behavior. A counterexample is a single-threaded program, where a single stack suffices.\n\nWhy do you think sharing the stack would cause problems in a multi-threaded program?",
+          "student": "Maybe it is something to do with memory being faster?",
+          "analysis": {
+            "level": "partial",
+            "gap": "The student's answer touches on performance considerations but misses the key technical reason: threads need separate stacks to maintain independent execution contexts, including function call frames, local variables, and return addresses, which would be overwritten if shared."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "Each thread needs its own stack because the stack is used to store function call frames, local variables, and return addresses. If threads shared the same stack, one thread’s function call could overwrite another’s data, leading to incorrect behavior. For example, if two threads call the same function, they would each need their own stack frame to store local variables and return addresses. Sharing the stack would cause these values to be overwritten, making the program unreliable [S2], [S3]. The heap and code are shared because they contain data and logic that all threads need to access, but the stack is private to each thread to ensure correct execution.",
+          "student": "No, I still don't get it.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student is indicating confusion and is not providing a clear explanation or question, making it difficult to assess their understanding."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student indicates they do not know and does not provide an attempt to answer the question.\"\n}",
+        "{\n  \"level\": \"partial\",\n  \"gap\": \"The student's answer touches on performance considerations but misses the key technical reason: threads need separate stacks to maintain independent execution contexts, including function call frames, local variables, and return addresses, which would be overwritten if shared.\"\n}",
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student is indicating confusion and is not providing a clear explanation or question, making it difficult to assess their understanding.\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 1.26,
+          "prompt_chars": 8157
+        },
+        {
+          "kind": "analysis",
+          "seconds": 2.75,
+          "prompt_chars": 7683
+        },
+        {
+          "kind": "tutor",
+          "seconds": 18.33,
+          "prompt_chars": 8431
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.07,
+          "prompt_chars": 8545
+        },
+        {
+          "kind": "tutor",
+          "seconds": 23.74,
+          "prompt_chars": 9476
+        },
+        {
+          "kind": "analysis",
+          "seconds": 5.79,
+          "prompt_chars": 9313
+        },
+        {
+          "kind": "tutor",
+          "seconds": 26.36,
+          "prompt_chars": 9589
+        }
+      ]
+    },
+    {
+      "id": "q007-solid",
+      "objective": "LO2",
+      "query_id": "q007",
+      "profile": "solid",
+      "question": "What does pthread_join do and why would the main thread call it?",
+      "context": [
+        "threads-intro-c1df7202::c0005",
+        "threads-api-8ce54688::c0004",
+        "threads-api-8ce54688::c0005",
+        "threads-api-8ce54688::c0008",
+        "threads-intro-c1df7202::c0010"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the purpose of calling pthread_join in the context of thread creation and completion?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "What would happen if the main thread didn’t call pthread_join at all?",
+          "student": "pthread_join blocks the calling thread until the given thread finishes, and can collect its return value. Main calls it so it does not exit or use results before the worker threads are done.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that `pthread_join` blocks the calling thread until the specified thread finishes and can collect its return value. The key idea is that `pthread_join` ensures the main thread waits for worker threads to complete before proceeding, preventing premature termination and ensuring correct result handling [S2].",
+          "student": "If main returned without joining, the process could end while worker threads are still running, and main could read results that are not written yet; joining waits for each thread and gets its return value.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\"level\": \"solid\", \"gap\": \"\"}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 16.56,
+          "prompt_chars": 9515
+        },
+        {
+          "kind": "analysis",
+          "seconds": 18.08,
+          "prompt_chars": 9229
+        },
+        {
+          "kind": "tutor",
+          "seconds": 18.01,
+          "prompt_chars": 9702
+        },
+        {
+          "kind": "analysis",
+          "seconds": 2.57,
+          "prompt_chars": 9522
+        },
+        {
+          "kind": "tutor",
+          "seconds": 23.66,
+          "prompt_chars": 9930
+        }
+      ]
+    },
+    {
+      "id": "q007-misconception",
+      "objective": "LO2",
+      "query_id": "q007",
+      "profile": "misconception",
+      "question": "What does pthread_join do and why would the main thread call it?",
+      "context": [
+        "threads-intro-c1df7202::c0005",
+        "threads-api-8ce54688::c0004",
+        "threads-api-8ce54688::c0005",
+        "threads-api-8ce54688::c0008",
+        "threads-intro-c1df7202::c0010"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the purpose of calling pthread_join in the context of thread creation and completion?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your statement is not correct. pthread_join does not start the thread; it waits for the thread to complete. The thread is started by pthread_create, not pthread_join. \n\npthread_join blocks the calling thread (e.g., the main thread) until the target thread finishes execution. This ensures that the main thread waits for all other threads to complete before proceeding. For example, in the code from [S1], the main thread calls pthread_join twice to wait for T1 and T2 to finish before printing \"main: end\". If it did not call pthread_join, the main thread might exit before the other threads complete, leading to incorrect program behavior.\n\nA counterexample is a web server that creates worker threads but does not call pthread_join, as it does not need to wait for them to finish. \n\nCheck question: Why would the main thread call pthread_join in the example from [S1]?",
+          "student": "pthread_join starts the thread running; until you call join the new thread does not execute.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "pthread_join does not start the thread; it waits for the thread to complete, not the opposite."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that `pthread_join` waits for a thread to terminate and allows the main thread to safely use any return values. The key idea is that `pthread_join` ensures the main thread waits for other threads to complete before proceeding, as explained in [S1]. This prevents the main thread from exiting prematurely, which could lead to incorrect behavior.",
+          "student": "pthread_create already starts the thread; pthread_join only waits for that thread to terminate and optionally collects its return value, so main can safely use its results.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"pthread_join does not start the thread; it waits for the thread to complete, not the opposite.\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.28,
+          "prompt_chars": 9515
+        },
+        {
+          "kind": "analysis",
+          "seconds": 4.62,
+          "prompt_chars": 9131
+        },
+        {
+          "kind": "tutor",
+          "seconds": 31.98,
+          "prompt_chars": 9879
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.76,
+          "prompt_chars": 10191
+        },
+        {
+          "kind": "tutor",
+          "seconds": 8.62,
+          "prompt_chars": 10599
+        }
+      ]
+    },
+    {
+      "id": "q007-unsure",
+      "objective": "LO2",
+      "query_id": "q007",
+      "profile": "unsure",
+      "question": "What does pthread_join do and why would the main thread call it?",
+      "context": [
+        "threads-intro-c1df7202::c0005",
+        "threads-api-8ce54688::c0004",
+        "threads-api-8ce54688::c0005",
+        "threads-api-8ce54688::c0008",
+        "threads-intro-c1df7202::c0010"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the purpose of calling pthread_join in the context of thread creation and completion?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "The student is not correct in assuming they know what pthread_join does. \npthread_join waits for a specific thread to finish execution, ensuring the main thread does not proceed until the joined thread has completed. This is crucial for synchronizing thread completion and avoiding race conditions. For example, in the code from [S1], the main thread calls pthread_join twice to ensure both T1 and T2 finish before printing \"main: end\". If the main thread didn’t call pthread_join, it might exit before the other threads complete, leading to undefined behavior. A counterexample is a web server that doesn’t join threads, as they run indefinitely. \nWhat is one reason the main thread would call pthread_join in a parallel program?",
+          "student": "I don't know what join does.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student indicates they do not know what pthread_join does, so they need an explanation of its purpose and why the main thread would call it."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "No, pthread_join does not merge threads; it waits for a specific thread to complete execution. The student is incorrect in thinking it combines threads. pthread_join ensures the main thread waits for a particular thread to finish, which is essential for synchronizing thread completion. For example, in [S1], the main thread calls pthread_join twice to ensure both T1 and T2 finish before proceeding. A counterexample is a web server that doesn’t join threads, as they run indefinitely. Why would the main thread call pthread_join in a parallel program that needs all threads to complete before exiting?",
+          "student": "Does it join two threads into one thread?",
+          "analysis": {
+            "level": "misconception",
+            "gap": "pthread_join does not merge threads; it waits for a specific thread to complete execution."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "pthread_join waits for a specific thread to finish execution, ensuring the main thread does not proceed until the joined thread has completed. This is crucial for synchronizing thread completion and avoiding race conditions. For example, in [S1], the main thread calls pthread_join twice to ensure both T1 and T2 finish before printing \"main: end\". If the main thread didn’t call pthread_join, it might exit before the other threads complete, leading to undefined behavior. A counterexample is a web server that doesn’t join threads, as they run indefinitely. Why would the main thread call pthread_join in a parallel program that needs all threads to complete before exiting?",
+          "student": "I'm still confused, sorry.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student indicates confusion but does not specify what exactly they are unclear about, making it difficult to provide targeted clarification."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\"level\": \"unclear\", \"gap\": \"The student indicates they do not know what pthread_join does, so they need an explanation of its purpose and why the main thread would call it.\"}",
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"pthread_join does not merge threads; it waits for a specific thread to complete execution.\"\n}",
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student indicates confusion but does not specify what exactly they are unclear about, making it difficult to provide targeted clarification.\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.43,
+          "prompt_chars": 9515
+        },
+        {
+          "kind": "analysis",
+          "seconds": 4.51,
+          "prompt_chars": 9067
+        },
+        {
+          "kind": "tutor",
+          "seconds": 26.83,
+          "prompt_chars": 9865
+        },
+        {
+          "kind": "analysis",
+          "seconds": 4.4,
+          "prompt_chars": 9856
+        },
+        {
+          "kind": "tutor",
+          "seconds": 26.75,
+          "prompt_chars": 10600
+        },
+        {
+          "kind": "analysis",
+          "seconds": 5.38,
+          "prompt_chars": 10503
+        },
+        {
+          "kind": "tutor",
+          "seconds": 31.9,
+          "prompt_chars": 10779
+        }
+      ]
+    },
+    {
+      "id": "q023-solid",
+      "objective": "LO3",
+      "query_id": "q023",
+      "profile": "solid",
+      "question": "Two threads each add 1 to a shared counter ten million times, but the final value is less than twenty million. Why?",
+      "context": [
+        "threads-4d568260::c0006",
+        "threads-intro-c1df7202::c0009",
+        "lecture12-4288650c::c0005",
+        "threads-intro-c1df7202::c0013",
+        "threads-4d568260::c0007"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the final counter value sometimes end up less than twenty million when two threads each increment it ten million times?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "What would happen if the increment operation was atomic, and how would that fix the problem?",
+          "student": "counter = counter + 1 is a load, an add and a store, not one atomic step. If a thread is interrupted between the load and the store, both threads store the same value and one increment is lost. That is a race condition on a critical section.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that the issue arises because the increment operation is not atomic and can be interrupted, leading to lost updates. The key idea is that without synchronization, multiple threads can interleave their operations, causing the final value to be less than expected [S1].",
+          "student": "The update must run as an atomic critical section, for example by holding a mutex around the increment, so the load-add-store of one thread cannot interleave with the other's.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 13.94,
+          "prompt_chars": 8151
+        },
+        {
+          "kind": "analysis",
+          "seconds": 15.16,
+          "prompt_chars": 7951
+        },
+        {
+          "kind": "tutor",
+          "seconds": 13.46,
+          "prompt_chars": 8424
+        },
+        {
+          "kind": "analysis",
+          "seconds": 2.96,
+          "prompt_chars": 8236
+        },
+        {
+          "kind": "tutor",
+          "seconds": 18.96,
+          "prompt_chars": 8644
+        }
+      ]
+    },
+    {
+      "id": "q023-misconception",
+      "objective": "LO3",
+      "query_id": "q023",
+      "profile": "misconception",
+      "question": "Two threads each add 1 to a shared counter ten million times, but the final value is less than twenty million. Why?",
+      "context": [
+        "threads-4d568260::c0006",
+        "threads-intro-c1df7202::c0009",
+        "lecture12-4288650c::c0005",
+        "threads-intro-c1df7202::c0013",
+        "threads-4d568260::c0007"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the final counter value sometimes end up less than twenty million when two threads each increment it ten million times?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your explanation is not correct. The issue is not about CPUs keeping their own copies of the counter, but about the lack of synchronization leading to lost updates when multiple threads access shared data concurrently. \n\nWhen two threads increment a shared counter, the operation involves loading the counter into a register, incrementing it, and storing it back. If a context switch occurs between these steps, another thread may overwrite the value, leading to lost updates. For example, if Thread 1 loads the counter (value 0), increments it to 1, and then is preempted, Thread 2 may load the original value (0), increment it to 1, and store it. When Thread 1 resumes, it stores 1 again, resulting in a final value of 1 instead of 2. \n\nCheck question: What happens if two threads increment a shared counter without synchronization?",
+          "student": "Because the two threads run on different CPUs, each CPU keeps its own copy of the counter and only one copy is saved at the end.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The issue is not about CPUs keeping their own copies of the counter, but about the lack of synchronization leading to lost updates when multiple threads access shared data concurrently."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that the issue stems from the interleaving of instructions during the increment operation, leading to lost updates. The key idea is that without synchronization, the load-add-store sequence for each thread can interleave, causing one thread's update to be overwritten by another, resulting in a final value less than expected. This is explained in the context [S1] and [S5].",
+          "student": "The increment is several instructions, so the two threads' load-add-store sequences interleave and overwrite each other's results; protecting it with a lock makes it a critical section that runs atomically.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"The issue is not about CPUs keeping their own copies of the counter, but about the lack of synchronization leading to lost updates when multiple threads access shared data concurrently.\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 15.17,
+          "prompt_chars": 8151
+        },
+        {
+          "kind": "analysis",
+          "seconds": 5.84,
+          "prompt_chars": 7838
+        },
+        {
+          "kind": "tutor",
+          "seconds": 30.66,
+          "prompt_chars": 8677
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.79,
+          "prompt_chars": 8896
+        },
+        {
+          "kind": "tutor",
+          "seconds": 10.06,
+          "prompt_chars": 9304
+        }
+      ]
+    },
+    {
+      "id": "q023-unsure",
+      "objective": "LO3",
+      "query_id": "q023",
+      "profile": "unsure",
+      "question": "Two threads each add 1 to a shared counter ten million times, but the final value is less than twenty million. Why?",
+      "context": [
+        "threads-4d568260::c0006",
+        "threads-intro-c1df7202::c0009",
+        "lecture12-4288650c::c0005",
+        "threads-intro-c1df7202::c0013",
+        "threads-4d568260::c0007"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the final counter value sometimes end up less than twenty million when two threads each increment it ten million times?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your explanation is not correct. The final counter value is not due to the computer being too slow, but due to **race conditions** and **uncontrolled scheduling** of threads, not the speed of the computer. When two threads increment a shared counter, the operations are not atomic. Each thread reads the counter, increments it, and writes it back. If the threads interleave these steps, the final value can be less than expected. For example, if both threads read the counter as 0, increment it to 1, and write it back, the final value will be 1 instead of 2. This is a classic race condition [S1], [S2]. \n\nA concrete example: Thread 1 reads 0, increments to 1, and writes back. Thread 2 reads 0 (before Thread 1 writes), increments to 1, and writes back. The final value is 1, not 2. A counterexample would be if the threads used a mutex to synchronize access, ensuring only one thread increments the counter at a time. \n\nWhat causes the final counter value to be less than twenty million in your scenario?",
+          "student": "No idea, maybe the computer is too slow?",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The final counter value is less than twenty million due to race conditions and uncontrolled scheduling, not because the computer is too slow."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your explanation is not correct. The issue is not just threads running at the same time, but **race conditions** and **uncontrolled scheduling**. When threads interleave their operations, the counter can be overwritten incorrectly. For example, both threads might read the same initial value, increment it, and write back the same result, leading to a final value less than expected. This happens because the increment operation is not atomic—it’s split into three steps: load, increment, store. [S1], [S2]\n\nA concrete example: Thread 1 reads 0, increments to 1, and writes back. Thread 2 reads 0 (before Thread 1 writes), increments to 1, and writes back. The final value is 1, not 2. A counterexample would be if the threads used a mutex to synchronize access, ensuring only one thread increments the counter at a time. \n\nWhat causes the final counter value to be less than twenty million in your scenario?",
+          "student": "Something about the threads running at the same time?",
+          "analysis": {
+            "level": "partial",
+            "gap": "You need to explain that the issue is due to race conditions and uncontrolled scheduling, not just threads running at the same time."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "When two threads increment a shared counter, the operations are not atomic. Each thread reads the counter, increments it, and writes it back. If the threads interleave these steps, the final value can be less than expected. For example, both threads might read the same initial value, increment it, and write back the same result, leading to a final value less than 20 million. This happens because the increment operation is split into three steps: load, increment, store. [S1], [S2] \n\nImagine both threads read the counter as 0, increment it to 1, and write it back. The final value is 1 instead of 2. This is a classic race condition. To prevent this, synchronization mechanisms like mutexes or semaphores must be used to ensure only one thread increments the counter at a time.",
+          "student": "I still don't understand.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "You need to explain why the final counter value is less than expected due to race conditions and uncontrolled scheduling, as described in the course material."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"The final counter value is less than twenty million due to race conditions and uncontrolled scheduling, not because the computer is too slow.\"\n}",
+        "{\n  \"level\": \"partial\",\n  \"gap\": \"You need to explain that the issue is due to race conditions and uncontrolled scheduling, not just threads running at the same time.\"\n}",
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"You need to explain why the final counter value is less than expected due to race conditions and uncontrolled scheduling, as described in the course material.\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.49,
+          "prompt_chars": 8151
+        },
+        {
+          "kind": "analysis",
+          "seconds": 4.3,
+          "prompt_chars": 7750
+        },
+        {
+          "kind": "tutor",
+          "seconds": 31.54,
+          "prompt_chars": 8545
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.31,
+          "prompt_chars": 8828
+        },
+        {
+          "kind": "tutor",
+          "seconds": 33.79,
+          "prompt_chars": 9614
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.57,
+          "prompt_chars": 9779
+        },
+        {
+          "kind": "tutor",
+          "seconds": 32.94,
+          "prompt_chars": 10055
+        }
+      ]
+    },
+    {
+      "id": "q031-solid",
+      "objective": "LO4",
+      "query_id": "q031",
+      "profile": "solid",
+      "question": "Why does a lock built from an ordinary flag variable with plain loads and stores fail to provide mutual exclusion?",
+      "context": [
+        "threads-locks-cb67d3bd::c0008",
+        "threads-bugs-e5dff53b::c0014",
+        "threads-locks-cb67d3bd::c0009",
+        "threads-locks-cb67d3bd::c0020",
+        "threads-locks-cb67d3bd::c0007"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the lock code in Figure 28.1 fail to prevent two threads from entering the critical section at the same time?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "Great! Now, consider a scenario where two threads use this lock code. If the first thread is interrupted after testing the flag but before setting it, and the second thread runs, what happens?",
+          "student": "Testing the flag and setting it are two separate steps. A thread can be interrupted after seeing flag == 0 but before setting it to 1, so another thread also sees 0 and both enter the critical section. An atomic instruction like test-and-set fixes this.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You're right—test-and-set ensures mutual exclusion by treating the read and write as a single atomic step [S1]. The key idea is that with plain loads and stores, the flag check and update are separate steps, allowing race conditions where both threads might see the flag as 0 and enter the critical section [S3].",
+          "student": "Test-and-set reads the old value and writes 1 in one indivisible hardware step, so only one thread can see the lock free and take it.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 16.89,
+          "prompt_chars": 9532
+        },
+        {
+          "kind": "analysis",
+          "seconds": 17.71,
+          "prompt_chars": 9334
+        },
+        {
+          "kind": "tutor",
+          "seconds": 20.75,
+          "prompt_chars": 9807
+        },
+        {
+          "kind": "analysis",
+          "seconds": 2.87,
+          "prompt_chars": 9677
+        },
+        {
+          "kind": "tutor",
+          "seconds": 26.84,
+          "prompt_chars": 10085
+        }
+      ]
+    },
+    {
+      "id": "q031-misconception",
+      "objective": "LO4",
+      "query_id": "q031",
+      "profile": "misconception",
+      "question": "Why does a lock built from an ordinary flag variable with plain loads and stores fail to provide mutual exclusion?",
+      "context": [
+        "threads-locks-cb67d3bd::c0008",
+        "threads-bugs-e5dff53b::c0014",
+        "threads-locks-cb67d3bd::c0009",
+        "threads-locks-cb67d3bd::c0020",
+        "threads-locks-cb67d3bd::c0007"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the lock code in Figure 28.1 fail to prevent two threads from entering the critical section at the same time?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your answer is not correct. The failure is not due to the flag variable not being volatile, but due to the lack of atomicity in the test-and-set operation, which allows both threads to set the flag to 1 simultaneously [S1]. \n\nFor example, if Thread 1 reads the flag (0), and before it can set it to 1, the CPU interrupts and switches to Thread 2, which also reads the flag (still 0) and sets it to 1. Both threads now think they have the lock. This is a race condition. \n\nA correct lock must ensure that the test-and-set operation is atomic. \n\nCan you explain why the test-and-set operation must be atomic to ensure mutual exclusion?",
+          "student": "It fails because the flag variable is not declared volatile, so the compiler caches it; making it volatile fixes the lock.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The failure to provide mutual exclusion is not due to the flag variable not being volatile, but due to the lack of atomicity in the test-and-set operation, which allows both threads to set the flag to 1 simultaneously [S1]."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You're correct: the issue is that checking the flag and setting it are separate steps, which can interleave between threads, leading to a race condition. An atomic instruction like test-and-set or compare-and-swap ensures both operations happen in one step, preventing mutual exclusion failures [S1]. This guarantees that only one thread can acquire the lock at a time.",
+          "student": "The problem is that checking the flag and setting it are separate steps that can interleave between threads; an atomic instruction such as test-and-set or compare-and-swap does both in one step.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"The failure to provide mutual exclusion is not due to the flag variable not being volatile, but due to the lack of atomicity in the test-and-set operation, which allows both threads to set the flag to 1 simultaneously [S1].\"\n}",
+        "{\"level\": \"solid\", \"gap\": \"\"}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 3.61,
+          "prompt_chars": 9532
+        },
+        {
+          "kind": "analysis",
+          "seconds": 7.71,
+          "prompt_chars": 9203
+        },
+        {
+          "kind": "tutor",
+          "seconds": 34.4,
+          "prompt_chars": 10080
+        },
+        {
+          "kind": "analysis",
+          "seconds": 5.65,
+          "prompt_chars": 10048
+        },
+        {
+          "kind": "tutor",
+          "seconds": 12.38,
+          "prompt_chars": 10456
+        }
+      ]
+    },
+    {
+      "id": "q031-unsure",
+      "objective": "LO4",
+      "query_id": "q031",
+      "profile": "unsure",
+      "question": "Why does a lock built from an ordinary flag variable with plain loads and stores fail to provide mutual exclusion?",
+      "context": [
+        "threads-locks-cb67d3bd::c0008",
+        "threads-bugs-e5dff53b::c0014",
+        "threads-locks-cb67d3bd::c0009",
+        "threads-locks-cb67d3bd::c0020",
+        "threads-locks-cb67d3bd::c0007"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the lock code in Figure 28.1 fail to prevent two threads from entering the critical section at the same time?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "You're right to be unsure — a flag lock is a simple lock implementation that uses a single flag variable to indicate whether a thread holds the lock. The student's question is about why such a lock fails to provide mutual exclusion. \n\nThe lock code in Figure 28.1 uses plain loads and stores to check and set the flag, but this is insufficient for mutual exclusion because the operations are not atomic. If two threads check the flag and find it 0, they may both set it to 1 before either has a chance to run the critical section, allowing both to enter simultaneously [S3]. This is called a race condition. \n\nFor example, imagine two threads both check the flag and see it is 0. They both proceed to set it to 1 and enter the critical section. This violates mutual exclusion. A correct lock must ensure that only one thread can set the flag to 1 at a time. \n\nCan you explain why this race condition happens with plain loads and stores?",
+          "student": "I'm not sure what a flag lock is.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student is unsure about the concept of a flag lock, which is a fundamental part of the question."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your statement is not correct. The flag does not get deleted; the issue is that plain loads and stores are not atomic, allowing two threads to set the flag to 1 simultaneously, violating mutual exclusion [S3]. \n\nFor example, imagine two threads both check the flag and see it is 0. They both proceed to set it to 1 and enter the critical section. This violates mutual exclusion. A correct lock must ensure that only one thread can set the flag to 1 at a time. \n\nCan you explain why this race condition happens with plain loads and stores?",
+          "student": "Maybe the flag gets deleted?",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The flag does not get deleted; the issue is that plain loads and stores are not atomic, allowing two threads to set the flag to 1 simultaneously, violating mutual exclusion."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "A lock built from an ordinary flag variable with plain loads and stores fails to provide mutual exclusion because the operations to check and set the flag are not atomic. This means that two threads can interleave their execution in a way that both see the flag as 0, allowing both to set it to 1 and enter the critical section simultaneously [S3]. This is a race condition, and it violates the requirement that only one thread can be in the critical section at a time. The problem arises because the check and set operations are not performed as a single, indivisible action.",
+          "student": "I don't know.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student is unable to provide a clear explanation of why a lock built from an ordinary flag variable with plain loads and stores fails to provide mutual exclusion."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student is unsure about the concept of a flag lock, which is a fundamental part of the question.\"\n}",
+        "{\"level\": \"misconception\", \"gap\": \"The flag does not get deleted; the issue is that plain loads and stores are not atomic, allowing two threads to set the flag to 1 simultaneously, violating mutual exclusion.\"}",
+        "{\"level\": \"unclear\", \"gap\": \"The student is unable to provide a clear explanation of why a lock built from an ordinary flag variable with plain loads and stores fails to provide mutual exclusion.\"}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.91,
+          "prompt_chars": 9532
+        },
+        {
+          "kind": "analysis",
+          "seconds": 5.14,
+          "prompt_chars": 9114
+        },
+        {
+          "kind": "tutor",
+          "seconds": 40.98,
+          "prompt_chars": 9868
+        },
+        {
+          "kind": "analysis",
+          "seconds": 10.81,
+          "prompt_chars": 10096
+        },
+        {
+          "kind": "tutor",
+          "seconds": 38.66,
+          "prompt_chars": 10923
+        },
+        {
+          "kind": "analysis",
+          "seconds": 7.18,
+          "prompt_chars": 10665
+        },
+        {
+          "kind": "tutor",
+          "seconds": 37.93,
+          "prompt_chars": 10941
+        }
+      ]
+    },
+    {
+      "id": "q054-solid",
+      "objective": "LO5",
+      "query_id": "q054",
+      "profile": "solid",
+      "question": "How can a semaphore be used as a lock, and what initial value should it have?",
+      "context": [
+        "threads-sema-d8fb1c00::c0004",
+        "threads-sema-d8fb1c00::c0003",
+        "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e::c0000",
+        "ps-concurrency-381f1b77::c0046",
+        "threads-sema-d8fb1c00::c0002"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the correct initial value for a binary semaphore used as a lock, and why?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "Great! Now, what happens if you initialize the semaphore to 0 instead?",
+          "student": "Initialise the semaphore to 1. Call sem_wait before the critical section and sem_post after it. The first thread decrements it to 0 and enters; others block in sem_wait until sem_post increments it again.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You're correct that initializing the semaphore to 1 makes it behave like a binary lock, ensuring mutual exclusion [S1]. The key idea is that the initial value of 1 allows one thread to enter the critical section while blocking others, which is exactly how a binary semaphore functions as a mutex [S2].",
+          "student": "With an initial value of 1 only one thread can pass sem_wait at a time, so it behaves like a binary semaphore or mutex; sem_post releases it and wakes a waiting thread.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\"level\": \"solid\", \"gap\": \"\"}",
+        "{\"level\": \"solid\", \"gap\": \"\"}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 20.89,
+          "prompt_chars": 10129
+        },
+        {
+          "kind": "analysis",
+          "seconds": 22.58,
+          "prompt_chars": 9845
+        },
+        {
+          "kind": "tutor",
+          "seconds": 24.8,
+          "prompt_chars": 10318
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.29,
+          "prompt_chars": 10101
+        },
+        {
+          "kind": "tutor",
+          "seconds": 35.42,
+          "prompt_chars": 10509
+        }
+      ]
+    },
+    {
+      "id": "q054-misconception",
+      "objective": "LO5",
+      "query_id": "q054",
+      "profile": "misconception",
+      "question": "How can a semaphore be used as a lock, and what initial value should it have?",
+      "context": [
+        "threads-sema-d8fb1c00::c0004",
+        "threads-sema-d8fb1c00::c0003",
+        "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e::c0000",
+        "ps-concurrency-381f1b77::c0046",
+        "threads-sema-d8fb1c00::c0002"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the correct initial value for a binary semaphore used as a lock, and why?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your statement is not correct. A binary semaphore used as a lock should be initialised to 1, not 0. The correct operations are sem_wait() to acquire the lock and sem_post() to release it. Initialising to 1 allows the first thread to enter the critical section, while initialising to 0 would block the first thread immediately [S1]. For example, if a semaphore is initialised to 0, the first thread calling sem_wait() would block forever, as the value would become -1 and no thread would wake it [S2]. A correct example is a binary semaphore initialised to 1, where sem_wait() decrements it to 0 and sem_post() increments it back to 1 [S1]. Check question: What happens if a binary semaphore used as a lock is initialised to 0?",
+          "student": "You initialise it to 0, call sem_post to lock and sem_wait to unlock.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "A binary semaphore used as a lock should be initialised to 1, not 0. The correct operations are sem_wait() to acquire the lock and sem_post() to release it."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You're correct: a binary semaphore used as a lock should start at 1. This allows the first thread to enter the critical section, while blocking others until it is released [S1]. The key idea is that the initial value ensures mutual exclusion without blocking the first thread [S2].",
+          "student": "It should start at 1: sem_wait before the critical section decrements it to 0 and blocks others, and sem_post afterwards increments it so another thread can enter.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"A binary semaphore used as a lock should be initialised to 1, not 0. The correct operations are sem_wait() to acquire the lock and sem_post() to release it.\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.34,
+          "prompt_chars": 10129
+        },
+        {
+          "kind": "analysis",
+          "seconds": 8.41,
+          "prompt_chars": 9710
+        },
+        {
+          "kind": "tutor",
+          "seconds": 43.58,
+          "prompt_chars": 10520
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.7,
+          "prompt_chars": 10617
+        },
+        {
+          "kind": "tutor",
+          "seconds": 8.29,
+          "prompt_chars": 11025
+        }
+      ]
+    },
+    {
+      "id": "q054-unsure",
+      "objective": "LO5",
+      "query_id": "q054",
+      "profile": "unsure",
+      "question": "How can a semaphore be used as a lock, and what initial value should it have?",
+      "context": [
+        "threads-sema-d8fb1c00::c0004",
+        "threads-sema-d8fb1c00::c0003",
+        "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e::c0000",
+        "ps-concurrency-381f1b77::c0046",
+        "threads-sema-d8fb1c00::c0002"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the correct initial value for a binary semaphore used as a lock, and why?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "You're not incorrect to say you don't remember, but you need to understand how semaphores work to answer this. A binary semaphore used as a lock must start at 1. This allows the first thread to enter the critical section, while preventing others from doing so until it is released. If it starts at 0, no thread can enter, and if it starts at 2, multiple threads could enter simultaneously, breaking the lock’s purpose. For example, with two threads and a semaphore initialized to 1, the first thread acquires it (value becomes 0), and the second waits. When the first thread releases it (value becomes 1), the second can proceed. What happens if the initial value is 0?",
+          "student": "I don't remember how semaphores work.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student indicates they do not know how semaphores work, so they cannot answer the question."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "No, the initial value is not the number of threads. The initial value of a binary semaphore used as a lock must be 1, not the number of threads. This ensures that exactly one thread can enter the critical section at a time, while preventing others from entering until the lock is released. If the initial value were the number of threads, multiple threads could enter the critical section simultaneously, violating the lock’s purpose. For example, with two threads and a semaphore initialized to 1, only one thread can enter the critical section at a time. What would happen if the initial value were 2?",
+          "student": "Is the initial value the number of threads?",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The initial value of a binary semaphore used as a lock is not the number of threads, but rather 1 to allow one thread to enter the critical section while preventing others from doing so."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "A binary semaphore used as a lock must start at 1. This allows the first thread to enter the critical section, while preventing others from doing so until it is released. If it starts at 0, no thread can enter, and if it starts at 2, multiple threads could enter simultaneously, breaking the lock’s purpose. For example, with two threads and a semaphore initialized to 1, the first thread acquires it (value becomes 0), and the second waits. When the first thread releases it (value becomes 1), the second can proceed. [S1]",
+          "student": "No, I don't know.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student is indicating they do not know the answer, so they need to be guided through the concept of using a semaphore as a lock and the correct initial value."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\"level\": \"unclear\", \"gap\": \"The student indicates they do not know how semaphores work, so they cannot answer the question.\"}",
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"The initial value of a binary semaphore used as a lock is not the number of threads, but rather 1 to allow one thread to enter the critical section while preventing others from doing so.\"\n}",
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student is indicating they do not know the answer, so they need to be guided through the concept of using a semaphore as a lock and the correct initial value.\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.12,
+          "prompt_chars": 10129
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.81,
+          "prompt_chars": 9678
+        },
+        {
+          "kind": "tutor",
+          "seconds": 33.93,
+          "prompt_chars": 10427
+        },
+        {
+          "kind": "analysis",
+          "seconds": 7.57,
+          "prompt_chars": 10408
+        },
+        {
+          "kind": "tutor",
+          "seconds": 35.47,
+          "prompt_chars": 11248
+        },
+        {
+          "kind": "analysis",
+          "seconds": 8.15,
+          "prompt_chars": 11046
+        },
+        {
+          "kind": "tutor",
+          "seconds": 36.49,
+          "prompt_chars": 11322
+        }
+      ]
+    },
+    {
+      "id": "q047-solid",
+      "objective": "LO6",
+      "query_id": "q047",
+      "profile": "solid",
+      "question": "Why should a thread recheck its condition in a while loop rather than an if statement before calling wait?",
+      "context": [
+        "lecture14-a8135675::c0002",
+        "threads-api-8ce54688::c0014",
+        "threads-api-8ce54688::c0013",
+        "threads-cv-3156a56b::c0004",
+        "threads-cv-3156a56b::c0018"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the code use a while loop instead of an if statement to check the condition before calling wait?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "Great! Now, imagine a scenario where two threads are waiting on the same condition variable. If one thread signals and wakes another, but the condition is still false, what happens if the waiting thread uses an `if` statement instead of a `while` loop?",
+          "student": "When a waiting thread wakes up, the condition may no longer be true: another thread may have run first and changed the state, and spurious wakeups can happen. With Mesa semantics a signal is only a hint, so the thread must recheck the condition in a while loop.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that a while loop ensures the condition is rechecked after a spurious wakeup, avoiding incorrect behavior. The key idea is that using a while loop guarantees the condition is re-evaluated before proceeding, preventing missed signals or false wakeups [S2]. This is essential for correct synchronization in multi-threaded programs.",
+          "student": "Because the woken thread does not run immediately, another thread can consume the item first; the while loop rechecks and waits again if the condition is false.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 20.09,
+          "prompt_chars": 11431
+        },
+        {
+          "kind": "analysis",
+          "seconds": 21.81,
+          "prompt_chars": 11228
+        },
+        {
+          "kind": "tutor",
+          "seconds": 29.35,
+          "prompt_chars": 11701
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.65,
+          "prompt_chars": 11658
+        },
+        {
+          "kind": "tutor",
+          "seconds": 29.98,
+          "prompt_chars": 12066
+        }
+      ]
+    },
+    {
+      "id": "q047-misconception",
+      "objective": "LO6",
+      "query_id": "q047",
+      "profile": "misconception",
+      "question": "Why should a thread recheck its condition in a while loop rather than an if statement before calling wait?",
+      "context": [
+        "lecture14-a8135675::c0002",
+        "threads-api-8ce54688::c0014",
+        "threads-api-8ce54688::c0013",
+        "threads-cv-3156a56b::c0004",
+        "threads-cv-3156a56b::c0018"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the code use a while loop instead of an if statement to check the condition before calling wait?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your statement is not correct. The purpose of using a while loop is not to make the thread wait longer or waste less CPU, but to handle spurious wakeups and ensure the condition is still true before proceeding [S2]. For example, if a thread is woken up spuriously (without the condition being true), an if statement would let it proceed incorrectly, but a while loop would recheck the condition and avoid this error. A counterexample is when a signal is sent but the condition hasn't changed; without the while loop, the thread might act on stale data. \n\nCheck question: Why is rechecking the condition necessary even after a signal is received?",
+          "student": "If is fine; a while loop is only used so that the thread waits longer and wastes less CPU.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The purpose of using a while loop is not to make the thread wait longer or waste less CPU, but to handle spurious wakeups and ensure the condition is still true before proceeding."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that rechecking the condition in a while loop is necessary to handle spurious wakeups and ensure the condition is still true after a signal [S2]. The key idea is that a signal does not guarantee the condition has changed, so the thread must recheck the condition to avoid acting on stale or incorrect data.",
+          "student": "After a signal the condition may already be false again because another thread ran first, or the wakeup was spurious, so the thread must recheck it in a while loop before proceeding.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"The purpose of using a while loop is not to make the thread wait longer or waste less CPU, but to handle spurious wakeups and ensure the condition is still true before proceeding.\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.91,
+          "prompt_chars": 11431
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.53,
+          "prompt_chars": 11057
+        },
+        {
+          "kind": "tutor",
+          "seconds": 34.32,
+          "prompt_chars": 11890
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.46,
+          "prompt_chars": 11902
+        },
+        {
+          "kind": "tutor",
+          "seconds": 10.54,
+          "prompt_chars": 12310
+        }
+      ]
+    },
+    {
+      "id": "q047-unsure",
+      "objective": "LO6",
+      "query_id": "q047",
+      "profile": "unsure",
+      "question": "Why should a thread recheck its condition in a while loop rather than an if statement before calling wait?",
+      "context": [
+        "lecture14-a8135675::c0002",
+        "threads-api-8ce54688::c0014",
+        "threads-api-8ce54688::c0013",
+        "threads-cv-3156a56b::c0004",
+        "threads-cv-3156a56b::c0018"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the code use a while loop instead of an if statement to check the condition before calling wait?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your understanding is not correct. The `if` statement would only check the condition once, before calling `wait`, but a thread might be woken up spuriously (i.e., without the condition actually being true) due to implementation details [S2]. Using a `while` loop ensures the condition is rechecked after waking up, avoiding incorrect behavior [S2]. For example, if the parent thread calls `wait` and is woken up spuriously, an `if` would let it proceed even though the child hasn’t finished. A `while` loop would recheck and block again if the condition is still false. What is the key difference between `if` and `while` in this context?",
+          "student": "I'm not sure, I thought if and while do the same thing here.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student is unsure and has not provided a specific answer to the question about why a while loop is used instead of an if statement for condition checking before calling wait."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your idea is not correct. The primary reason for using a while loop, not performance, is to handle spurious wakeups and ensure the condition is rechecked after waking up, as explained in [S2] and [S4]. For example, if the parent thread calls `wait` and is woken up spuriously, an `if` would let it proceed even though the child hasn’t finished. A `while` loop would recheck and block again if the condition is still false. What is the key difference between `if` and `while` in this context?",
+          "student": "Maybe it is for performance?",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The primary reason for using a while loop, not performance, is to handle spurious wakeups and ensure the condition is rechecked after waking up, as explained in [S2] and [S4]."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "A thread rechecks its condition in a `while` loop rather than an `if` statement before calling `wait` to handle **spurious wakeups**—a situation where a thread is woken up even though the condition it is waiting for hasn't changed [S2]. With an `if` statement, the thread would only check the condition once, before waiting, and would not recheck after being woken up. This could lead to incorrect behavior if the condition is no longer true when the thread resumes. A `while` loop ensures the condition is rechecked each time the thread is woken, guaranteeing that the thread only proceeds when the condition is actually met [S4]. This is a safety measure, not a performance optimization.",
+          "student": "I still don't know.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student indicates they do not know and has not provided a clear explanation or question about the topic. To proceed, they need to clarify what specific aspect of the while loop versus if statement they are unsure about."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student is unsure and has not provided a specific answer to the question about why a while loop is used instead of an if statement for condition checking before calling wait.\"\n}",
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"The primary reason for using a while loop, not performance, is to handle spurious wakeups and ensure the condition is rechecked after waking up, as explained in [S2] and [S4].\"\n}",
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student indicates they do not know and has not provided a clear explanation or question about the topic. To proceed, they need to clarify what specific aspect of the while loop versus if statement they are unsure about.\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.29,
+          "prompt_chars": 11431
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.18,
+          "prompt_chars": 11027
+        },
+        {
+          "kind": "tutor",
+          "seconds": 32.88,
+          "prompt_chars": 11859
+        },
+        {
+          "kind": "analysis",
+          "seconds": 7.38,
+          "prompt_chars": 11711
+        },
+        {
+          "kind": "tutor",
+          "seconds": 32.52,
+          "prompt_chars": 12540
+        },
+        {
+          "kind": "analysis",
+          "seconds": 7.34,
+          "prompt_chars": 12239
+        },
+        {
+          "kind": "tutor",
+          "seconds": 38.07,
+          "prompt_chars": 12515
+        }
+      ]
+    },
+    {
+      "id": "q072-solid",
+      "objective": "LO7",
+      "query_id": "q072",
+      "profile": "solid",
+      "question": "Why can the obvious dining philosophers solution deadlock, and how can the deadlock be prevented?",
+      "context": [
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0036",
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0044",
+        "ps-concurrency-381f1b77::c0034",
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0037",
+        "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e::c0004"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the simple solution to the dining philosophers problem risk deadlock, and what condition must be met to avoid it?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "Great! Now, suppose all philosophers pick up their left fork first. What happens if one philosopher also picks up their right fork before others? How does this affect the possibility of deadlock?",
+          "student": "If every philosopher picks up the left fork at the same time, each then waits forever for the right fork held by a neighbour: a circular wait. Breaking the cycle prevents it, for example one philosopher picks up the right fork first, or at most four sit at the table.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that the deadlock occurs due to a circular wait, where each philosopher holds one fork and waits for another. By changing the order in which one philosopher picks up forks, the circular dependency is broken, allowing at least one to proceed and release forks, preventing deadlock [S4]. The key idea is that breaking the circular wait condition avoids deadlock.",
+          "student": "Changing the order for one philosopher breaks the circular wait, so at least one philosopher can get both forks, eat and release them.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\"level\": \"solid\", \"gap\": \"\"}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 13.37,
+          "prompt_chars": 7402
+        },
+        {
+          "kind": "analysis",
+          "seconds": 13.64,
+          "prompt_chars": 7222
+        },
+        {
+          "kind": "tutor",
+          "seconds": 15.52,
+          "prompt_chars": 7695
+        },
+        {
+          "kind": "analysis",
+          "seconds": 2.59,
+          "prompt_chars": 7569
+        },
+        {
+          "kind": "tutor",
+          "seconds": 19.81,
+          "prompt_chars": 7977
+        }
+      ]
+    },
+    {
+      "id": "q072-misconception",
+      "objective": "LO7",
+      "query_id": "q072",
+      "profile": "misconception",
+      "question": "Why can the obvious dining philosophers solution deadlock, and how can the deadlock be prevented?",
+      "context": [
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0036",
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0044",
+        "ps-concurrency-381f1b77::c0034",
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0037",
+        "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e::c0004"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the simple solution to the dining philosophers problem risk deadlock, and what condition must be met to avoid it?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your explanation is not correct. The deadlock in the dining philosophers problem is not due to unfair fork sharing, but due to a **circular wait** condition. The time limit is not a solution specified in the course material. To prevent deadlock, the course material suggests breaking the circular wait or ensuring a philosopher can only pick up both forks at once [S4]. For example, if all philosophers pick up their left fork first, they may all deadlock while waiting for the right fork. A counterexample is allowing at most four philosophers to sit at the table, which prevents the circular wait. \n\nCheck question: What is one way to prevent deadlock in the dining philosophers problem according to the course material?",
+          "student": "It deadlocks because the forks are not shared fairly, so one philosopher eats all the time; giving each philosopher a time limit fixes it.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "The deadlock occurs due to a circular wait condition, not because of unfair fork sharing. A time limit is not a solution specified in the course material; the correct prevention methods involve breaking the circular wait or ensuring that a philosopher can only pick up both forks at once."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that the circular wait condition can cause deadlock and that changing the order in which philosophers pick up forks breaks the cycle. This aligns with the course material, which states that allowing philosophers to pick up forks in different orders can prevent deadlock [S4].",
+          "student": "All philosophers can hold their left fork and wait for the right one in a cycle, which is a circular wait; letting one philosopher take the forks in the opposite order breaks the cycle.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\"level\": \"misconception\", \"gap\": \"The deadlock occurs due to a circular wait condition, not because of unfair fork sharing. A time limit is not a solution specified in the course material; the correct prevention methods involve breaking the circular wait or ensuring that a philosopher can only pick up both forks at once.\"}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 14.09,
+          "prompt_chars": 7402
+        },
+        {
+          "kind": "analysis",
+          "seconds": 9.43,
+          "prompt_chars": 7093
+        },
+        {
+          "kind": "tutor",
+          "seconds": 25.08,
+          "prompt_chars": 8035
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.48,
+          "prompt_chars": 8018
+        },
+        {
+          "kind": "tutor",
+          "seconds": 16.74,
+          "prompt_chars": 8426
+        }
+      ]
+    },
+    {
+      "id": "q072-unsure",
+      "objective": "LO7",
+      "query_id": "q072",
+      "profile": "unsure",
+      "question": "Why can the obvious dining philosophers solution deadlock, and how can the deadlock be prevented?",
+      "context": [
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0036",
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0044",
+        "ps-concurrency-381f1b77::c0034",
+        "sumsem2025-26-vl-bcse303l-00100-th-2026-02c11114::c0037",
+        "fallsem2025-26-vl-bcse303l-00100-th-2025-fd173a9e::c0004"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "Why does the simple solution to the dining philosophers problem risk deadlock, and what condition must be met to avoid it?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "The dining philosophers problem involves philosophers sitting around a table with one chopstick between each pair. Each needs two chopsticks to eat. The obvious solution has each philosopher pick up both chopsticks directly, but this can lead to deadlock if all philosophers pick up their left chopstick first and then wait for the right one. This creates a circular wait, a key condition for deadlock. To prevent this, ensure at most four philosophers sit at the table, or make sure each philosopher picks up both chopsticks at once. Can you explain how the solution in [S3] avoids deadlock?",
+          "student": "I don't know the dining philosophers problem.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student indicates they do not know the dining philosophers problem, so they cannot answer the question. Please explain the problem first."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "The student is partially correct, but the explanation is incomplete. Deadlock occurs due to the **circular wait condition**, not just the number of philosophers. The solution in [S3] avoids deadlock by using **condition variables** and a **mutex** to ensure philosophers only pick up both forks when they are available, preventing the circular wait.\n\nFor example, if all philosophers pick up their left fork first, they will wait indefinitely for the right fork, causing deadlock. However, [S3] ensures that a philosopher only attempts to pick up both forks when both are free, avoiding this scenario.\n\nCheck question: How does the solution in [S3] prevent the circular wait condition?",
+          "student": "Is it about too many philosophers?",
+          "analysis": {
+            "level": "partial",
+            "gap": "The student correctly identifies that the issue is related to the number of philosophers, but the explanation is incomplete. The deadlock occurs due to the circular wait condition, not just the number of philosophers, and the solution in [S3] uses condition variables and a mutex to avoid deadlock."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "The solution in [S3] prevents deadlock by ensuring that a philosopher only attempts to pick up both forks when they are both available. This is done using a **mutex** to protect the state of each philosopher and a **condition variable** to block the philosopher until both forks are free. This avoids the **circular wait** condition, which is a key factor in deadlock. By checking that both forks are free before attempting to eat, the solution ensures that no philosopher is left waiting indefinitely for a fork that is already held by another.",
+          "student": "Sorry, no idea.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student indicates they do not know, so they are unable to provide an answer to the question about how the solution in [S3] prevents the circular wait condition."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student indicates they do not know the dining philosophers problem, so they cannot answer the question. Please explain the problem first.\"\n}",
+        "{\"level\": \"partial\", \"gap\": \"The student correctly identifies that the issue is related to the number of philosophers, but the explanation is incomplete. The deadlock occurs due to the circular wait condition, not just the number of philosophers, and the solution in [S3] uses condition variables and a mutex to avoid deadlock.\"}",
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student indicates they do not know, so they are unable to provide an answer to the question about how the solution in [S3] prevents the circular wait condition.\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 14.53,
+          "prompt_chars": 7402
+        },
+        {
+          "kind": "analysis",
+          "seconds": 4.87,
+          "prompt_chars": 7000
+        },
+        {
+          "kind": "tutor",
+          "seconds": 21.23,
+          "prompt_chars": 7795
+        },
+        {
+          "kind": "analysis",
+          "seconds": 9.1,
+          "prompt_chars": 7644
+        },
+        {
+          "kind": "tutor",
+          "seconds": 26.8,
+          "prompt_chars": 8596
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.61,
+          "prompt_chars": 8362
+        },
+        {
+          "kind": "tutor",
+          "seconds": 28.84,
+          "prompt_chars": 8638
+        }
+      ]
+    },
+    {
+      "id": "q075-solid",
+      "objective": "LO8",
+      "query_id": "q075",
+      "profile": "solid",
+      "question": "How does acquiring locks in a fixed global order prevent deadlock?",
+      "context": [
+        "threads-bugs-e5dff53b::c0012",
+        "threads-bugs-e5dff53b::c0011",
+        "concurrency-bugs-e8a8fced::c0006",
+        "threads-bugs-e5dff53b::c0017",
+        "threads-bugs-e5dff53b::c0010"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the main idea behind using a fixed order for acquiring locks to avoid deadlock?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "CHECK",
+          "message": "Great! Now, consider a scenario where two threads need to acquire two locks, L1 and L2. If one thread acquires L1 first and the other acquires L2 first, what happens if they both try to acquire the other lock?",
+          "student": "Deadlock needs a circular wait. If every thread acquires locks in the same global order, a thread holding a lock only waits for a lock later in the order, so a cycle of waiting threads cannot form.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that enforcing a fixed global lock order prevents circular wait, one of the necessary conditions for deadlock [S5]. By ensuring all threads acquire locks in the same order, a cycle of waiting threads cannot form, thus avoiding deadlock.",
+          "student": "For example if every thread locks L1 before L2, no thread can hold L2 while waiting for L1, so the cycle of two threads waiting for each other cannot happen.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 19.41,
+          "prompt_chars": 10287
+        },
+        {
+          "kind": "analysis",
+          "seconds": 18.45,
+          "prompt_chars": 10002
+        },
+        {
+          "kind": "tutor",
+          "seconds": 25.9,
+          "prompt_chars": 10475
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.41,
+          "prompt_chars": 10386
+        },
+        {
+          "kind": "tutor",
+          "seconds": 28.63,
+          "prompt_chars": 10794
+        }
+      ]
+    },
+    {
+      "id": "q075-misconception",
+      "objective": "LO8",
+      "query_id": "q075",
+      "profile": "misconception",
+      "question": "How does acquiring locks in a fixed global order prevent deadlock?",
+      "context": [
+        "threads-bugs-e5dff53b::c0012",
+        "threads-bugs-e5dff53b::c0011",
+        "concurrency-bugs-e8a8fced::c0006",
+        "threads-bugs-e5dff53b::c0017",
+        "threads-bugs-e5dff53b::c0010"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the key idea behind using a fixed global order for lock acquisition?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your statement is not correct. Acquiring locks in a fixed global order does not reduce the time locks are held; it prevents deadlock by eliminating the possibility of a circular wait, not by reducing lock hold time. \n\nBy enforcing a total or partial lock ordering, all threads acquire locks in the same sequence, which ensures no circular wait can occur. For example, if all threads acquire L1 before L2, a circular chain like L1 → L2 → L1 cannot form. A counterexample would be if two threads acquire L1 and L2 in opposite orders, potentially leading to a deadlock. \n\nCan you give an example of a situation where lock ordering prevents a circular wait?",
+          "student": "It prevents deadlock because threads hold each lock for less time when they are ordered.",
+          "analysis": {
+            "level": "misconception",
+            "gap": "Acquiring locks in a fixed global order prevents deadlock by eliminating the possibility of a circular wait, not by reducing the time locks are held."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "You correctly identified that lock ordering prevents deadlock by eliminating the circular-wait condition. By enforcing a fixed global order, all threads acquire locks in the same sequence, ensuring no thread can wait for a lock that another thread holds, which would form a cycle [S5]. This breaks one of the four necessary conditions for deadlock.",
+          "student": "Ordering removes the circular-wait condition: every thread waits only for locks later in the order, so no cycle of waiting threads can form.",
+          "analysis": {
+            "level": "solid",
+            "gap": ""
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"Acquiring locks in a fixed global order prevents deadlock by eliminating the possibility of a circular wait, not by reducing the time locks are held.\"\n}",
+        "{\n  \"level\": \"solid\",\n  \"gap\": \"\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 2.92,
+          "prompt_chars": 10287
+        },
+        {
+          "kind": "analysis",
+          "seconds": 6.65,
+          "prompt_chars": 9882
+        },
+        {
+          "kind": "tutor",
+          "seconds": 35.06,
+          "prompt_chars": 10685
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.69,
+          "prompt_chars": 10693
+        },
+        {
+          "kind": "tutor",
+          "seconds": 10.68,
+          "prompt_chars": 11101
+        }
+      ]
+    },
+    {
+      "id": "q075-unsure",
+      "objective": "LO8",
+      "query_id": "q075",
+      "profile": "unsure",
+      "question": "How does acquiring locks in a fixed global order prevent deadlock?",
+      "context": [
+        "threads-bugs-e5dff53b::c0012",
+        "threads-bugs-e5dff53b::c0011",
+        "concurrency-bugs-e8a8fced::c0006",
+        "threads-bugs-e5dff53b::c0017",
+        "threads-bugs-e5dff53b::c0010"
+      ],
+      "turns": [
+        {
+          "stage": "DIAGNOSE",
+          "message": "What is the key idea behind using a fixed global order for lock acquisition?",
+          "student": null,
+          "analysis": null
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Lock ordering means always acquiring locks in a specific, predefined sequence. This prevents circular wait, one of the four conditions needed for deadlock. By enforcing a total or partial order, you ensure that no thread can wait for a lock that another thread already holds in a way that creates a cycle. For example, if all threads acquire L1 before L2, a deadlock cannot form between them. \n\nA concrete example: if two threads need L1 and L2, and both always acquire L1 first, they can't deadlock. But if one acquires L2 first and the other L1 first, a deadlock might occur. \n\nCheck question: Why is lock ordering ineffective if threads don't follow the same order?",
+          "student": "I'm not really sure what lock ordering means.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "The student is unsure about the concept of lock ordering and its relation to preventing deadlock."
+          }
+        },
+        {
+          "stage": "EXPLAIN",
+          "message": "Your statement is not correct. Acquiring locks in a fixed global order does not make locks faster; it prevents deadlock by eliminating the **circular wait** condition, not by improving performance. \n\nThe key idea is that a fixed order ensures that no thread can wait for a lock that another thread already holds in a way that creates a cycle. For example, if all threads acquire L1 before L2, a deadlock cannot form between them. However, if threads acquire locks in arbitrary orders, a cycle could form (e.g., Thread A holds L2 and waits for L1, while Thread B holds L1 and waits for L2), leading to deadlock.\n\nCheck question: How does lock ordering prevent a circular wait in a system with multiple locks?",
+          "student": "Maybe it makes the locks faster?",
+          "analysis": {
+            "level": "misconception",
+            "gap": "Acquiring locks in a fixed global order prevents deadlock by eliminating circular wait, not by making locks faster."
+          }
+        },
+        {
+          "stage": "DONE",
+          "message": "Acquiring locks in a fixed global order prevents deadlock by eliminating the **circular wait** condition, one of the four necessary conditions for deadlock [S5]. When all threads follow the same lock order (e.g., always acquiring L1 before L2), no thread can wait for a lock that another thread already holds in a way that creates a cycle. For example, if Thread A holds L2 and waits for L1, and Thread B holds L1 and waits for L2, a deadlock occurs. But with a fixed order, this cycle cannot form because all threads acquire locks in the same sequence. This ensures that the circular wait condition is never met, thus preventing deadlock.",
+          "student": "I still don't understand it.",
+          "analysis": {
+            "level": "unclear",
+            "gap": "You need to explain what you don't understand about lock ordering and how it prevents circular wait."
+          }
+        }
+      ],
+      "analysis_raw": [
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"The student is unsure about the concept of lock ordering and its relation to preventing deadlock.\"\n}",
+        "{\n  \"level\": \"misconception\",\n  \"gap\": \"Acquiring locks in a fixed global order prevents deadlock by eliminating circular wait, not by making locks faster.\"\n}",
+        "{\n  \"level\": \"unclear\",\n  \"gap\": \"You need to explain what you don't understand about lock ordering and how it prevents circular wait.\"\n}"
+      ],
+      "calls": [
+        {
+          "kind": "tutor",
+          "seconds": 1.9,
+          "prompt_chars": 10287
+        },
+        {
+          "kind": "analysis",
+          "seconds": 3.67,
+          "prompt_chars": 9839
+        },
+        {
+          "kind": "tutor",
+          "seconds": 26.54,
+          "prompt_chars": 10590
+        },
+        {
+          "kind": "analysis",
+          "seconds": 4.88,
+          "prompt_chars": 10557
+        },
+        {
+          "kind": "tutor",
+          "seconds": 30.41,
+          "prompt_chars": 11326
+        },
+        {
+          "kind": "analysis",
+          "seconds": 5.2,
+          "prompt_chars": 11310
+        },
+        {
+          "kind": "tutor",
+          "seconds": 32.86,
+          "prompt_chars": 11586
+        }
+      ]
+    }
+  ]
+}

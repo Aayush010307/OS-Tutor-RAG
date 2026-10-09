@@ -1,7 +1,13 @@
 """Tutor quality evaluation (Phase 4): run the scripted student dialogues through the real tutor and score them.
 
     /usr/local/bin/python3 -m src.evaluation.tutor_eval run --model qwen3:8b       # writes <out>/<model>_transcripts.json
-    /usr/local/bin/python3 -m src.evaluation.tutor_eval report qwen3:8b llama3.1:8b  # writes <out>/report.md
+    /usr/local/bin/python3 -m src.evaluation.tutor_eval report qwen3:8b            # one model -> <out>/report_qwen3_8b.md
+    /usr/local/bin/python3 -m src.evaluation.tutor_eval report qwen3:8b llama3.1:8b
+                                                         # comparison -> <out>/report_qwen3_8b_vs_llama3.1_8b.md
+
+Only the models named on the command line are evaluated; nothing else is read or run. Each model set gets its own
+report file, so a routine single-model report never overwrites a comparison. (`report.md` in tutor_eval/ and
+tutor_eval_v2/ was written by the earlier naming scheme and is never rewritten.)
 
 `run` plays every scenario of data/evaluation/tutor_scenarios_v1.json (8 questions x 3 student profiles) through
 TutorController with the E2 hybrid retriever and a local Ollama model, recording every model call and its latency.
@@ -32,7 +38,7 @@ from pathlib import Path
 
 from src.retrieval.indexer import sha256_file
 from src.tutor.controller import LEVELS, TutorController
-from src.tutor.llm import OllamaLLM
+from src.tutor.llm import DEFAULT_MODEL, OllamaLLM
 
 SCENARIOS = Path("data/evaluation/tutor_scenarios_v1.json")
 BENCHMARK = Path("data/evaluation/retrieval_queries_v1.1.json")
@@ -64,6 +70,11 @@ def run(model, scenarios_path=SCENARIOS, out_dir=OUT, retriever=None):
     spec = json.loads(Path(scenarios_path).read_text(encoding="utf-8"))
     own = retriever is None
     retriever = retriever or HybridRRFRetriever.open()
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f"{model.replace(':', '_')}_transcripts.json"
+    write = lambda ds: path.write_text(json.dumps(header(model, scenarios_path) | {"dialogues": ds},
+                                                  ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     dialogues = []
     try:
         for sc in spec["scenarios"]:
@@ -83,18 +94,18 @@ def run(model, scenarios_path=SCENARIOS, out_dir=OUT, retriever=None):
                                   "analysis_raw": [c["output"] for c in rec.calls if c["kind"] == "analysis"],
                                   "calls": [{k: c[k] for k in ("kind", "seconds", "prompt_chars")} for c in rec.calls]})
                 print(f"{dialogues[-1]['id']}: {' -> '.join(t['stage'] for t in turns)}", flush=True)
+                write(dialogues)  # partial results survive an Ollama failure mid-run
     finally:
         if own:
             retriever.close()
-    out = {"run": {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "model": model,
-                   "llm_options": OllamaLLM(model).options, "scenarios": str(scenarios_path),
-                   "scenarios_sha256": sha256_file(scenarios_path), "retriever": "hybrid RRF (E2), top 5"},
-           "dialogues": dialogues}
-    out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"{model.replace(':', '_')}_transcripts.json"
-    path.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    write(dialogues)
     return path
+
+
+def header(model, scenarios_path):
+    return {"run": {"generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "model": model,
+                    "llm_options": OllamaLLM(model).options, "scenarios": str(scenarios_path),
+                    "scenarios_sha256": sha256_file(scenarios_path), "retriever": "hybrid RRF (E2), top 5"}}
 
 
 def _valid_json(raw):
@@ -159,16 +170,41 @@ def _fmt(pair):
     return f"{k}/{n} ({k / n:.0%})" if n else "-"
 
 
+def _slug(model):
+    return model.replace(":", "_")
+
+
+def canonical(models):
+    """One order per model set, whatever order they were typed in: the primary model first, the rest alphabetical."""
+    return sorted(dict.fromkeys(models), key=lambda m: (m != DEFAULT_MODEL, m))
+
+
+def report_path(models, out_dir=OUT):
+    """One file per model set: report_qwen3_8b.md, report_qwen3_8b_vs_llama3.1_8b.md (for either typing order)."""
+    return Path(out_dir) / f"report_{'_vs_'.join(_slug(m) for m in canonical(models))}.md"
+
+
 def report(models, out_dir=OUT, benchmark=BENCHMARK):
+    """Score exactly the given models from their transcripts in out_dir; no other model is read."""
+    models = canonical(models)  # same model set -> same file and same column order
+    if not models:
+        raise ValueError("name at least one model")
+    out_dir = Path(out_dir)
+    missing = [m for m in models if not (out_dir / f"{_slug(m)}_transcripts.json").exists()]
+    if missing:
+        raise FileNotFoundError("no transcripts for " + ", ".join(missing) + f" in {out_dir}; run "
+                                + "; ".join(f"`tutor_eval run --model {m} --output-dir {out_dir}`" for m in missing))
     bench = json.loads(Path(benchmark).read_text(encoding="utf-8"))
     grade2 = {q["query_id"]: {r["chunk_id"] for r in q["relevant_chunks"] if r["relevance"] == 2} for q in bench["queries"]}
-    out_dir = Path(out_dir)
-    L = ["# Tutor Quality Evaluation", "",
+    names = ", ".join(f"`{m}`" for m in models)
+    L = [f"# Tutor Quality Evaluation — {' vs '.join(models)}", "",
+         (f"Model evaluated: {names} (single-model report; no other model was run or scored)." if len(models) == 1 else
+          f"Models evaluated (comparison requested explicitly): {names}."), "",
          "Scripted student dialogues (data/evaluation/tutor_scenarios_v1.json: 8 questions x 3 profiles) run through the "
          "tutor with the E2 hybrid retriever and a local Ollama model. Measurements only.", ""]
     summary, options = {}, {}
     for model in models:
-        tr = json.loads((out_dir / f"{model.replace(':', '_')}_transcripts.json").read_text(encoding="utf-8"))
+        tr = json.loads((out_dir / f"{_slug(model)}_transcripts.json").read_text(encoding="utf-8"))
         d_rows, t_rows, lat = score(tr, grade2)
         kinds = lambda k: [t for t in t_rows if t["kind"] == k]
         s = {
@@ -225,7 +261,7 @@ def report(models, out_dir=OUT, benchmark=BENCHMARK):
                 cells.append(f"{statistics.mean(vals):.2f} (n={len(vals)})" if vals else "-")
             L.append(f"| {kind} | " + " | ".join(cells) + " |")
         L.append("")
-    path = out_dir / "report.md"
+    path = report_path(models, out_dir)
     path.write_text("\n".join(L) + "\n", encoding="utf-8")
     return path
 
@@ -237,11 +273,14 @@ def main(argv=None):
     r.add_argument("--model", required=True)
     r.add_argument("--scenarios", default=SCENARIOS, type=Path)
     r.add_argument("--output-dir", default=OUT, type=Path)
-    p = sub.add_parser("report")
-    p.add_argument("models", nargs="+")
+    p = sub.add_parser("report", help="score only the models named here (one model, or several for a comparison)")
+    p.add_argument("models", nargs="+", metavar="MODEL")
     p.add_argument("--output-dir", default=OUT, type=Path)
     args = ap.parse_args(argv)
-    path = run(args.model, args.scenarios, args.output_dir) if args.cmd == "run" else report(args.models, args.output_dir)
+    try:
+        path = run(args.model, args.scenarios, args.output_dir) if args.cmd == "run" else report(args.models, args.output_dir)
+    except FileNotFoundError as e:
+        sys.exit(f"error: {e}")
     print(path)
     return 0
 

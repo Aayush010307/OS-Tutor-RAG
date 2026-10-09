@@ -12,6 +12,8 @@ quality evaluation stays comparable between runs. `think: false` turns off qwen3
 laptop); models without it ignore the flag.
 """
 import json
+import time
+import urllib.error
 import urllib.request
 
 HOST = "http://localhost:11434"
@@ -19,6 +21,7 @@ DEFAULT_MODEL = "qwen3:8b"
 TEMPERATURE = 0.3  # production default for tutor generation and analysis
 SEED = 42
 NUM_CTX = 8192
+RETRIES = 2  # Ollama occasionally answers 500 mid-run (model evicted, out of memory); retry before giving up
 
 
 class OllamaLLM:
@@ -27,6 +30,17 @@ class OllamaLLM:
         self.options = {"temperature": temperature, "seed": seed, "num_ctx": num_ctx}
 
     def __call__(self, prompt, json_mode=False, on_token=None):
+        """Retries a transient Ollama failure, but never after tokens have already been streamed to the caller."""
+        for attempt in range(RETRIES + 1):
+            try:
+                return self._chat(prompt, json_mode, on_token)
+            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as e:
+                streamed = getattr(e, "streamed", False)
+                if attempt == RETRIES or streamed:
+                    raise
+                time.sleep(2 * (attempt + 1))
+
+    def _chat(self, prompt, json_mode=False, on_token=None):
         body = {"model": self.model, "messages": [{"role": "user", "content": prompt}], "stream": on_token is not None,
                 "think": False, "options": self.options} | ({"format": "json"} if json_mode else {})
         req = urllib.request.Request(f"{self.host}/api/chat", data=json.dumps(body).encode(),
@@ -35,17 +49,21 @@ class OllamaLLM:
             if not body["stream"]:
                 return json.load(resp)["message"]["content"].strip()
             parts = []
-            for line in resp:
-                if not line.strip():
-                    continue
-                chunk = json.loads(line)
-                if chunk.get("error"):
-                    raise RuntimeError(chunk["error"])
-                if text := chunk.get("message", {}).get("content", ""):
-                    parts.append(text)
-                    on_token(text)
-                if chunk.get("done"):
-                    break
+            try:
+                for line in resp:
+                    if not line.strip():
+                        continue
+                    chunk = json.loads(line)
+                    if chunk.get("error"):
+                        raise RuntimeError(chunk["error"])
+                    if text := chunk.get("message", {}).get("content", ""):
+                        parts.append(text)
+                        on_token(text)
+                    if chunk.get("done"):
+                        break
+            except (urllib.error.URLError, TimeoutError) as e:
+                e.streamed = bool(parts)  # a half-streamed reply must not be retried: the caller already saw it
+                raise
             return "".join(parts).strip()
 
 

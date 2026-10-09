@@ -1,0 +1,726 @@
+{
+  "annotator": "Claude (single annotator, not blinded), 2026-10-10",
+  "rubric": "0-2 each: correct = OS facts right; grounded = supported by the 5 given sources; pedagogy = DIAGNOSE probes without giving the answer (one question), EXPLAIN targets the student's actual gap with an example and does not misstate what the student said, CHECK tests the idea on a new case, WRAP_UP/ANSWER confirm or answer clearly. Flow errors caused by a wrong analysis lower pedagogy of the resulting turn.",
+  "grades": [
+    {
+      "id": "q005-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "diagnostic question restates the original question"
+    },
+    {
+      "id": "q005-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "check question has an impossible premise (two threads sharing one stack)"
+    },
+    {
+      "id": "q005-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q005-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q005-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "contrived counterexample"
+    },
+    {
+      "id": "q005-misconception",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 0,
+      "grounded": 0,
+      "pedagogy": 0,
+      "note": "rejects a correct student answer and denies that threads share an address space, contradicting the sources"
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "repeats the previous check question verbatim"
+    },
+    {
+      "id": "q005-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q007-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q007-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "prints the scaffolding label 'Check question:'"
+    },
+    {
+      "id": "q007-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 0,
+      "note": "opens with meta-commentary about 'the student'; treats 'I don't know' as a claim; weak web-server counterexample"
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "third-person 'the student is incorrect'"
+    },
+    {
+      "id": "q007-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "repeats the earlier explanation and ends with a question although the dialogue is over"
+    },
+    {
+      "id": "q023-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q023-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q023-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q023-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q023-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 1,
+      "note": "no citation; prints 'Check question:'"
+    },
+    {
+      "id": "q023-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "check question restates the original question"
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 0,
+      "note": "calls a partially correct answer simply 'not correct' and repeats the previous turn almost verbatim"
+    },
+    {
+      "id": "q023-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "asks about 'Figure 28.1', which the student cannot see"
+    },
+    {
+      "id": "q031-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "asks about 'Figure 28.1'"
+    },
+    {
+      "id": "q031-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "asks about 'Figure 28.1'"
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "third-person narration of the student's question"
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "repeats the previous explanation and check question"
+    },
+    {
+      "id": "q031-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "diagnostic question names the quantity the original question asks for"
+    },
+    {
+      "id": "q054-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "as above"
+    },
+    {
+      "id": "q054-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "prints 'Check question:'"
+    },
+    {
+      "id": "q054-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "as above"
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 1,
+      "note": "no citation; clumsy opening ('you need to understand how semaphores work to answer this')"
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q054-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q047-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q047-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "prints 'Check question:'"
+    },
+    {
+      "id": "q047-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "repeats the previous explanation and check question"
+    },
+    {
+      "id": "q047-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "asks two things in one diagnostic question"
+    },
+    {
+      "id": "q072-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "check turn asks two questions"
+    },
+    {
+      "id": "q072-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "asks two things at once"
+    },
+    {
+      "id": "q072-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "prints 'Check question:'"
+    },
+    {
+      "id": "q072-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "asks two things at once"
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "asks the student to explain 'the solution in [S3]', exposing source numbering as if it were shared reading"
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "third-person 'the student is partially correct'"
+    },
+    {
+      "id": "q072-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-solid",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q075-solid",
+      "turn": 1,
+      "kind": "CHECK",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-solid",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-misconception",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q075-misconception",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 2,
+      "note": "no citation"
+    },
+    {
+      "id": "q075-misconception",
+      "turn": 2,
+      "kind": "WRAP_UP",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 0,
+      "kind": "DIAGNOSE",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "restates the original question"
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 1,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 1,
+      "pedagogy": 1,
+      "note": "no citation; prints 'Check question:'"
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 2,
+      "kind": "EXPLAIN",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 1,
+      "note": "repeats the previous explanation; prints 'Check question:'"
+    },
+    {
+      "id": "q075-unsure",
+      "turn": 3,
+      "kind": "ANSWER",
+      "correct": 2,
+      "grounded": 2,
+      "pedagogy": 2,
+      "note": ""
+    }
+  ]
+}

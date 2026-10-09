@@ -19,7 +19,7 @@ Course project for BCSE303P Operating Systems Lab: Aayush Jaiswal (24BCI0042), S
 | `src/assessment/` | Pre-test / post-test learning-gain analysis |
 | `web/index.html` | Student chat page |
 | `data/` | Processed chunks, vector index, benchmarks, evaluation results, draft assessment items |
-| `tests/` | 127 automated tests |
+| `tests/` | 135 automated tests |
 | `PROJECT_LOG.md` | Full development history, decisions and results |
 | `OS-Tutor-RAG_Case_Study.docx` | Case study report |
 
@@ -47,7 +47,8 @@ python3 -m pytest tests -q                                   # tests
 python3 -m src.retrieval.search --query "What is a semaphore?" --top-k 5
 python3 -m src.evaluation.retrieval_evaluator --retriever hybrid --top-k 20 \
     --benchmark data/evaluation/retrieval_queries_v1.1.json --output-dir /tmp/eval --name hybrid
-python3 -m src.evaluation.tutor_eval run --model qwen3:8b
+python3 -m src.evaluation.tutor_eval run --model qwen3:8b --output-dir data/evaluation/tutor_eval_v2
+python3 -m src.evaluation.tutor_eval report qwen3:8b --output-dir data/evaluation/tutor_eval_v2   # qwen only
 ```
 
 ## Corpus note

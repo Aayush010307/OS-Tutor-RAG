@@ -2439,3 +2439,144 @@ hybrid RRF retriever are all byte-identical; no new retrieval experiment and no 
 - Audited before staging: no API keys, tokens, passwords, `.env` or credential files; no caches, Qdrant lock or
   chat transcripts; `Docs/`, `chunks.jsonl`, the vector store, benchmark v1.1, the judgments and `src/retrieval/`
   unmodified.
+
+### 2026-10-10 — Phase 4.1 quality evaluation: completed, before vs after
+
+The 2026-10-08 entry recorded this evaluation as in progress. Correction: that first run **crashed** and
+produced nothing. Ollama answered HTTP 500 mid-generation and the harness wrote transcripts only at the end,
+so the whole run was lost. Two small harness changes were made before retrying (no tutor behaviour change):
+
+- `src/tutor/llm.py`: a transient `HTTPError` / `URLError` / timeout is retried twice with a short backoff,
+  but never after tokens have already been streamed to the caller (a half-streamed reply the student has
+  seen must not be regenerated).
+- `src/evaluation/tutor_eval.py`: transcripts are written after every dialogue, so a failure costs one
+  dialogue instead of the whole run.
+
+Both models were then run to completion on the frozen scenarios (`tutor_scenarios_v1.json`, unchanged, same
+SHA-256), with the E2 hybrid retriever, top 5, temperature 0.3, seed 42:
+
+```bash
+/usr/local/bin/python3 -m src.evaluation.tutor_eval run --model qwen3:8b    --output-dir data/evaluation/tutor_eval_v2
+/usr/local/bin/python3 -m src.evaluation.tutor_eval run --model llama3.1:8b --output-dir data/evaluation/tutor_eval_v2
+/usr/local/bin/python3 -m src.evaluation.tutor_eval report qwen3:8b llama3.1:8b --output-dir data/evaluation/tutor_eval_v2
+```
+
+The Phase 4 run in `data/evaluation/tutor_eval/` (temperature 0, earlier prompts) is untouched and is the
+"before" side. Both sides use the same scenarios, retriever, checks and rubric. The annotator for the manual
+rubric is the same single, not blinded annotator (Claude).
+
+**qwen3:8b, before -> after**
+
+| Measure | Before | After |
+| --- | --- | --- |
+| Dialogues on the expected path | 21/24 (88%) | 23/24 (96%) |
+| Analysis: exact level agreement | 39/48 (81%) | 46/48 (96%) |
+| Analysis: solid / not-solid | 52/56 (93%) | 55/56 (98%) |
+| Analysis: valid JSON | 56/56 | 56/56 |
+| DIAGNOSE asks one question | 24/24 | 24/24 |
+| CHECK asks one question | 7/7 | 7/8 (88%) |
+| EXPLAIN ends with a check question | 28/28 | 25/25 |
+| EXPLAIN / WRAP_UP / ANSWER cite a source | 16/49 (33%) | 40/48 (83%) |
+| All citations point to a given source | 80/80 | 80/80 |
+| Turns within 120 words | 78/80 (98%) | 70/80 (88%) |
+| Turns mentioning context / instructions | 5/80 (6%) | 4/80 (5%) |
+| Grade-2 chunk in the retrieved 5 | 24/24 | 24/24 |
+| Manual: correct | 1.76 | 1.98 |
+| Manual: grounded | 1.94 | 1.89 |
+| Manual: pedagogy | 1.39 | 1.38 |
+| Tutor latency, median / max (s) | 8.9 / 18.3 | 21.1 / 43.6 |
+
+**llama3.1:8b, before -> after**
+
+| Measure | Before | After |
+| --- | --- | --- |
+| Dialogues on the expected path | 19/24 (79%) | 24/24 (100%) |
+| Analysis: exact level agreement | 34/46 (74%) | 48/48 (100%) |
+| Analysis: solid / not-solid | 46/54 (85%) | 56/56 (100%) |
+| DIAGNOSE asks one question | 12/24 (50%) | 24/24 (100%) |
+| CHECK asks one question | 7/11 (64%) | 4/8 (50%) |
+| EXPLAIN / WRAP_UP / ANSWER cite a source | 41/43 (95%) | 34/48 (71%) |
+| Turns within 120 words | 60/78 (77%) | 39/80 (49%) |
+| Manual: correct | 1.51 | 1.84 |
+| Manual: grounded | 1.77 | 1.81 |
+| Manual: pedagogy | 1.26 | 1.40 |
+| Tutor latency, median / max (s) | 11.7 / 25.1 | 33.7 / 88.3 |
+
+**What improved**
+
+- The understanding analysis is close to the scripted labels for both models, and the correct-marked-partial
+  problem is largely gone: qwen3 81% -> 96% exact, llama3.1 74% -> 100%.
+- Citations in qwen3's explanations went from 33% to 83%. Every citation either model produced points at a
+  retrieved source; the validator removed the rest.
+- llama3.1 now asks exactly one diagnostic question every time (50% -> 100%).
+- Manual correctness is up for both models, llama3.1 markedly (1.51 -> 1.84).
+
+**What got worse, and is not hidden**
+
+- **Latency roughly doubled or tripled** (qwen3 8.9 -> 21.1 s, llama3.1 11.7 -> 33.7 s median per tutor
+  call). The shared policy blocks make every prompt longer and the answers are longer too. On a laptop this
+  is felt in the chat page.
+- **Answers are longer.** Within-120-words fell to 88% (qwen3) and 49% (llama3.1, mean 127 words). The
+  "never cut an explanation short" clause is being read as licence to write more.
+- **qwen3's grounding dipped slightly** (1.94 -> 1.89): 7 explanations argue without citing anything.
+- **llama3.1's citation rate fell** (95% -> 71%) even though its correctness rose.
+- **Pedagogy is flat for qwen3** (1.39 -> 1.38). The gains in analysis and citation did not reach the
+  teaching quality of individual turns.
+
+**Remaining weaknesses, from reading all 160 turns**
+
+1. **DIAGNOSE still restates the question.** qwen3's diagnostic questions are mostly a rewording of what the
+   student asked, which is what held pedagogy at 1.00 in Phase 4 and still does. The explicit "must not be a
+   rewording" instruction did not fix it.
+2. **Overcorrection.** The "never call a wrong statement right" rule now misfires in the other direction. Both
+   models sometimes tell a student who answered correctly that they are wrong. The worst cases: qwen3
+   `q005-misconception` denied that threads share an address space, contradicting its own sources; llama3.1
+   `q054-solid` claimed `sem_wait` returns immediately at -1. Both were graded 0 for correctness.
+3. **Negating "I don't know."** Several turns open by telling an unsure student that their "I'm not sure" is
+   incorrect. The rule should apply to claims, not to admissions of ignorance.
+4. **Scaffolding leaks**, much worse on llama3.1: "Here's my response:", "Let's break down the student's last
+   message", "The student's last message said something wrong", and 16 turns that mention the guidelines or
+   the tutor policy outright. qwen3 prints the literal label "Check question:" in several turns.
+5. **Repetition.** In the "unsure" profile both models repeat the previous explanation and the same check
+   question almost verbatim across EXPLAIN rounds.
+6. **One invalid citation form survived.** llama3.1 wrote `[TIP]`, which `validated()` does not recognise: it
+   strips `[S<n>]` outside range and a fixed list of invented labels, not arbitrary bracketed words.
+7. Single annotator, not blinded, 160 turns. No inter-annotator agreement. No claim about student learning is
+   made or possible: no study has been run.
+
+**Default model:** qwen3:8b stays the recommended default. llama3.1:8b scores better on flow and analysis,
+but its student-facing text is weaker: twice the length, half the CHECK turns without a single question, and
+systematic meta-narration about the student and the instructions.
+
+**Tests:** `python3 -m pytest tests -q` -> **127 passed** with the index free. Nothing was weakened.
+
+**Files from this run:** `data/evaluation/tutor_eval_v2/` with `qwen3_8b_transcripts.json`,
+`llama3.1_8b_transcripts.json`, `manual_grades_qwen3_8b.json`, `manual_grades_llama3.1_8b.json` and
+`report.md`. The Phase 4 directory `data/evaluation/tutor_eval/` is unchanged.
+
+### 2026-10-10 — Tutor evaluation: single-model reports by default
+
+Decision from the owner: qwen3:8b is the primary model; llama3.1:8b is an optional comparison.
+
+- Problem: `tutor_eval report` already accepted one model, but always wrote `<out>/report.md`, so a routine
+  qwen-only report would have overwritten the completed qwen3/llama3.1 comparison.
+- Change (`src/evaluation/tutor_eval.py`): each model set gets its own file, `report_qwen3_8b.md` for one model
+  and `report_qwen3_8b_vs_llama3.1_8b.md` for an explicitly requested comparison. Only the named models are read;
+  a missing transcript stops the command with the `run` command to produce it, and nothing is written. The report
+  title and first line name the model(s) evaluated. `run --model` and `report MODEL...` both still require an
+  explicit model. The existing `report.md` files in `tutor_eval/` and `tutor_eval_v2/` are left as written and
+  are never rewritten.
+- Unchanged: `DEFAULT_MODEL = "qwen3:8b"`, the scoring checks, the manual rubric, the scenarios, the corpus and
+  the benchmarks.
+- New `tests/test_tutor_eval_cli.py` (7 tests) on copies of the real transcripts in a temporary directory.
+  `python3 -m pytest tests -q`: **134 passed**.
+- The 13 existing evaluation and frozen files (both tutor result directories, the scenarios, benchmark v1.1,
+  `chunks.jsonl`) were hashed before the change and are byte-identical after it.
+- `CLAUDE.md` and `README.md` now show the qwen-only commands; README test count 127 -> 134.
+- Follow-up, same day: a comparison now has one filename and one column order whatever order the models are typed
+  in (`canonical()`: the primary model `qwen3:8b` first, the rest alphabetical). `report qwen3:8b llama3.1:8b` and
+  `report llama3.1:8b qwen3:8b` both write `report_qwen3_8b_vs_llama3.1_8b.md` with identical bytes; single-model
+  names are unchanged. Scoring is unchanged: a comparison typed in reverse order, generated in a temp directory,
+  matches the existing `tutor_eval_v2/report.md` table for table, differing only in the two header lines the CLI
+  change added. Regression test added; `python3 -m pytest tests -q`: **135 passed**. The 13-file hash snapshot is
+  still 13/13 identical.
