@@ -1,0 +1,608 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T05:21:30.518127+00:00",
+  "title": "Design System: OS-Tutor",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Desk Charcoal",
+        "light": "#f6f7f9",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "rail": {
+        "role": "neutral",
+        "displayName": "Rail Black",
+        "light": "#eceef2",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Slate Surface",
+        "light": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Surface 2",
+        "light": "#eff1f4",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "surface-3": {
+        "role": "neutral",
+        "displayName": "Surface 3",
+        "light": "#e4e8ee",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "light": "#dde1e7",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Strong Hairline",
+        "light": "#c6cdd7",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Chalk",
+        "light": "#161a21",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Pencil",
+        "light": "#485160",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "light": "#5f6878",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Periwinkle Signal",
+        "light": "#2c55c4",
+        "tonalRamp": [
+          "oklch(15% 0.15 268)",
+          "oklch(25% 0.15 268)",
+          "oklch(35% 0.15 268)",
+          "oklch(48% 0.15 268)",
+          "oklch(60% 0.15 268)",
+          "oklch(72% 0.15 268)",
+          "oklch(84% 0.15 268)",
+          "oklch(95% 0.15 268)"
+        ]
+      },
+      "accent-strong": {
+        "role": "primary",
+        "displayName": "Deep Cobalt",
+        "light": "#2c55c4",
+        "tonalRamp": [
+          "oklch(15% 0.18 266)",
+          "oklch(25% 0.18 266)",
+          "oklch(35% 0.18 266)",
+          "oklch(48% 0.18 266)",
+          "oklch(60% 0.18 266)",
+          "oklch(72% 0.18 266)",
+          "oklch(84% 0.18 266)",
+          "oklch(95% 0.18 266)"
+        ]
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "Accent White",
+        "light": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.02 268)",
+          "oklch(25% 0.02 268)",
+          "oklch(35% 0.02 268)",
+          "oklch(48% 0.02 268)",
+          "oklch(60% 0.02 268)",
+          "oklch(72% 0.02 268)",
+          "oklch(84% 0.02 268)",
+          "oklch(95% 0.02 268)"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Cobalt Wash",
+        "light": "rgb(44 85 196 / 0.09)",
+        "tonalRamp": [
+          "oklch(15% 0.15 268)",
+          "oklch(25% 0.15 268)",
+          "oklch(35% 0.15 268)",
+          "oklch(48% 0.15 268)",
+          "oklch(60% 0.15 268)",
+          "oklch(72% 0.15 268)",
+          "oklch(84% 0.15 268)",
+          "oklch(95% 0.15 268)"
+        ]
+      },
+      "accent-line": {
+        "role": "primary",
+        "displayName": "Cobalt Hairline",
+        "light": "rgb(44 85 196 / 0.32)",
+        "tonalRamp": [
+          "oklch(15% 0.15 268)",
+          "oklch(25% 0.15 268)",
+          "oklch(35% 0.15 268)",
+          "oklch(48% 0.15 268)",
+          "oklch(60% 0.15 268)",
+          "oklch(72% 0.15 268)",
+          "oklch(84% 0.15 268)",
+          "oklch(95% 0.15 268)"
+        ]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Sage",
+        "light": "#1d7348",
+        "tonalRamp": [
+          "oklch(15% 0.11 160)",
+          "oklch(25% 0.11 160)",
+          "oklch(35% 0.11 160)",
+          "oklch(48% 0.11 160)",
+          "oklch(60% 0.11 160)",
+          "oklch(72% 0.11 160)",
+          "oklch(84% 0.11 160)",
+          "oklch(95% 0.11 160)"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Ochre",
+        "light": "#8d5a0c",
+        "tonalRamp": [
+          "oklch(15% 0.11 75)",
+          "oklch(25% 0.11 75)",
+          "oklch(35% 0.11 75)",
+          "oklch(48% 0.11 75)",
+          "oklch(60% 0.11 75)",
+          "oklch(72% 0.11 75)",
+          "oklch(84% 0.11 75)",
+          "oklch(95% 0.11 75)"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Coral",
+        "light": "#b0301f",
+        "tonalRamp": [
+          "oklch(15% 0.13 27)",
+          "oklch(25% 0.13 27)",
+          "oklch(35% 0.13 27)",
+          "oklch(48% 0.13 27)",
+          "oklch(60% 0.13 27)",
+          "oklch(72% 0.13 27)",
+          "oklch(84% 0.13 27)",
+          "oklch(95% 0.13 27)"
+        ]
+      },
+      "success-soft": {
+        "role": "tertiary",
+        "displayName": "Sage Wash",
+        "light": "rgb(29 115 72 / 0.09)",
+        "tonalRamp": [
+          "oklch(15% 0.11 160)",
+          "oklch(25% 0.11 160)",
+          "oklch(35% 0.11 160)",
+          "oklch(48% 0.11 160)",
+          "oklch(60% 0.11 160)",
+          "oklch(72% 0.11 160)",
+          "oklch(84% 0.11 160)",
+          "oklch(95% 0.11 160)"
+        ]
+      },
+      "warning-soft": {
+        "role": "tertiary",
+        "displayName": "Ochre Wash",
+        "light": "rgb(141 90 12 / 0.1)",
+        "tonalRamp": [
+          "oklch(15% 0.11 75)",
+          "oklch(25% 0.11 75)",
+          "oklch(35% 0.11 75)",
+          "oklch(48% 0.11 75)",
+          "oklch(60% 0.11 75)",
+          "oklch(72% 0.11 75)",
+          "oklch(84% 0.11 75)",
+          "oklch(95% 0.11 75)"
+        ]
+      },
+      "danger-soft": {
+        "role": "tertiary",
+        "displayName": "Coral Wash",
+        "light": "rgb(176 48 31 / 0.08)",
+        "tonalRamp": [
+          "oklch(15% 0.13 27)",
+          "oklch(25% 0.13 27)",
+          "oklch(35% 0.13 27)",
+          "oklch(48% 0.13 27)",
+          "oklch(60% 0.13 27)",
+          "oklch(72% 0.13 27)",
+          "oklch(84% 0.13 27)",
+          "oklch(95% 0.13 27)"
+        ]
+      },
+      "code-bg": {
+        "role": "neutral",
+        "displayName": "Code Well",
+        "light": "#f1f3f6",
+        "tonalRamp": [
+          "oklch(15% 0.015 260)",
+          "oklch(25% 0.015 260)",
+          "oklch(35% 0.015 260)",
+          "oklch(48% 0.015 260)",
+          "oklch(60% 0.015 260)",
+          "oklch(72% 0.015 260)",
+          "oklch(84% 0.015 260)",
+          "oklch(95% 0.015 260)"
+        ]
+      }
+    },
+    "themes": {
+      "default": "dark",
+      "light": "Selected by :root[data-theme=\"light\"]; same semantic tokens re-lit (see colorMeta.*.light).",
+      "syntax": {
+        "dark": {
+          "keyword": "#b4a2f5",
+          "type": "#86c5e8",
+          "string": "#a6d29a",
+          "number": "#e9b87a",
+          "comment": "#6f7889",
+          "func": "#8fb0ff",
+          "meta": "#e59ab8"
+        },
+        "light": {
+          "keyword": "#6d3fc0",
+          "type": "#0d6a8f",
+          "string": "#2c7a2c",
+          "number": "#a35a00",
+          "comment": "#6b7380",
+          "func": "#2c55c4",
+          "meta": "#b0306a"
+        }
+      },
+      "ambient": {
+        "dark": "rgb(70 110 255 / 0.07)",
+        "light": "rgb(44 85 196 / 0.05)"
+      },
+      "scrim": {
+        "dark": "rgb(5 7 10 / 0.6)",
+        "light": "rgb(22 26 33 / 0.35)"
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Title",
+        "purpose": "Welcome headline only."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Welcome intro, max 60ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Tutor prose, student messages, composer, starters."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "Buttons, titles, filenames, section labels."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Timestamps, hints, stage labels, tags, ghost actions."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Code, citation refs, model ids, counts."
+      }
+    },
+    "shadows": [
+      {
+        "name": "float",
+        "value": "0 12px 32px -16px rgb(0 0 0 / 0.7), 0 2px 6px -2px rgb(0 0 0 / 0.4)",
+        "light": "0 10px 28px -16px rgb(22 26 33 / 0.28), 0 2px 6px -3px rgb(22 26 33 / 0.12)",
+        "purpose": "The composer only."
+      },
+      {
+        "name": "state-ring",
+        "value": "0 0 0 3px var(--accent-soft)",
+        "purpose": "Current stage node."
+      },
+      {
+        "name": "flash-ring",
+        "value": "0 0 0 3px var(--accent-line) -> transparent over 1.6s",
+        "purpose": "Source card a citation jumped to."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All authored motion."
+      },
+      {
+        "name": "edge-draw",
+        "value": "scaleX(0 -> 1) 520ms ease-out, origin left",
+        "purpose": "The edge into the new current stage; the one authored moment."
+      },
+      {
+        "name": "drawer-in",
+        "value": "translateX(+/-24px), opacity 0 -> 1, 220ms ease-out",
+        "purpose": "Mobile rail and sources drawers."
+      },
+      {
+        "name": "breathe",
+        "value": "opacity 0.25 -> 1, 1.2s, staggered 0.15s",
+        "purpose": "Waiting dots."
+      },
+      {
+        "name": "caret",
+        "value": "1s steps(2) blink",
+        "purpose": "Streaming caret in accent."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "all animation and transition durations 0.01ms",
+        "purpose": "prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Rail becomes persistent"
+      },
+      {
+        "name": "xl",
+        "value": "1280px",
+        "purpose": "Sources column becomes persistent"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Send Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The only filled accent button; submits the composer.",
+      "html": "<button class=\"ds-btn-send\" aria-label=\"Ask\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m5 12 7-7 7 7\"/><path d=\"M12 19V5\"/></svg></button>",
+      "css": ".ds-btn-send{display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:8px;background:var(--accent-strong);color:var(--on-accent);cursor:pointer;transition:background-color .15s,transform .15s,filter .15s}.ds-btn-send:hover{filter:brightness(1.1)}.ds-btn-send:active{transform:scale(.95)}.ds-btn-send:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.ds-btn-send:disabled{background:var(--surface-3);color:var(--ink-3);filter:none}"
+    },
+    {
+      "name": "New Lesson Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary action: surface fill on a strong hairline.",
+      "html": "<button class=\"ds-btn-secondary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--accent)\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"/><path d=\"M18.4 2.6a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4Z\"/></svg>New lesson</button>",
+      "css": ".ds-btn-secondary{display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--ink);font:600 .875rem/1.3rem 'Atkinson Hyperlegible Next Variable',system-ui,sans-serif;box-shadow:inset 0 1px 0 rgb(255 255 255/.03);cursor:pointer;transition:background-color .15s,border-color .15s}.ds-btn-secondary:hover{background:var(--surface-2);border-color:var(--accent-line)}.ds-btn-secondary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
+    },
+    {
+      "name": "Ghost Action",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Quiet meta actions under a reply (copy, sources count).",
+      "html": "<button class=\"ds-btn-ghost\">3 sources</button>",
+      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:var(--ink-3);font:400 .78125rem/1.1rem 'Atkinson Hyperlegible Next Variable',system-ui,sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-btn-ghost:hover{background:var(--surface-3);color:var(--ink)}.ds-btn-ghost:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
+    },
+    {
+      "name": "Composer",
+      "kind": "input",
+      "refersTo": "composer",
+      "description": "The floating working surface: textarea, model select, hint, send.",
+      "html": "<form class=\"ds-composer\"><textarea class=\"ds-composer-input\" rows=\"1\" placeholder=\"Ask about threads, locks or deadlock\"></textarea><div class=\"ds-composer-bar\"><span class=\"ds-composer-model\">qwen3:8b</span><span class=\"ds-composer-hint\">Enter to send, Shift+Enter for a new line</span></div></form>",
+      "css": ".ds-composer{border:1px solid var(--line-strong);border-radius:14px;background:var(--surface);box-shadow:var(--shadow-float);transition:border-color .15s}.ds-composer:focus-within{border-color:var(--accent-line)}.ds-composer-input{display:block;width:100%;resize:none;border:0;background:transparent;padding:14px 16px 8px;color:var(--ink);font:400 1rem/1.7rem 'Atkinson Hyperlegible Next Variable',system-ui,sans-serif;caret-color:var(--accent);outline:none}.ds-composer-input::placeholder{color:var(--ink-3)}.ds-composer-bar{display:flex;align-items:center;gap:8px;padding:0 10px 10px}.ds-composer-model{padding:0 8px;font:400 .78125rem/2rem 'Atkinson Hyperlegible Mono Variable',ui-monospace,monospace;color:var(--ink-2)}.ds-composer-hint{font-size:.78125rem;color:var(--ink-3)}"
+    },
+    {
+      "name": "Citation Chip",
+      "kind": "chip",
+      "refersTo": "citation-chip",
+      "description": "Inline [S] ref in tutor prose; opens the matching source.",
+      "html": "<p class=\"ds-prose\">The waiting thread releases the mutex atomically<button class=\"ds-cite\">S1</button>.</p>",
+      "css": ".ds-prose{color:var(--ink);font:400 1rem/1.7 'Atkinson Hyperlegible Next Variable',system-ui,sans-serif}.ds-cite{display:inline-flex;align-items:center;height:1.35rem;margin:0 2px;padding:0 6px;transform:translateY(-1px);vertical-align:middle;border:1px solid var(--accent-line);border-radius:5px;background:var(--accent-soft);color:var(--accent);font:600 .72rem/1 'Atkinson Hyperlegible Mono Variable',ui-monospace,monospace;cursor:pointer;transition:background-color .15s,color .15s}.ds-cite:hover{background:var(--accent-strong);color:var(--on-accent)}.ds-cite:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
+    },
+    {
+      "name": "Source Card",
+      "kind": "card",
+      "refersTo": "source-card",
+      "description": "Expandable passage the tutor was given.",
+      "html": "<details class=\"ds-source\" open><summary class=\"ds-source-sum\"><span class=\"ds-source-ref\">S1</span><span><span class=\"ds-source-file\">Lecture 7 - Condition variables.pdf</span><span class=\"ds-source-meta\">Slide 12</span></span></summary><div class=\"ds-source-body\">Passage the tutor was given</div></details>",
+      "css": ".ds-source{border:1px solid var(--line);border-radius:12px;background:var(--surface)}.ds-source[open]{border-color:var(--line-strong)}.ds-source-sum{display:flex;gap:12px;padding:12px 14px;list-style:none;cursor:pointer;border-radius:12px}.ds-source-sum::-webkit-details-marker{display:none}.ds-source-sum:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.ds-source-ref{font:600 .78125rem/1.1rem 'Atkinson Hyperlegible Mono Variable',ui-monospace,monospace;color:var(--accent)}.ds-source-file{display:block;font-size:.875rem;color:var(--ink)}.ds-source-meta{display:block;margin-top:4px;font-size:.78125rem;color:var(--ink-3)}.ds-source-body{border-top:1px solid var(--line);padding:12px 14px 14px;font-size:.78125rem;color:var(--ink-3)}"
+    },
+    {
+      "name": "Student Message",
+      "kind": "card",
+      "refersTo": "student-message",
+      "description": "The student's turn, right-aligned; tutor replies have no container.",
+      "html": "<div class=\"ds-student\">The mutex protects the condition check, I think?</div>",
+      "css": ".ds-student{max-width:min(85%,36rem);margin-left:auto;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink);font:400 1rem/1.7rem 'Atkinson Hyperlegible Next Variable',system-ui,sans-serif;white-space:pre-wrap}"
+    },
+    {
+      "name": "History Item",
+      "kind": "nav",
+      "refersTo": "history-item-active",
+      "description": "Lesson in the rail; active fills surface-3.",
+      "html": "<nav class=\"ds-hist\"><button class=\"ds-hist-item\" aria-current=\"page\">Why does pthread_cond_wait take a mutex?<span>Just now</span></button><button class=\"ds-hist-item\">Dining philosophers<span>2 h ago</span></button></nav>",
+      "css": ".ds-hist{display:flex;flex-direction:column;padding:8px;background:var(--rail)}.ds-hist-item{display:block;width:100%;text-align:left;padding:8px 36px 8px 10px;border:0;border-radius:8px;background:transparent;color:var(--ink-2);font:400 .875rem/1.3rem 'Atkinson Hyperlegible Next Variable',system-ui,sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-hist-item span{display:block;margin-top:2px;font-size:.78125rem;color:var(--ink-3)}.ds-hist-item:hover{background:var(--surface-2);color:var(--ink)}.ds-hist-item[aria-current=page]{background:var(--surface-3);color:var(--ink)}.ds-hist-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
+    },
+    {
+      "name": "Stage Rail",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature: the lesson as a process state diagram, current state lit. Socratic mode only; hidden when the server runs answer-first.",
+      "html": "<ol class=\"ds-rail\"><li class=\"ds-node is-visited\"><i></i>Diagnose</li><li class=\"ds-edge\"></li><li class=\"ds-node is-current\"><i></i>Explain</li><li class=\"ds-edge\"></li><li class=\"ds-node\"><i></i>Check</li><li class=\"ds-edge\"></li><li class=\"ds-node\"><i></i>Done</li></ol>",
+      "css": ".ds-rail{display:flex;align-items:center;gap:8px;margin:0;padding:14px 0 0;list-style:none;font:400 .78125rem/1.1rem 'Atkinson Hyperlegible Next Variable',system-ui,sans-serif}.ds-node{display:flex;align-items:center;gap:6px;color:var(--ink-3)}.ds-node i{width:10px;height:10px;border-radius:50%;border:1px solid var(--line-strong);transition:background-color .3s,border-color .3s,box-shadow .3s}.ds-node.is-visited{color:var(--ink-2)}.ds-node.is-visited i{background:var(--ink-3);border-color:var(--ink-3)}.ds-node.is-current{color:var(--accent);font-weight:600}.ds-node.is-current i{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.ds-edge{position:relative;width:20px;height:1px;background:var(--line-strong)}.ds-edge::after{content:'';position:absolute;right:-1px;top:-3px;width:7px;height:7px;transform:rotate(45deg);border-top:1px solid var(--line-strong);border-right:1px solid var(--line-strong)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Study Desk",
+    "overview": "OS-Tutor is a desk, not a chatbot. The lesson sits in a single reading column on a cool charcoal ground, flanked by a darker rail holding the student's lessons and, once a question has been asked, a sources column holding the exact slides and pages the tutor read. In the default Socratic mode the header carries the lesson's state drawn as the process state diagram OS students already know. Everything a student sees answers one of two questions: where is this lesson, and where did this claim come from.\n\nThe world is quiet and long-session friendly. Depth comes from tonal steps of the same blue-grey and hairline borders, not from cards or shadows; the tutor's replies sit directly on the ground with no container. One restrained cobalt accent marks action and the current state, and nothing else. Green, amber and red exist only for the evaluator's analysis, finished lessons and errors. Dark is the home theme; light is the same system re-lit through the same semantic tokens (light values live in `.impeccable/design.json` under `colorMeta.*.light`).\n\nOne typeface family carries everything: Atkinson Hyperlegible Next for text, its Mono sibling for code, citation refs, model names and counts. Motion is sparse and purposeful: one authored moment (the stage-rail edge drawing itself), plus small state feedback, all collapsed under reduced motion.",
+    "keyCharacteristics": [
+      "Three-column desk: rail (264px), reading column (46rem max), sources column (360px at xl, drawer below).",
+      "Tonal layering on hairlines; no message cards, one soft float shadow on the composer.",
+      "A single cobalt accent with a text tone and a fill tone; semantic colours reserved for analysis and status.",
+      "Atkinson Hyperlegible Next and Mono throughout, tabular numerals by default.",
+      "The stage rail as a state diagram is the signature."
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Cobalt means action or \"you are here\". If an element is neither clickable nor the current state, it is not cobalt.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Tone Accent Rule",
+        "body": "The light tone (accent) is for text and strokes; fills use accent-strong with on-accent text. In the light theme both resolve to the same cobalt.",
+        "section": "colors"
+      },
+      {
+        "name": "The Judgement Colours Rule",
+        "body": "Green, amber and red appear only for analysis, completion and errors; never for decoration or emphasis.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ramp Rule",
+        "body": "Five steps, ratio about 1.15: meta, ui, body, lead, title. New text picks a step; it does not invent a size. The only exceptions are fixed micro marks: the brand wordmark (0.95rem) and mark (0.7rem), the citation chip (0.72rem) and the arc's round count (0.65rem).",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Means Machine Rule",
+        "body": "Mono is for things a machine names: code, citation refs, model ids, counts. Never for prose or headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Numerals are tabular everywhere (set on body), so counts and round numbers never jitter.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Card Rule",
+        "body": "Tutor replies sit on the ground with no border, fill or shadow. Containers are for things the student acts on (composer, source cards, errors), not for speech.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Float Rule",
+        "body": "Only the composer floats. Nothing else gets a drop shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** use only the semantic tokens (bg, rail, surface, line, ink, accent...) so both themes stay correct; never a raw colour in a component.",
+      "**Do** keep cobalt for action and the current state; fills use accent-strong with on-accent text.",
+      "**Do** use the three named radii (8px controls, 12px panels, 14px composer) and 1px hairlines.",
+      "**Do** set code, citation refs, model ids and counts in Atkinson Hyperlegible Mono.",
+      "**Do** give every interactive element the 2px accent focus outline and keep animations under the reduced-motion override."
+    ],
+    "donts": [
+      "**Don't** wrap tutor replies in cards, bubbles or shadows.",
+      "**Don't** add drop shadows beyond the composer's float.",
+      "**Don't** use green, amber or red outside analysis, completion and error states.",
+      "**Don't** introduce type sizes outside the five-step ramp beyond the existing micro marks.",
+      "**Don't** add a second authored animation competing with the stage-rail edge draw."
+    ]
+  }
+}

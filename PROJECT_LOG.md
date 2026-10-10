@@ -2580,3 +2580,626 @@ Decision from the owner: qwen3:8b is the primary model; llama3.1:8b is an option
   matches the existing `tutor_eval_v2/report.md` table for table, differing only in the two header lines the CLI
   change added. Regression test added; `python3 -m pytest tests -q`: **135 passed**. The 13-file hash snapshot is
   still 13/13 identical.
+
+### 2026-10-10 — React frontend (OS-Tutor) for the tutor server
+
+Requested by the owner: a production-quality React frontend for the existing tutor, built with the installed
+design skills. The Python server stays the backend of record; nothing in `src/`, `tests/`, `Docs/` or `data/`
+was changed. The old page `web/index.html` is kept and still served at http://localhost:8000.
+
+**Backend contract used (from `src/tutor/server.py` and `controller.py`, unchanged)**
+- `GET /api/models` -> `{models, default}` (`models` is `[]` when Ollama cannot be reached).
+- `POST /api/start {question, model}` and `POST /api/reply {session_id, text}` answer with one `data: <json>` line
+  per event: `session`, `sources`, `analysis`, `token`, `turn`, `error`.
+- Turn stages DIAGNOSE / EXPLAIN / CHECK / DONE; `ANSWER` only marks a side answer, which leaves the lesson stage,
+  round count and pending question unchanged. DONE after a solid check is the wrap-up; DONE after a non-solid
+  analysis is the full answer when the explanation rounds ran out. No cancel endpoint, so no stop button.
+
+**Decisions**
+- Stack: React 19, TypeScript 5.9 (strict), Vite 8, Tailwind CSS 4, lucide-react, react-markdown + remark-gfm +
+  rehype-highlight (C, C++, bash, Python only), self-hosted Atkinson Hyperlegible Next / Mono (the old page's
+  legibility-first family). State: `useReducer` + two contexts, no state library. Tests: Vitest. Lint: ESLint 10
+  with typescript-eslint and react-hooks.
+- Serving (owner's choice): Vite dev server on 5173 (and `vite preview` on 4173) proxies `/api` to the Python
+  server on 8000. No backend change. Two processes during development.
+- Every message while a lesson is open goes to `/api/reply`; the server decides whether it is an answer or a new
+  question. Only a finished or expired session starts a new topic (`/api/start`). Each reply resolves citations
+  against its own sources: a side answer's sources come from its `sources` event, a normal reply reuses the
+  topic's sources from `/api/start`.
+- Citations: `[S<n>]` that match a returned source become buttons that open that passage in the sources panel
+  (inline column at >= 1280 px, drawer below). Unknown refs are dropped while streaming; the server's validated
+  `turn.message` replaces the streamed text. Location "slide None" shows "Page or slide not recorded".
+- Model output is rendered as markdown with raw HTML disabled and only `http(s):` and `cite:` URLs allowed.
+- Lesson history is kept in `localStorage` ("Kept in this browser only"); server sessions are in memory, so a
+  lesson continues after a reload only while the server process is still running. An expired session resets
+  the lesson so the next message starts a new topic.
+- Retry ("Ask again") is offered only when starting a topic failed: re-running `/api/start` cannot duplicate
+  server state. A failed reply offers "Put my answer back" instead, because the server may already have recorded
+  the student's message.
+- Evaluator view (same `teacher` localStorage key as the old page) shows only `analysis.level` and `analysis.gap`
+  under the student's message.
+- Design: dark charcoal with one restrained blue accent (owner's pinned direction) plus a light theme; the stage
+  indicator is drawn like the process state diagram (Explain and Check joined by a loop with the round count).
+  Product context in `PRODUCT.md`.
+
+**Design skills**: Anthropic frontend-design, TasteSkill (`design-taste-frontend`) and Impeccable were loaded and
+followed (PRODUCT.md, direction contract, craft floor, detector, critique rounds, finish review). "UI UX Pro Max"
+is not installed on this machine and was not used.
+
+**Files**: new `frontend/` (package.json + lockfile, vite/ts/eslint config, `index.html`, `public/favicon.svg`,
+`src/` with `types.ts`, `lib/api.ts`, `lib/tutor.ts`, `state/{chat.tsx,reducer.ts,settings.tsx}`,
+`components/*`, `test/core.test.ts`), `PRODUCT.md`; README and CLAUDE.md gain the frontend commands.
+
+**Validation**
+- `npm run typecheck`, `npm run lint`: clean. `npm test`: 7 passed. `npm run build`: succeeds; initial JS 83 kB
+  gzip, markdown/highlighting chunk (106 kB gzip) loads with the first reply.
+- Real integration (Ollama running, qwen3:8b, headless Chrome via playwright-core): curl through the proxy shows
+  `session`, `sources`, then tokens arriving incrementally, then `turn`. In the browser: starter question ->
+  DIAGNOSE streamed; a correct answer -> analysis `solid` -> CHECK; "what is a race condition?" during CHECK ->
+  side answer with its own 5 sources, stage stayed CHECK; a separate lesson with a wrong answer -> analysis
+  `misconception` -> EXPLAIN, rail showed round 1/2; reload kept the history and reopened the lesson; light
+  theme; mobile 390 px (nav drawer, sources drawer, no horizontal page overflow); server unreachable (proxy to a
+  closed port) -> banner plus inline error with "Ask again", no endless spinner. No console errors.
+- Markdown fixture (stored conversation): headings, table, blockquote, lists, C highlighting, working code copy,
+  horizontal code scroll on mobile, `[S9]` dropped, injected `<script>` / `<img onerror>` shown as inert text.
+- The model did not write `[S]` citations or code in the live turns that were tested, so live citation clicks
+  were checked on the side answer only; code rendering was checked with the fixture.
+- `/usr/local/bin/python3 -m pytest tests -q`: **135 passed** (with the tutor server stopped; while it runs it
+  holds the Qdrant lock and the retrieval tests error, as before).
+
+**Known limitations**: no stop button (no cancel endpoint); history is per browser; replies that fail after the
+server recorded the student's message are not retried automatically; the expired-session check matches the
+server's error text.
+
+**Addendum, same day: design review and fixes**
+- Impeccable finish reviewer (a fresh subagent), round 1: `fix`. Applied: the stage rail redrawn as a state diagram
+  (hollow, visited and current nodes; transition edges; a Check-to-Explain return arc carrying the round count;
+  the edge into a new state draws itself once) and shown in every header, including before the first turn; the
+  reply action row always visible; source passages rendered as typeset markdown, with long filenames clamped; the
+  server outage stated once (banner with the command, short in-thread note); header blur removed; composer
+  radius 14 px. Also fixed: the welcome no longer scrolls to the bottom on load; switching lessons resets the
+  scroll; the markdown renderers are no longer re-created on every render (code blocks were remounting).
+- Round 2 (verdict pass): 6 fixes resolved and 1 partial. The batch caused 2 regressions, both now fixed and
+  checked with stored lessons: an edge is lit only when the lesson came along it, and the mobile round count no
+  longer clips. Still open for the owner: the rail's form was chosen without Impeccable's direction roll (the
+  owner pinned the palette, not the form).
+- A real lesson was driven to Done (Diagnose, Check, side question, Wrap-up) in headless Chrome.
+- `DESIGN.md` and `.impeccable/design.json` were written from the shipped code by Impeccable's documenter.
+- Final: typecheck, lint, 7 Vitest tests and the build are clean; `pytest tests -q` -> 135 passed (server stopped).
+
+---
+
+## 2026-10-10 — Integration of PR #1 (Satyam Bhalotia): tutor service layer, reranker, learner model, revision
+
+**Status: INTEGRATED ON BRANCH `integration/pr1-tutor-service`, NOT COMMITTED, NOT MERGED** (awaiting the owner's
+review). PR #1 (`feat/tutor-service-learner-revision`, one commit `d6b21cd`, based on `85abbe6`) was reviewed, then
+merged into a branch made from `main` (`bb91644`) in a separate worktree. The owner's checkout, with the in-progress React
+frontend, was never touched.
+
+### What the PR introduces
+
+- `src/config.py`: one place for all settings, from environment variables and an optional `.env`; `.env.example`.
+- `src/tutor/llm.py`: an `LLMProvider` abstraction (`OllamaProvider`, alias `OllamaLLM`; `MockLLMProvider` for
+  development and tests), `LLMError` with student-safe messages, connect probe, `<think>` stripping, health check.
+- `src/tutor/service.py`: an optional answer-first tutor (`TUTOR_MODE=answer_first`) with intents (simpler, analogy,
+  code, test me, ...), stages ANSWER / CHECK / FEEDBACK / NO_CONTEXT.
+- `src/tutor/controller.py`: prompt-injection hardening (retrieved text and student text cannot pose as prompt
+  sections), optional learner context in the prompt, richer source metadata; the Socratic flow is unchanged.
+- `src/tutor/server.py`, `API_CONTRACT.md`: v2 HTTP API, additive over v1 (health, learner profile, Smart Revision,
+  conversations, source lookup; error `code`s).
+- `src/learner/` (28-concept taxonomy, learner model), `src/revision/` (Smart Revision), `src/tutor/conversations.py`.
+- `src/retrieval/pipeline.py` (`RagRetriever`: hybrid -> optional cross-encoder rerank -> intent/identifier reorder ->
+  top 5), `reranker.py`, `intent.py`; `retrieval_evaluator.py` gains the E3 pipeline runs (additive).
+- E3 outputs in `data/evaluation/e3_rerank/` (6 runs, results and reports), `web/index.html` redesign, `PRODUCT.md`.
+
+### Owner decisions applied (2026-10-10)
+
+1. **Default tutoring mode stays Socratic** (diagnose first; the flow the tutor evaluation measures). The PR's default
+   was `answer_first`; changed in `src/config.py` and `.env.example`. `answer_first` is kept as an option.
+2. **Retrieval:** dense, BM25 and hybrid are untouched; the reranker stays optional and **disabled by default**
+   (`RERANKER_ENABLED=false`); E3 results are kept as delivered; no benchmark or rubric is modified.
+3. **The local React frontend** (untracked, in development) is preserved and is not part of this integration.
+4. **`PRODUCT.md`:** both versions preserved; a reconciled version is proposed (see below).
+
+### Conflicts and how they were resolved
+
+- `src/tutor/llm.py`: the PR replaced `OllamaLLM.__call__` with its provider; `main` (`bb91644`) had added a
+  transient-failure retry to the same method. Neither side alone was correct. Resolution: the PR's provider kept whole
+  (probe, `LLMError` translation, `<think>` stripping, empty-reply check), with the retry rebuilt inside it. Up to
+  `RETRIES = 2` retries for HTTP 5xx, dropped connections and timeouts, **never after a token has reached the
+  student**. A missing model (404), a malformed reply and an unreachable server (probe) are not retried.
+- `README.md`: the PR's restructured README kept. `main`'s qwen-only evaluation commands added to "Run it", test count
+  restored (359), and the tutor section corrected. The PR said the Phase 4.1 behaviour "has not been measured"; it has
+  (`tutor_eval_v2`), and those results are now stated, with answer-first marked unevaluated.
+
+### Other changes made during integration
+
+- `.env.example`: `LLM_PROVIDER=ollama` (was `mock`, which made a copied `.env` serve scripted answers to students) and
+  `OLLAMA_BASE_URL=http://localhost:11434` (was a placeholder), matching `src/config.py` and the documented local setup.
+  The remote-Ollama address stays as a comment.
+- `src/retrieval/reranker.py`: the downloaded weights are now checked against the pinned SHA-256 at load (the hash was
+  recorded but never compared). A mismatch raises; `build_retriever` already falls back to hybrid. The pinned hash was
+  confirmed against the real weights (`5d3e70fd…`, revision `233902d2`).
+- `src/evaluation/tutor_eval.py`: evaluation calls keep a 600 s reply timeout (`EVAL_TIMEOUT`). The PR's app default of
+  120 s suits a waiting student, but the slowest measured evaluation call was 88 s (llama3.1:8b), too close.
+- `API_CONTRACT.md`: endpoints marked "planned" are implemented (verified on a running server) and are now marked new.
+  The Socratic default is stated, the env var list matches `src/config.py`, and there is a warning that a v1 or
+  Socratic client must handle `FEEDBACK` / `NO_CONTEXT` before answer-first is switched on.
+- `tests/test_config_llm.py`: the asserted default mode follows the owner's decision (`socratic`); otherwise unchanged.
+- New `tests/test_llm_retry.py` (7 tests): a 500 retried, persistent 5xx gives up after the retries, a 404 not retried,
+  a drop before any token retried with tokens delivered once, no retry after tokens were shown, generation settings
+  still sent, and the reranker refusing unpinned weights.
+
+### Reranker (E3) — configuration and status
+
+- Model `cross-encoder/ms-marco-MiniLM-L-6-v2` (Apache-2.0), ONNX on the CPU through the existing onnxruntime and
+  tokenizers (no new dependency), pinned revision and weights hash. It reranks the fused top 20 (`RERANKER_TOP_K`), reads
+  at most 512 tokens per pair (longer chunks lose their tail), and fails soft to the hybrid order. Optional and **off by
+  default**.
+- Reported on benchmark v1.1 (frozen; corpus `90d1e88e…`, benchmark `bfbbd033…`):
+  - **Hybrid + reranker: nDCG@10 0.744 vs hybrid 0.727** (MRR@5 0.938 vs 0.921, Recall@10 0.657 vs 0.645).
+  - The share of **unjudged top-10 results rises from 11% to 16%**. v1.1 was pooled from the dense system, so the
+    reranker's figures are lower bounds and the comparison is biased against it. The gain is promising, not
+    established.
+  - Hybrid + intent order with all content types preferred: 0.703, a regression, so the conceptual-type preference is
+    off by default.
+  - The PR's hybrid rerun on another machine reproduced E2 at 0.727. Its note that the saved E2 value 0.7274 and the
+    rerun 0.7272 differ in the last digits (ONNX floating-point drift across machines) is recorded.
+- **Default product retrieval** (what the tutor now uses with the reranker off): hybrid + intent/identifier reorder
+  preferring code and practice material. The PR did not evaluate this configuration. Measured during the review with the
+  project's evaluator over the frozen v1.1 benchmark (run in a scratch directory, not saved as a result file):
+  **nDCG@10 0.726 vs hybrid 0.727, MRR@5 0.919 vs 0.921, Recall@10 0.645 vs 0.645**. That is neutral within noise. The
+  dense v1.1 run at the PR head reproduced the committed `baseline_dense_v1.1_results.json` exactly.
+
+### Validation
+
+- `python3 -m pytest tests -q` on the integration tree: **359 passed**. That is 344 from the PR, plus `main`'s 8
+  evaluation-CLI tests, plus the 7 new retry and integrity tests.
+- A live server from the integration tree, default settings (Socratic), was checked with a client that follows the React
+  frontend's own SSE parsing (`frontend/src/lib/api.ts`) and type assumptions (`types.ts`, `tutor.ts`, `reducer.ts`),
+  with the mock LLM and with the real `qwen3:8b`. Everything held: event order (`session`, `sources`), stages within the
+  frontend's set (DIAGNOSE, EXPLAIN, side ANSWER), source fields including `text`, `p.N` / `slide N` locations, the
+  expired-session message matching the frontend's `/expired/i`, and all v2 GET endpoints answering 200.
+- **Not tested:** the React app itself running against this backend (no build or browser run). The frontend is being
+  developed separately and was not touched.
+- **Known incompatibility:** with `TUTOR_MODE=answer_first` the server emits `FEEDBACK` (and can emit `NO_CONTEXT`),
+  which the frontend's `TurnStage` does not include (`turnLabel` would fail). This is fine under the Socratic default and
+  must be handled before answer-first is offered.
+- Frozen artifacts: `Docs/`, chunks, manifests, the vector store, both benchmarks and all earlier evaluation outputs (57
+  tracked files) are byte-identical; the integration only **adds** the 12 E3 files.
+
+### PRODUCT.md
+
+The owner's local file and the PR's file differ. The integration branch carries a reconciled version. It keeps the
+owner's approved frontend direction (name, pinned visual direction, principles, the Socratic purpose). It adds the PR's
+accurate, non-conflicting details: the stack, reviewers as users, positioning, remote Ollama, source metadata, the v2
+API, evidence and accessibility. It corrects what the merged backend contradicts: the default mode, and that the backend
+now keeps a learner model and conversations. The originals are preserved outside the repository in
+`OS-RAG-backups/2026-10-10-pr1-integration/` (`PRODUCT.local.md`, `PRODUCT.pr1.md`, `PRODUCT.reconciled.md`). The
+owner's untracked local `PRODUCT.md` is unchanged.
+
+### Limitations and remaining validation
+
+1. Answer-first mode, Smart Revision and the learner model have **no quality evaluation**: no grounding,
+   misconception-correction or revision-relevance figures exist yet.
+2. The reranker's E3 gain rests on judgments pooled from another system; pooling its top results (a v1.2 benchmark)
+   needs the owner's approval.
+3. The default retrieval check above was run in a scratch directory; saving it as an `e3_rerank` result would make it
+   reproducible from the repository.
+4. The React frontend has not been run against the merged backend, and it does not yet handle the answer-first stages.
+5. The frontend build is not wired into `web/index.html` (output goes to `frontend/dist`).
+
+### 2026-10-10 — Pre-commit audit of the integration (still uncommitted)
+
+- **Documentation:** the frontend session's uncommitted README, CLAUDE.md and PROJECT_LOG changes in the main checkout
+  were ported into this branch. The PROJECT_LOG entry, including its later design-review addendum, and the CLAUDE.md
+  bullet are verbatim; the README additions are placed in the PR's structure. The main checkout's files were not
+  modified. When both land on `main`, the docs will need one more merge; take this branch's text, which contains both.
+- **answer_first in the React frontend:** a 6-file patch (`types.ts`, `lib/tutor.ts`, `state/reducer.ts`,
+  `components/Messages.tsx`, `components/StageRail.tsx`, `test/core.test.ts`; +74/-11) does the following.
+  - Adds `FEEDBACK` and `NO_CONTEXT` to `TurnStage`.
+  - Keeps the session's `mode`, so an answer-first `ANSWER` is labelled "Answer", not "Side question".
+  - Labels `FEEDBACK` ("Feedback") and `NO_CONTEXT` ("Not in the course material").
+  - Shows any unknown stage as sent instead of throwing.
+  - Hides the diagnose-explain-check rail in answer-first.
+  - Adds 3 Vitest tests.
+
+  It was built and tested in a copy of `frontend/`, rebased onto the frontend session's latest `StageRail.tsx`, and
+  dry-runs cleanly against the live frontend. It is **not applied** (the frontend session owns that code); it is kept
+  as `OS-RAG-backups/2026-10-10-pr1-integration/frontend-answer-first-compat.patch`. Frontend checks with the patch:
+  typecheck, lint, 10/10 tests, build all pass.
+- **Runtime:** the patched build (`vite preview`, proxy to this branch's backend, real `qwen3:8b`) was checked in Chrome.
+  - Socratic: DIAGNOSE, analysis "Partly there", EXPLAIN 1/2 with an `[S1]` citation opening its passage, and a side
+    question with its own sources while the rail stayed on Explain.
+  - Answer-first: "Answer", a Check turn, then a "Feedback" turn with analysis "Solid" and citations; no crash, rail
+    hidden.
+  - Backend stopped: banner plus an inline error, no console errors.
+  - One backend process was killed silently by memory pressure on the 16 GB laptop (Ollama, two Python servers and
+    Chrome); a restart worked.
+- **Python:** 359 passed, 0 skipped. No test file that exists on `main` was modified and no skip or xfail markers
+  were added.
+  - Configuration defaults confirmed from code and from a copied `.env.example`: `TUTOR_MODE=socratic`,
+    `LLM_PROVIDER=ollama`, `RERANKER_ENABLED=false`.
+  - The 57 frozen and evaluation files are byte-identical in both trees.
+
+### 2026-10-10 — React frontend added to the integration branch
+
+- **Decision:** the owner's current React frontend (`frontend/`, OS-Tutor) is the final UI. It is committed on this
+  branch exactly as it exists in the main checkout. That copy already contains the answer-first compatibility
+  changes described in the pre-commit audit above. No older frontend was restored or substituted.
+- **Files:** 26 files under `frontend/`, copied from the main checkout. They are byte-identical to the backup manifest
+  `OS-RAG-backups/2026-10-10-final-integration-1126/manifest.sha256`. The main checkout itself was not modified.
+- **Design docs:** `DESIGN.md`, `.impeccable/design.json` and `.impeccable/surfaces/frontend-src-app-tsx.md` were
+  copied from the main checkout. One correction was applied to `DESIGN.md` and `design.json`: the stage rail
+  (Diagnose, Explain, Check, Done) is documented as Socratic-only, because answer-first hides it.
+- **`.gitignore`:** now ignores `.impeccable/hook.cache.json`. The file holds absolute paths and session ids from one
+  machine.
+- **Not committed:** `node_modules/`, `dist/`, `*.tsbuildinfo`, caches, review screenshots.
+- **Known issue, fixed in the next entry:** in answer-first mode, citations after the first question can point at that
+  question's sources instead of the current answer's.
+
+### 2026-10-10 — Turn-level source provenance (Option A, approved by the owner)
+
+- **Bug:** in answer-first mode, the frontend kept the first question's `sources` event as the topic's sources and
+  showed them for later replies. Example: an off-topic question about baking retrieved Bakery Algorithm and CAS
+  passages (A), and the relevance gate rejected them. The next question, about `sem_wait`/`sem_post`, was answered
+  from passages B. Its Check and Feedback turns then had their `[S1]`… citations resolved against A. The `turn` event
+  did not say which passages a reply had used, so the frontend could not know.
+- **Contract (`API_CONTRACT.md`, "Citations and turn sources"):** every `turn` event now carries `sources`. These are
+  exactly the passages its reply was generated from, numbered as its `[Sn]` citations, in the `sources` event's card
+  schema (passage `text` included).
+  - Answer-first: ANSWER cites its own retrieval. CHECK and FEEDBACK cite the answer they check. A side answer and a
+    re-explanation cite their own retrieval.
+  - Socratic: lesson turns cite the lesson's passages. A side answer cites its own retrieval.
+  - NO_CONTEXT and "got it" turns report `[]`.
+  - The change is additive. Every existing field and the event order are unchanged.
+- **Backend:**
+  - `src/tutor/server.py`: `turn_payload` adds `sources`, looking up passage text by `chunk_id`.
+  - `src/tutor/service.py`: both NO_CONTEXT returns now report `[]` instead of the rejected candidates.
+- **Frontend:**
+  - `types.ts`: optional `turn.sources`.
+  - `reducer.ts`: a turn's own `sources` replace the message's sources.
+  - `lib/tutor.ts`, `state/chat.tsx`: `replySources` starts an answer-first reply with no sources while it streams,
+    and sets the reply's mode so its heading is right from the start.
+  - Fallback: servers that send no `turn.sources` (older versions, and history saved before this change) keep the
+    previous behaviour. The frontend never reconstructs sources on its own.
+- **Tests:**
+  - New `tests/test_turn_sources.py` (5 tests): the A-then-B regression through ANSWER, CHECK and FEEDBACK, including
+    a check that each prompt held B's text and none of A's; a side question and a re-explanation; an off-topic side
+    question; and the SSE contract in both modes. Four of the five fail on the code before this fix.
+  - 4 new frontend tests: the A-then-B regression with citation linking, the fallback for older servers, Socratic plus
+    a side question, and reply placeholders. The regression test fails on the old reducer.
+  - No existing test was changed or weakened.
+- **Results:**
+  - Python: 364 passed, 0 skipped.
+  - Frontend: typecheck, lint, 14/14 tests and build all pass.
+  - Frozen and evaluation artifacts: 57/57 byte-identical.
+- **Live check, real `qwen3:8b`, SSE:**
+  - Answer-first, with a reranker threshold set to force NO_CONTEXT: `turn.sources` was `[]` while the `sources` event
+    listed the rejected candidates, CAS among them. ANSWER, CHECK and FEEDBACK all carried the `threads-sema` passages
+    S1–S5 with text.
+  - Socratic: DIAGNOSE and EXPLAIN carried the lesson's passages. A side answer carried its own retrieval.
+- **Browser check (Chrome, `vite preview`):**
+  - Answer-first: NO_CONTEXT showed no sources. The Answer, Check and Feedback showed B. Feedback `[S3]` opened
+    `threads-sema.pdf` p.2. No Bakery or CAS card appeared anywhere.
+  - Socratic: DIAGNOSE, then EXPLAIN 1/2. `[S1]` opened `threads-api.pdf` p.7, a passage of the lesson.
+  - No console errors.
+
+### 2026-10-10 — Uncertainty, hints and partial answers (product-quality audit fixes, uncommitted)
+
+- **Problem, from the audit:** in Socratic mode, a student who replied "i am not sure" was told "The student's answer is
+  not correct". The model judged the reply correctly as `unclear`. The cause was the prompt: `unclear`, `partial` and
+  `misconception` all used one EXPLAIN task, which since `85abbe6` begins "say plainly in your first sentence that it is
+  not correct", and the judged level was never in the prompt.
+  - Reproduced live with qwen3:8b: the same reply on two runs.
+  - In the frozen Phase 4.1 transcripts (read, not rerun), the EXPLAIN turns that open by calling the student wrong are
+    3 of 7 for `unclear` and 2 of 4 for `partial` (qwen3:8b), and 4 of 8 for `unclear` (llama3.1:8b). In Phase 4 the
+    `unclear` count was 0 of 7.
+- **Owner decisions:**
+  - Hints get their own behaviour.
+  - Pure uncertainty does not use an explanation round.
+  - The Socratic relevance gate is deferred.
+- **Backend (`src/tutor/controller.py`):**
+  - New deterministic rules, which match the whole message only:
+    - `is_unsure`: "i am not sure", "I don't know what join does", "Sorry, no idea".
+    - `wants_explanation`: "explain it to me", "Can you explain that again?".
+    - `is_hint_request`: "give me a hint", "Can I get a hint?".
+  - A hedged answer with content ("not sure, but I think it releases the lock") still goes to the model.
+  - **Uncertainty or an explanation request:** the analysis is `unclear` without a model call, and the tutor gives EXPLAIN
+    with a new `SUPPORT` task. That task never calls the student wrong, gives a simple explanation with an example, and
+    ends with an easier, different question. It does not use a round.
+  - **Still unsure after one supportive turn, or with the rounds already spent:** the tutor gives the full answer
+    (`DONE`). This keeps all 8 frozen `unsure` scenarios on `tutor_eval`'s expected flow `EXPLAIN, EXPLAIN, DONE`, and a
+    test checks it.
+  - **Model-judged `unclear`:** also uses the `SUPPORT` task, but still uses a round.
+  - **EXPLAIN now carries a `LEVEL` note:**
+    - `partial`: say what is right first, then the missing idea, and never "not correct".
+    - `misconception`: say it is wrong in the first sentence (as before).
+  - **Hint request:** a new `HINT` turn gives a short nudge toward the pending question, citing the lesson's passages.
+    The stage, rounds, gaps and pending question are unchanged, and there is no analysis.
+  - `STYLE` now says to address the student as "you", never "the student".
+  - Socratic turns carry `tutor_state = {"rounds", "max_rounds"}`.
+- **Answer-first (`src/tutor/service.py`):**
+  - `DONT_KNOW` is replaced by `is_unsure`. "i am not sure" and "I am not sure." were missed before, and a hedged
+    misconception was wrongly skipped as not knowing.
+  - At a pending check, `wants_explanation` simplifies, as "I don't know" already did.
+  - `HINT` at a pending check keeps the check pending.
+  - A hint with nothing pending gets a fixed message, with `sources: []` and no model call.
+  - "I'm not sure" after an answer is explained differently, without a search on that text.
+- **Revision (`src/revision/service.py`):** uses `is_unsure` instead of `DONT_KNOW`.
+- **Frontend:**
+  - `types.ts`: the `HINT` stage and `TutorState`.
+  - `reducer.ts`:
+    - `HINT` leaves the lesson stage unchanged.
+    - The round count comes from `tutor_state.rounds` when the server sends it; otherwise EXPLAIN turns are counted as
+      before.
+  - `lib/tutor.ts`:
+    - The "Hint" label.
+    - `sourceTarget`: the panel follows the latest reply, so a reply that used no passage shows none.
+    - `sourcesLabel`: answer-first replies are labelled "Passages this reply was based on".
+  - `StageRail.tsx`: the "1/2" count has a tooltip ("Explanation round 1 of 2…").
+  - `SourcesPanel.tsx`: collapsed cards show a 2-line excerpt (from `text`, which the server already sends), and a reply
+    without passages gets its own empty state.
+  - `App.tsx`: uses the shared helpers, and the screen-reader announcement passes `mode`.
+- **API (`API_CONTRACT.md`, "Uncertainty and hints"):**
+  - The changes are additive: `HINT` is a new stage value, and Socratic `tutor_state` is new.
+  - Existing fields, events and stage names are unchanged, and answer-first is unchanged apart from the rules above.
+  - The legacy `web/index.html` shows `HINT` with an empty stage label. It also counts EXPLAIN turns itself, so it shows
+    one round too many after "I'm not sure".
+- **Tests (no existing test changed):**
+  - New: `tests/test_uncertainty_and_hints.py`, with 94 cases.
+  - The policy test, which is parametrised over `STAGE_INSTRUCTIONS`, now also covers `SUPPORT` and `HINT`.
+  - Six key checks were run against the committed code (`bab50af`, extracted to a scratch folder) and the working tree:
+    all six fail on `bab50af` and pass now.
+  - Frontend: 5 new tests, which fail on the previous code.
+- **Results:**
+  - Python: 460 passed, 0 skipped (364 before).
+  - Frontend: 19/19 tests; typecheck, lint and build pass.
+  - Frozen artifacts: 57/57 byte-identical.
+- **Live check (qwen3:8b):**
+  - **Socratic:**
+    - "i am not sure": EXPLAIN, rounds 0, no "not correct", with an easier, different question.
+    - "give me a hint": HINT, rounds 0, ending "Try the question again: …".
+    - "I still don't know": `DONE`, the full answer.
+    - Three replies judged `partial` ("Threads share memory.", "To protect the shared variable.", "It decrements the
+      semaphore.") all opened by saying what was right.
+  - **Answer-first:**
+    - A hint with nothing pending gave the fixed message.
+    - A hint at a check was a HINT turn, with the check still pending.
+    - "i am not sure" at a check gave a simplified FEEDBACK without a model call.
+  - **Browser:**
+    - Hint label shown, and the rail stayed on Explain.
+    - The count appeared (1/2) only after a real attempt.
+    - Card excerpts shown, and `[S2]` opened its passage.
+    - No console errors.
+- **Not done, needs a decision:**
+  1. The Socratic relevance gate (deferred).
+  2. `tutor_eval` now judges pure uncertainty by rule, so a future evaluation's `unclear` agreement figure is not
+     comparable with Phase 4/4.1. A new run needs a new output folder.
+  3. Answer-first's existing `SIMPLIFY` task once let the model state the answer before asking the check again (seen
+     live, not changed here).
+
+### 2026-10-10 — Answer-first SIMPLIFY, hint restatement, legacy page status (pre-publication check, uncommitted)
+
+Follows the previous entry. Nothing committed, pushed or merged; the base is still `bab50af`.
+
+#### 1. Answer-first SIMPLIFY gave the check's answer away, then asked the same check again
+
+- **Reproduced:**
+  - Real pipeline (hybrid retrieval, qwen3:8b), `TutorService` as the server runs it.
+  - Script: `scratchpad/simplify/repro.py`, outside the repository. For each of 6 topics: an answer, a check, then
+    "i am not sure".
+  - Result: in **5 of 6**, SIMPLIFY worked through the check's own scenario, stated its result, then re-asked an almost
+    identical question. Example: the check was "What happens if a thread calls `sem_wait` on a semaphore initialized to
+    0?"; the reply explained that the thread blocks, then asked "If a thread calls `sem_wait` on a semaphore initialized
+    to 0, what happens immediately?".
+- **Root cause:** the task text itself.
+  - It asked to "explain the idea more simply with one small concrete example … then ask the same check again".
+  - A check is already a concrete scenario about the idea just explained. The simplest example of that idea is the check
+    itself, and nothing in the task said the check must stay unanswered.
+- **Variants measured live** (same 6 topics, fixed seed):
+
+  | Variant | Gives the answer away | Asks the check again | Other |
+  |---|---|---|---|
+  | Original | 5/6 | most | — |
+  | Forbid stating the result, keep "example of a different situation" | 3/6 | 2/6 | — |
+  | "Remind them of the one fact they need" + first-step question | 3/6 | — | one gave it away inside the question |
+  | "Name what to think about, not the conclusion" + first-step question | 0/6 | 0/6 | 3/6 echoed "citing [S3]" to the student |
+  | Same, citation clause rephrased | 0/6 | 2/6 | — |
+  | Same, citation clause dropped | 0/6 | 2/6 | no citations |
+  | **Same, citation as a separate sentence (kept)** | **0/6** | 1/6, after the hint | 1/6 wrote an "Ask:" prefix |
+
+- **Final (`TASKS["SIMPLIFY"]`, `src/tutor/service.py`):**
+  - Help the student get there themselves.
+  - Never state or imply the check's result, and do not work through its scenario, not even inside a question.
+  - One sentence naming what to think about, not the conclusion. Cite the context where it supports that sentence.
+  - Then ONE easier question that is a first step toward the check, not the check itself, and does not contain the
+    answer.
+- **Measured on 12 runs** (the 6 topics × "i am not sure" and "I don't know"): 0/12 give the answer away; 2/12 (the
+  `pthread_join` topic, both replies) repeat the check word for word, after a hint rather than after the answer.
+- **Semantics unchanged:**
+  - Still the `FEEDBACK` stage, and the check stays pending.
+  - After two missed rounds, `RESOLVE` gives the full answer, as before.
+  - Like `CLARIFY` and `CORRECT`, the reply ends with its own follow-up question, which becomes the pending check.
+  - API unchanged.
+- **Regression test:** `test_answer_first_simplify_helps_without_answering_the_check`. It failed on the old text.
+
+#### 2. A hint sometimes ended by restating the student's original question (found in the browser check)
+
+- **Symptom:**
+  - qwen3:8b ended a Socratic hint with "Try the question again: What does sem_wait do?", the student's opening question,
+    instead of the tutor's pending one.
+  - The student's next answer was then judged against the wrong question.
+  - Passing the pending question in the prompt (`QUESTION TO HINT AT`) helped in one run but not in the next.
+- **Fix:** the restatement is now added by the code, not left to the model.
+  - `pending_question` takes the last question of the tutor's latest message, and a repeated hint keeps the same
+    question.
+  - `ask_again` appends "Try the question again: <pending question>" to the hint and emits it as a token, so the stream
+    and the final message match.
+  - The `HINT` task now says not to ask or restate the question. Both modes use this.
+- **Tests:**
+  - The pending question is named in the prompt and ends the hint.
+  - Two hints in a row restate the same question.
+  - The streamed text equals the final message.
+  - Answer-first restates the pending check.
+  - All of these failed before the fix.
+- **Live:** 3/3 topics restated the correct pending question, and the streamed text equalled the final message.
+- **Open, not fixed:** 1/3 live hints (`pthread_cond_wait`) largely gave the answer away despite "without giving it
+  away".
+
+#### 3. The legacy `web/index.html`
+
+- **Finding:**
+  - The file is a 1.2 MB prebuilt React bundle committed by PR #1 (`d6b21cd`). Its source is not in this repository, so
+    it cannot be rebuilt or reviewed as source.
+  - It is still served at `/` on :8000.
+  - The docs only said it "is kept" or "is still served". The owner's decision is that the React frontend is the final
+    UI, and `PRODUCT.md` plans for the React build to be served there.
+- **Decision: legacy-only, documented, not patched.** Hand-editing minified output with no source would be
+  unreviewable.
+- **Observed in the browser** (Socratic, real qwen3:8b), after a hint:
+  - The hint turn has no stage label.
+  - The state track shows no current stage.
+  - The composer label changes from "Answer the tutor's question" to "Ask a question".
+  - The next answer still went to `/api/reply` in the same session, and the page recovered: "Explain", "Round 1 of 2".
+  - No console errors.
+  - From code: it counts EXPLAIN turns itself, so a supportive explanation after "I'm not sure" counts as a round there.
+- **Docs:**
+  - `API_CONTRACT.md`:
+    - The consumer line is corrected: the frontend builds to `frontend/dist`, not `web/index.html`.
+    - The legacy page's status and limits are stated under "Uncertainty and hints".
+  - `README.md` (two places) and `CLAUDE.md`: the page is legacy, prebuilt and not maintained.
+  - `.env.example`: removed the stale claim that the React frontend does not handle answer-first stages.
+
+#### Other changes
+
+- `src/tutor/mock_llm.py`: scripted replies for the new `SUPPORT` and `HINT` tasks (development mode,
+  `LLM_PROVIDER=mock`).
+- Four of the new hint tests from the previous entry now check that the task *starts with* the `HINT` instruction,
+  because the pending question is appended. These are this session's own uncommitted tests; no committed test was
+  changed.
+
+#### Results
+
+- **Python** (full suite, backend stopped): 464 passed, 0 failed, 0 skipped.
+- **Frontend:** 19/19 tests; typecheck, lint and build pass.
+- **Browser checks (Chrome, React app on :5173, real qwen3:8b), no console errors:**
+  - **Socratic:**
+    - "I don't know": supportive Explain, no round counted.
+    - "Can I get a hint?": Hint label, rail unchanged, the tutor's pending question restated.
+    - "The value goes negative.": judged partial and acknowledged, and the count showed 1/2.
+    - `[S1]` opened `threads-sema.pdf` p.2; cards showed excerpts; the label was "Retrieved for this lesson's question".
+  - **Answer-first:**
+    - Answer, then Check, then "i am not sure": Feedback with a nudge and an easier first-step question, giving nothing
+      away.
+    - `[S2]` opened `threads.pdf` p.11; the label was "Passages this reply was based on".
+- **Integrity:**
+  - 57/57 frozen files byte-identical, and no file under `data/` or `Docs/` modified.
+  - No secrets in the diff.
+  - Only `tests/test_uncertainty_and_hints.py` is untracked. Runtime files (`data/learner/`, `data/tutor_logs/`,
+    `frontend/dist/`) are git-ignored.
+  - Main checkout: still `bb91644`, the same 7 uncommitted entries, and the backup manifest matches 52/52.
+
+#### Unresolved
+
+1. Hints can still give too much away (1/3 live).
+2. SIMPLIFY sometimes repeats the check after the hint (2/12).
+3. The Socratic relevance gate is deferred.
+4. A new tutor evaluation run would need a new output folder; its `unclear` agreement is not comparable with
+   Phase 4/4.1.
+
+### 2026-10-10 — Socratic lessons open by answering the question
+
+- **Problem:** in the React app, "What are threads?" got a diagnostic question back ("What is the main difference
+  between a process and a thread?") instead of an answer.
+- **Owner decision:** the first reply of a new lesson answers the student's request directly and does not end with a
+  question. After it the Socratic flow continues. A request to be quizzed may still start with a question.
+- **Root cause:** a code path, not the model.
+  - `TutorController.start` always called `_say(session, "DIAGNOSE")`.
+  - The DIAGNOSE task says "Do NOT answer the question yet … Ask the student exactly ONE short question".
+  - No other opening existed in the state machine. The frontend only rendered what it got: stage "Diagnose" and a
+    question.
+  - Answer-first (`TutorService`) already answers first and was not involved.
+- **Why it is not only a prompt change:** after an answer with no question, nothing is pending. The next student
+  message cannot be judged as an answer to anything, so the controller needs a state for that.
+- **Implementation (`src/tutor/controller.py`):**
+  - `TutorController(opening=...)`:
+    - `"diagnose"` is the default: unchanged and evaluated. `tutor_eval` keeps it, because its frozen scenarios script
+      answers to a diagnostic question.
+    - `"explain"` is what the web app uses (`server.App.tutor`).
+  - With `"explain"`, `start` answers with a new `INTRODUCE` task: a direct beginner explanation, citations, an example
+    where it helps, "course material does not specify" for gaps, no judging, and no question.
+  - The turn keeps an existing stage name, `EXPLAIN`. The internal stage is `INTRODUCED` (explained, nothing pending).
+  - The student's next message:
+    - a new question is answered the same way, with its own retrieval (`ANSWER`, no "back to the question" sentence);
+    - uncertainty or "explain again" gets `SUPPORT`, with no round used (the existing rule);
+    - a hint request gets a fixed "nothing to hint at" message (`HINT`, `sources: []`, no model call);
+    - anything else ("quiz me", "ok") gets a `CHECK` question. From the check, the rounds are unchanged.
+  - A first message matching `QUIZ_REQUEST` ("Quiz me on threads", "Test my understanding of …", "Ask me questions …")
+    still opens with `DIAGNOSE`.
+  - `QUIZ_REQUEST` is the answer-first service's old `test_me` rule, moved here and extended to "give me a quiz" and
+    "ask me questions"; `service.py` now uses it.
+  - `SUPPORT` was reworded so it works whether or not a question was pending.
+  - Socratic `tutor_state` gains `awaiting_answer`.
+- **API:**
+  - No new stage or event. `tutor_state.awaiting_answer` is additive.
+  - The server's Socratic `/api/start` now returns `EXPLAIN` instead of `DIAGNOSE` for an ordinary question (documented
+    in `API_CONTRACT.md`, "Socratic lesson opening").
+  - The legacy `web/index.html` counts that opening `EXPLAIN` as a round (documented; the page is not maintained).
+- **Frontend:**
+  - The reducer stores `awaitingAnswer`, and `lessonAwaitsAnswer()` uses it.
+  - The composer says "Your question" and "Ask a follow-up, or say 'quiz me' to try a question" when nothing is pending,
+    and "Your answer" when something is.
+  - The welcome copy no longer says the tutor "won't hand you the answer straight away", and the stage list describes
+    the new opening.
+  - The first reply is labelled "Explain", which describes it accurately, and uses no round.
+- **Docs:** `API_CONTRACT.md`, `README.md` (the tutor-flow section; also removed a stale claim that the React app
+  cannot handle answer-first), `.env.example` and the `src/config.py` docstring.
+- **Mock LLM:** a scripted `INTRODUCE` reply.
+- **Tests:**
+  - New `tests/test_first_turn.py`, with 41 cases:
+    - the quiz rule;
+    - six conceptual openings that must explain with no question, and the task's requirements;
+    - quiz openings still diagnose;
+    - the controller default is still `DIAGNOSE`;
+    - the next message leads to `CHECK`, and the usual rounds and wrap-up follow;
+    - a follow-up question is answered without a question, and a side question during a check keeps it pending;
+    - uncertainty after the opening and during a check;
+    - a hint with nothing pending, and a hint restating the check question;
+    - the opening's own sources, and no course material;
+    - SSE in Socratic mode;
+    - answer-first unchanged (over SSE and in the service).
+  - 4 new frontend tests: the opening is labelled Explain with no round and links its own citations;
+    `awaitingAnswer` across the check and a new topic; a hint with nothing pending; older servers.
+  - **Existing tests updated, stated explicitly:**
+    - `tests/test_server_v2.py::test_the_socratic_mode_is_still_available` and
+      `tests/test_turn_sources.py::test_socratic_turns_carry_the_lesson_sources_and_side_answers_their_own` asserted that
+      the server's Socratic lesson opens with `DIAGNOSE`. They now assert the decided `EXPLAIN` opening. The second also
+      sends "quiz me" before the answer, so it still checks lesson and side-answer provenance.
+    - 4 assertions in `tests/test_uncertainty_and_hints.py` compared Socratic `tutor_state` exactly. They now include
+      `awaiting_answer: true`, which makes them stricter.
+    - No other test was changed.
+- **Results:**
+  - Python (full suite, backend stopped): 506 passed, 0 failed.
+  - Frontend: 23/23 tests; typecheck, lint and build pass.
+  - Frozen files: 57/57 byte-identical.
+- **Live (qwen3:8b, SSE):**
+  - "What are threads?", "Explain process synchronization.", "What is a semaphore?" and "What is the difference between
+    a process and a thread?" each got `EXPLAIN` with `awaiting_answer: false` and 0 question marks. Each was 74–115
+    words with 1–4 distinct citations, an example, and the same sources as the `sources` event.
+  - "Quiz me on threads." got a `DIAGNOSE` question.
+- **Browser (React app, real qwen3:8b), no console errors:**
+  - **Socratic:**
+    - "What are threads?" got an Explain reply that answered directly with no question. There was no round count, and
+      the composer read "Ask a follow-up, or say 'quiz me'…".
+    - `[S1]` opened `threads.pdf` p.3, "What are threads?".
+    - "quiz me" got a Check question, and the composer read "Your answer…".
+    - "Can I get a hint?" got a Hint that restated the check question.
+    - "i am not sure" got a supportive explanation with no round counted.
+    - A new lesson with "Quiz me on threads." got a Diagnose question.
+  - **Answer-first:** "What are threads?" got an Answer, direct and cited, with no rail.
+- **Unresolved:**
+  1. The model's explanation may contain claims to check against the sources ("threads switch without OS intervention"
+     in one live run). Grounding is by prompt, as before.
+  2. The tutor evaluation measures the diagnose-first opening. The new app opening has not been evaluated.
+  3. The legacy page counts the opening as a round.
