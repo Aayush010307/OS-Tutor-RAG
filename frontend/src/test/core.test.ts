@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createEventParser } from "../lib/api";
-import { formatLocation, linkCitations, turnLabel } from "../lib/tutor";
+import { formatLocation, linkCitations, replySources, turnLabel } from "../lib/tutor";
 import { reducer, type State } from "../state/reducer";
-import type { ServerEvent, Source, TutorMessage } from "../types";
+import type { Conversation, ServerEvent, Source, TutorMessage } from "../types";
 
 const src = (n: number, chunk = `doc::c${n}`): Source => ({
   ref: `S${n}`, chunk_id: chunk, filename: "doc.pdf", section: "Sec", location: `p.${n}`, text: "context",
@@ -132,5 +132,98 @@ describe("answer-first mode and unknown stages", () => {
     expect(s.conversations[0]!.mode).toBeNull();
     expect(s.conversations[0]!.stage).toBe("DIAGNOSE");
     expect(turnLabel("ANSWER", null, s.conversations[0]!.mode)).toBe("Side question");
+  });
+});
+
+describe("turn-level source provenance", () => {
+  const empty: State = { conversations: [], activeId: null, streaming: null };
+  const cite = (ref: string, chunk_id: string, text: string): Source => ({
+    ref, chunk_id, filename: "doc.pdf", section: "Sec", location: "p.3", text,
+  });
+  const A = [cite("S1", "vit::c0036", "Bakery Algorithm"), cite("S2", "vit::c0025", "compare and swap (CAS)")];
+  const B = [cite("S1", "sema::c0002", "sem_wait() decrements"), cite("S2", "sema::c0003", "sem_post() increments")];
+  const C = [cite("S1", "bugs::c0012", "Deadlock conditions")];
+  const ids = (srcs: Source[]) => srcs.map((s) => s.chunk_id);
+  const conv = (s: State) => s.conversations[0]!;
+  const tutorMsg = (s: State, id: string) => conv(s).messages.find((m): m is TutorMessage => m.id === id)!;
+  // a reply placeholder starts with the topic's sources, exactly as state/chat.tsx creates it
+  const ask = (s: State, id: string, text: string, opensTopic = false) =>
+    reducer(s, { type: "begin", convId: "c", title: "Q", opensTopic, student: { id: `s-${id}`, role: "student", text, opensTopic },
+      tutor: { id, role: "tutor", text: "", status: "retrieving", sources: opensTopic ? [] : conv(s).topicSources } });
+  const ev = (s: State, msgId: string, event: ServerEvent) =>
+    reducer(s, { type: "event", convId: "c", msgId, studentId: `s-${msgId}`, event });
+
+  it("Check and Feedback cite the answer they check (B), never an earlier question's sources (A)", () => {
+    let s = ask(empty, "t1", "How do I bake sourdough bread?", true);
+    s = ev(s, "t1", { type: "session", data: { id: "sid", model: "qwen3:8b", mode: "answer_first" } });
+    s = ev(s, "t1", { type: "sources", data: A }); // shown while retrieving, then rejected by the server
+    s = ev(s, "t1", { type: "turn", data: { stage: "NO_CONTEXT", message: "Not in the material.", analysis: null, sources: [] } });
+    expect(tutorMsg(s, "t1").sources).toEqual([]); // NO_CONTEXT keeps no unrelated passages
+
+    s = ask(s, "t2", "What do sem_wait and sem_post do?");
+    s = ev(s, "t2", { type: "sources", data: B });
+    s = ev(s, "t2", { type: "turn", data: { stage: "ANSWER", message: "It blocks [S1]; it wakes [S2].", analysis: null, sources: B } });
+    s = ask(s, "t3", "test my understanding");
+    s = ev(s, "t3", { type: "turn", data: { stage: "CHECK", message: "What does sem_wait do at 0? [S1]", analysis: null, sources: B } });
+    s = ask(s, "t4", "it blocks until a post");
+    s = ev(s, "t4", { type: "analysis", data: { level: "solid", gap: "" } });
+    s = ev(s, "t4", { type: "turn", data: { stage: "FEEDBACK", message: "Right [S1], and post wakes it [S2].",
+      analysis: { level: "solid", gap: "" }, sources: B } });
+
+    expect(ids(conv(s).topicSources)).toEqual(ids(A)); // the stale state that caused the bug is still there...
+    for (const id of ["t2", "t3", "t4"]) {
+      expect(ids(tutorMsg(s, id).sources)).toEqual(ids(B)); // ...but every turn keeps its own provenance
+      expect(ids(tutorMsg(s, id).sources).some((c) => ids(A).includes(c))).toBe(false);
+    }
+    // a click on [S1] / [S2] in the feedback opens that message's passage with the same ref: B, never A
+    const feedback = tutorMsg(s, "t4");
+    expect(linkCitations(feedback.text, feedback.sources)).toBe("Right [S1](cite:S1), and post wakes it [S2](cite:S2).");
+    expect(feedback.sources.find((x) => x.ref === "S1")!.chunk_id).toBe("sema::c0002");
+    expect(feedback.sources.find((x) => x.ref === "S2")!.text).toBe("sem_post() increments");
+  });
+
+  it("an older server without turn sources keeps the previous behaviour", () => {
+    let s = ask(empty, "t1", "Q", true);
+    s = ev(s, "t1", { type: "session", data: { id: "sid", model: "m" } });
+    s = ev(s, "t1", { type: "sources", data: B });
+    s = ev(s, "t1", { type: "turn", data: { stage: "DIAGNOSE", message: "What do you know? [S1]", analysis: null } });
+    s = ask(s, "t2", "an answer");
+    s = ev(s, "t2", { type: "turn", data: { stage: "EXPLAIN", message: "Close [S2].", analysis: null } });
+    expect(ids(tutorMsg(s, "t1").sources)).toEqual(ids(B));
+    expect(ids(tutorMsg(s, "t2").sources)).toEqual(ids(B)); // the topic's sources, as before
+  });
+
+  it("socratic stages are unchanged and a side question keeps its own sources", () => {
+    let s = ask(empty, "t1", "Q", true);
+    s = ev(s, "t1", { type: "session", data: { id: "sid", model: "m", mode: "socratic" } });
+    s = ev(s, "t1", { type: "sources", data: B });
+    s = ev(s, "t1", { type: "turn", data: { stage: "DIAGNOSE", message: "?", analysis: null, sources: B } });
+    s = ask(s, "t2", "What is a deadlock?");
+    s = ev(s, "t2", { type: "sources", data: C });
+    s = ev(s, "t2", { type: "turn", data: { stage: "ANSWER", message: "Four conditions [S1].", analysis: null, sources: C } });
+    s = ask(s, "t3", "my answer");
+    s = ev(s, "t3", { type: "turn", data: { stage: "EXPLAIN", message: "Not quite [S2].", analysis: null, sources: B } });
+    expect(conv(s).stage).toBe("EXPLAIN");
+    expect(conv(s).explainRounds).toBe(1);
+    expect(ids(conv(s).topicSources)).toEqual(ids(B));
+    expect(ids(tutorMsg(s, "t2").sources)).toEqual(ids(C));
+    expect(ids(tutorMsg(s, "t3").sources)).toEqual(ids(B));
+    expect(turnLabel("ANSWER", null, tutorMsg(s, "t2").mode)).toBe("Side question");
+  });
+});
+
+describe("reply placeholders", () => {
+  const src2 = (ref: string, chunk_id: string): Source => ({ ref, chunk_id, filename: "f", section: null, location: "p.1", text: "t" });
+  const base = (mode: Conversation["mode"]): Conversation => ({
+    id: "c", title: "Q", createdAt: 0, updatedAt: 0, messages: [], sessionId: "sid", model: "m", mode,
+    stage: "CHECK", explainRounds: 0, topicSources: [src2("S1", "vit::c0036")],
+  });
+
+  it("answer-first replies never start with an earlier question's sources; socratic replies keep the lesson's", () => {
+    expect(replySources(base("answer_first"), false)).toEqual([]);
+    expect(replySources(base("socratic"), false).map((s) => s.chunk_id)).toEqual(["vit::c0036"]);
+    expect(replySources(base(null), false).map((s) => s.chunk_id)).toEqual(["vit::c0036"]); // v1 server: as before
+    expect(replySources(base("socratic"), true)).toEqual([]);
+    expect(replySources(null, false)).toEqual([]);
   });
 });

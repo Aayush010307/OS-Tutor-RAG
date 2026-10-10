@@ -105,13 +105,15 @@ export function reducer(state: State, action: Action): State {
           case "token":
             return updateTutor(c, msgId, (m) => ({ ...m, status: "streaming", text: m.text + event.data.text }));
           case "turn": {
-            const { stage, message, analysis } = event.data;
+            const { stage, message, analysis, sources } = event.data;
             const next = updateTutor(c, msgId, (m) => ({
               ...m,
               status: "done",
               stage,
               mode: c.mode ?? undefined,
               analysis,
+              // the server's own provenance for this turn wins; older servers omit it and keep the previous sources
+              sources: sources ?? m.sources,
               text: message || m.text, // the server's validated text replaces the raw stream
               error: undefined,
               retryQuestion: undefined,

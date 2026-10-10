@@ -54,7 +54,8 @@ question) -> `token`... -> `turn`.
  *(new)* "concepts": [{"id","label","topic"}],     // concepts this turn is about
  *(new)* "tutor_state": {"open": bool, "pending_check": bool, "representation": str | null},
  *(new)* "learner_update": {"concept_id","label","level","confidence","change"} | null,
- *(new)* "actions": [{"id": <intent>, "label": str}]   // suggested buttons for this turn; empty = show none
+ *(new)* "actions": [{"id": <intent>, "label": str}],  // suggested buttons for this turn; empty = show none
+ *(new)* "sources": [Source]                         // this turn's own provenance, see "Citations and turn sources"
 }
 ```
 
@@ -82,8 +83,23 @@ question) -> `token`... -> `turn`.
   guessed: any field the retriever does not have is `null`/`""`.
 - `preview` is the first ~280 characters; `text` is the full chunk (the `sources` event includes it, as in v1).
 - Render all text as text, never as HTML (retrieved material is untrusted).
-- `[S1]` markers in `message` always refer to refs in the most recent `sources` event for that turn (a new-question
-  answer sends its own `sources`).
+
+### Citations and turn sources *(new, 2026-10-10)*
+
+- **`turn.sources` is the turn's provenance:** exactly the passages its reply was generated from, in the `Source` schema
+  above (with `text`), numbered as the prompt numbered them. Every `[Sn]` in `turn.message` refers to the entry with
+  `ref` `Sn` in **that turn's** `sources`. Resolve citations against it, never against an earlier event.
+- **A response's sources are not always the latest `sources` event.** The `sources` event is what a retrieval found while
+  the request ran; the turn says what was used:
+  - a new question's grounded answer (`ANSWER`), a re-explanation and a side answer cite their own retrieval;
+  - `CHECK` and `FEEDBACK` (answer-first) cite the context kept from the last successful answer, which they do not
+    re-send as a `sources` event; a side answer or a no-context reply in between does not replace that context;
+  - Socratic turns cite the lesson's context; a side answer cites its own;
+  - `NO_CONTEXT` and the "got it" reply used no passage: `sources` is `[]`, even if a `sources` event listed rejected
+    candidates during the same request.
+- **Backward compatibility:** `sources` is additive; the existing fields and the event order (`session`, `sources`,
+  `analysis`, `token`..., `turn`) are unchanged. A client talking to an older server that omits `turn.sources` falls
+  back to the previous rule: the latest `sources` event of the request, or the topic's sources from `/api/start`.
 
 ### `error` event
 

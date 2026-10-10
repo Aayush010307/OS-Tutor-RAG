@@ -37,7 +37,9 @@ export type ServerEvent =
   | { type: "sources"; data: Source[] }
   | { type: "analysis"; data: Analysis }
   | { type: "token"; data: { text: string } }
-  | { type: "turn"; data: { stage: TurnStage; message: string; analysis: Analysis | null } }
+  /** `sources` (newer servers): the exact passages this turn's reply was generated from; its [Sn] refer to these.
+   * [] when no passage was used. Absent from older servers, which keep the previous source handling. */
+  | { type: "turn"; data: { stage: TurnStage; message: string; analysis: Analysis | null; sources?: Source[] } }
   | { type: "error"; data: { message: string } };
 
 // ---- client state ----

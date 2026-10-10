@@ -1,4 +1,4 @@
-import type { Analysis, Level, Source, TurnStage, TutorMode } from "../types";
+import type { Analysis, Conversation, Level, Source, TurnStage, TutorMode } from "../types";
 
 /** Explanation rounds before the tutor gives the full answer (`max_rounds` in controller.py). */
 export const MAX_EXPLAIN_ROUNDS = 2;
@@ -59,4 +59,14 @@ export function formatLocation(location: string): string | null {
 export function titleFrom(text: string): string {
   const line = text.trim().split("\n")[0] ?? "";
   return line.length > 72 ? `${line.slice(0, 71).trimEnd()}…` : line;
+}
+
+/**
+ * Sources a reply starts with, before the server reports its own. A new topic starts empty. Socratic replies cite the
+ * lesson's sources. Answer-first replies may use another context (the answer a check is about), so they start empty
+ * and show only this request's `sources` event or the turn's own provenance, never a stale earlier set.
+ */
+export function replySources(conv: Conversation | null, opensTopic: boolean): Source[] {
+  if (opensTopic || !conv || conv.mode === "answer_first") return [];
+  return conv.topicSources;
 }

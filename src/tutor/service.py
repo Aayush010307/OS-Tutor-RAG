@@ -240,7 +240,8 @@ class TutorService:
         if not self.is_relevant(results):
             session.history += [("Student", text), ("Tutor", NO_CONTEXT_MESSAGE)]
             session.question = text
-            return self._turn(session, "NO_CONTEXT", NO_CONTEXT_MESSAGE, sources(results), follow_up=None)
+            # the fixed message was generated from no passage: rejected candidates are not this turn's provenance
+            return self._turn(session, "NO_CONTEXT", NO_CONTEXT_MESSAGE, [], follow_up=None)
         named = taxonomy.detect_concepts(text)
         concepts = named or taxonomy.concepts_from_results(results) or list(session.concepts)
         view = _view(session, text, results, session.history + [("Student", text)])
@@ -320,7 +321,7 @@ class TutorService:
         results = self._retrieve(text, emit)
         if not self.is_relevant(results):
             session.history += [("Student", text), ("Tutor", NO_CONTEXT_MESSAGE)]
-            return self._turn(session, "NO_CONTEXT", NO_CONTEXT_MESSAGE, sources(results))
+            return self._turn(session, "NO_CONTEXT", NO_CONTEXT_MESSAGE, [])  # no passage used (see _answer)
         aside = Session(text, results, stage=session.stage, history=list(session.history) + [("Student", text)])
         message = self._generate(build_prompt(aside, STAGE_INSTRUCTIONS["ASIDE"]), len(results), emit)
         session.history = aside.history + [("Tutor", message)]

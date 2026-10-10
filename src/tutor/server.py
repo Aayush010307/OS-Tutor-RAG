@@ -148,10 +148,17 @@ def revision_payload(turn):
             "sources": turn.sources, "done": turn.done, "summary": turn.summary}
 
 
-def turn_payload(turn):
+def turn_payload(turn, get_chunk=None):
+    """`sources` is this turn's own provenance: exactly the passages its reply was generated from, numbered as its
+    [S1], [S2], ... citations, in the `sources` event's card schema (passage text looked up by chunk_id). It is [] when
+    the reply used no passage (NO_CONTEXT, "got it")."""
+    def card(s):
+        chunk = get_chunk(s["chunk_id"]) if get_chunk else None
+        return dict(s) | ({"text": chunk["text"]} if chunk else {})
     return {"stage": turn.stage, "message": turn.message, "analysis": turn.analysis, "mode": turn.mode,
             "follow_up": turn.follow_up, "concepts": turn.concepts, "tutor_state": turn.tutor_state,
-            "learner_update": turn.learner_update, "actions": turn.actions}
+            "learner_update": turn.learner_update, "actions": turn.actions,
+            "sources": [card(s) for s in turn.sources]}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -310,7 +317,7 @@ class Handler(BaseHTTPRequestHandler):
                 turn = tutor.respond(session, student, intent=intent, emit=emit)
             else:
                 turn = tutor.respond(session, student, emit=emit)
-        send("turn", turn_payload(turn))
+        send("turn", turn_payload(turn, app.retriever.get_chunk))
         app.log(sid, model, session, turn, student)
         if student is None:  # first turn: the question itself is the student's message
             said = question

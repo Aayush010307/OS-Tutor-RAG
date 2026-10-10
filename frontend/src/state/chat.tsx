@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
 import { ServerUnavailable, streamTurn } from "../lib/api";
-import { titleFrom } from "../lib/tutor";
+import { replySources, titleFrom } from "../lib/tutor";
 import { useSettings } from "./settings";
 import type { Conversation, Message, ServerEvent, StudentMessage, TutorMessage } from "../types";
 import { reducer, type State } from "./reducer";
@@ -74,7 +74,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         role: "tutor",
         text: "",
         status: opensTopic ? "retrieving" : "analysing",
-        sources: opensTopic ? [] : (conv?.topicSources ?? []),
+        sources: replySources(conv, opensTopic),
+        mode: opensTopic ? undefined : (conv?.mode ?? undefined),
       };
       dispatch({
         type: "begin",

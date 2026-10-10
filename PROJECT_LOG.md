@@ -2837,3 +2837,50 @@ owner's untracked local `PRODUCT.md` is unchanged.
 - **Not committed:** `node_modules/`, `dist/`, `*.tsbuildinfo`, caches, review screenshots.
 - **Known issue, fixed in the next entry:** in answer-first mode, citations after the first question can point at that
   question's sources instead of the current answer's.
+
+### 2026-10-10 — Turn-level source provenance (Option A, approved by the owner)
+
+- **Bug:** in answer-first mode, the frontend kept the first question's `sources` event as the topic's sources and
+  showed them for later replies. Example: an off-topic question about baking retrieved Bakery Algorithm and CAS
+  passages (A), and the relevance gate rejected them. The next question, about `sem_wait`/`sem_post`, was answered
+  from passages B. Its Check and Feedback turns then had their `[S1]`… citations resolved against A. The `turn` event
+  did not say which passages a reply had used, so the frontend could not know.
+- **Contract (`API_CONTRACT.md`, "Citations and turn sources"):** every `turn` event now carries `sources`. These are
+  exactly the passages its reply was generated from, numbered as its `[Sn]` citations, in the `sources` event's card
+  schema (passage `text` included).
+  - Answer-first: ANSWER cites its own retrieval. CHECK and FEEDBACK cite the answer they check. A side answer and a
+    re-explanation cite their own retrieval.
+  - Socratic: lesson turns cite the lesson's passages. A side answer cites its own retrieval.
+  - NO_CONTEXT and "got it" turns report `[]`.
+  - The change is additive. Every existing field and the event order are unchanged.
+- **Backend:**
+  - `src/tutor/server.py`: `turn_payload` adds `sources`, looking up passage text by `chunk_id`.
+  - `src/tutor/service.py`: both NO_CONTEXT returns now report `[]` instead of the rejected candidates.
+- **Frontend:**
+  - `types.ts`: optional `turn.sources`.
+  - `reducer.ts`: a turn's own `sources` replace the message's sources.
+  - `lib/tutor.ts`, `state/chat.tsx`: `replySources` starts an answer-first reply with no sources while it streams,
+    and sets the reply's mode so its heading is right from the start.
+  - Fallback: servers that send no `turn.sources` (older versions, and history saved before this change) keep the
+    previous behaviour. The frontend never reconstructs sources on its own.
+- **Tests:**
+  - New `tests/test_turn_sources.py` (5 tests): the A-then-B regression through ANSWER, CHECK and FEEDBACK, including
+    a check that each prompt held B's text and none of A's; a side question and a re-explanation; an off-topic side
+    question; and the SSE contract in both modes. Four of the five fail on the code before this fix.
+  - 4 new frontend tests: the A-then-B regression with citation linking, the fallback for older servers, Socratic plus
+    a side question, and reply placeholders. The regression test fails on the old reducer.
+  - No existing test was changed or weakened.
+- **Results:**
+  - Python: 364 passed, 0 skipped.
+  - Frontend: typecheck, lint, 14/14 tests and build all pass.
+  - Frozen and evaluation artifacts: 57/57 byte-identical.
+- **Live check, real `qwen3:8b`, SSE:**
+  - Answer-first, with a reranker threshold set to force NO_CONTEXT: `turn.sources` was `[]` while the `sources` event
+    listed the rejected candidates, CAS among them. ANSWER, CHECK and FEEDBACK all carried the `threads-sema` passages
+    S1–S5 with text.
+  - Socratic: DIAGNOSE and EXPLAIN carried the lesson's passages. A side answer carried its own retrieval.
+- **Browser check (Chrome, `vite preview`):**
+  - Answer-first: NO_CONTEXT showed no sources. The Answer, Check and Feedback showed B. Feedback `[S3]` opened
+    `threads-sema.pdf` p.2. No Bakery or CAS card appeared anywhere.
+  - Socratic: DIAGNOSE, then EXPLAIN 1/2. `[S1]` opened `threads-api.pdf` p.7, a passage of the lesson.
+  - No console errors.
