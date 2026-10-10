@@ -34,7 +34,7 @@
   `data/evaluation/tutor_scenarios_v1.json` are frozen; Phase 4 results in `data/evaluation/tutor_eval/`, Phase 4.1 in `tutor_eval_v2/`.
 - React frontend (2026-10-10): `frontend/` (React 19, TS, Vite, Tailwind 4). `cd frontend && npm run dev` -> http://localhost:5173,
   proxies `/api` to the tutor server on :8000 (`TUTOR_BACKEND` to change). Checks: `npm run typecheck`, `npm run lint`, `npm test`,
-  `npm run build`. It consumes the server's SSE contract unchanged; `web/index.html` is kept. Product context: `PRODUCT.md`.
+  `npm run build`. It consumes the server's SSE contract (`API_CONTRACT.md`); `web/index.html` is a legacy prebuilt page, kept but not maintained. Product context: `PRODUCT.md`.
 - Assessment framework: `data/assessment/` (DRAFT objectives and item bank; never report fabricated student results),
   analysis `python3 -m src.assessment.learning_gain responses.json`.
 - Interpreter: plain `python3` may resolve to miniconda without the project's dependencies; use `/usr/local/bin/python3`

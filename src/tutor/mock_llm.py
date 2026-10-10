@@ -122,6 +122,10 @@ class MockLLM(LLMProvider):
             return f"Let's make it simpler. {body} In your own words, what happens?"
         if name in ("service.RESOLVE", "controller.ANSWER"):
             return f"Here is the full answer. {body}"
+        if name == "controller.SUPPORT":
+            return f"Let's build it up step by step. {body} Here is an easier one: what does the lock protect?"
+        if name == "controller.HINT":
+            return "Hint: look at what happens to the lock while the thread waits [S1]."
         if name == "controller.ASIDE":
             return f"{body} Back to your earlier question whenever you are ready."
         if rep:

@@ -6,9 +6,18 @@ export type TutorMode = "socratic" | "answer_first";
 /**
  * Stage of a finished turn. In socratic mode ANSWER only ever marks a side answer to a new question asked
  * mid-lesson. answer_first mode (API_CONTRACT.md) sends ANSWER for its main answer, CHECK, FEEDBACK (reaction to a
- * check answer) and NO_CONTEXT (nothing relevant retrieved). Other values are shown as sent, never a crash.
+ * check answer) and NO_CONTEXT (nothing relevant retrieved). HINT (both modes, newer servers) is a hint on the pending
+ * question; like a side answer it leaves the lesson where it was. Other values are shown as sent, never a crash.
  */
-export type TurnStage = "DIAGNOSE" | "EXPLAIN" | "CHECK" | "DONE" | "ANSWER" | "FEEDBACK" | "NO_CONTEXT";
+export type TurnStage = "DIAGNOSE" | "EXPLAIN" | "CHECK" | "DONE" | "ANSWER" | "FEEDBACK" | "NO_CONTEXT" | "HINT";
+
+/** `tutor_state` of a turn (newer servers). Socratic turns report the explanation rounds used; answer-first turns
+ * report the conversation state. Older servers omit it. */
+export interface TutorState {
+  rounds?: number;
+  max_rounds?: number;
+  pending_check?: boolean;
+}
 
 export type Level = "solid" | "partial" | "misconception" | "unclear";
 
@@ -39,7 +48,7 @@ export type ServerEvent =
   | { type: "token"; data: { text: string } }
   /** `sources` (newer servers): the exact passages this turn's reply was generated from; its [Sn] refer to these.
    * [] when no passage was used. Absent from older servers, which keep the previous source handling. */
-  | { type: "turn"; data: { stage: TurnStage; message: string; analysis: Analysis | null; sources?: Source[] } }
+  | { type: "turn"; data: { stage: TurnStage; message: string; analysis: Analysis | null; sources?: Source[]; tutor_state?: TutorState } }
   | { type: "error"; data: { message: string } };
 
 // ---- client state ----
@@ -88,7 +97,7 @@ export interface Conversation {
   /** From the `session` event; absent in history saved before the server reported it. */
   mode?: TutorMode | null;
   /** Last lesson stage (side answers do not change it). */
-  stage: Exclude<TurnStage, "ANSWER"> | null;
+  stage: Exclude<TurnStage, "ANSWER" | "HINT"> | null;
   explainRounds: number;
   /** Sources of the current topic's original question; replies that are not side answers cite these. */
   topicSources: Source[];

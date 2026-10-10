@@ -4,7 +4,9 @@
        "I still don't understand" / "simpler" / "give me an analogy"   -> the same idea in a different representation
        "test my understanding"                                          -> CHECK (one question, stays pending)
        the student's answer to a check                                  -> FEEDBACK
-             solid -> confirm   partial -> clarify   misconception -> correct   unclear -> simplify and ask again
+             solid -> confirm   partial -> clarify   misconception -> correct
+             unclear -> simplify: a nudge and an easier first-step question, never the check's answer
+       a hint request while a check is pending                          -> HINT; the check stays pending
        a new question while a check is pending                          -> answered on its own; the check stays pending
 
 Nothing is forced: no question follows an answer unless the student asks for one or the deterministic rule offers one
@@ -27,8 +29,9 @@ from dataclasses import dataclass, field
 
 from src.learner import taxonomy
 
-from .controller import (ANALYZE, STAGE_INSTRUCTIONS, WANTS_ANSWER, Session, Turn, build_prompt, is_new_question,
-                         parse_analysis, sources, validated)
+from .controller import (ANALYZE, STAGE_INSTRUCTIONS, WANTS_ANSWER, Session, Turn, ask_again, build_prompt, hint_extra,
+                         is_hint_request, is_new_question, is_unsure, parse_analysis, sources, validated,
+                         wants_explanation)
 
 MODE = "answer_first"
 
@@ -46,6 +49,8 @@ NO_CONTEXT_MESSAGE = ("I couldn't find enough relevant material in the current T
                       "condition variables or deadlock.")
 GOT_IT_MESSAGE = "Glad that made sense. Ask me the next question, or try a quick check whenever you like."
 OFFER_TEXT = "Want to test your understanding with a quick scenario?"
+NO_HINT_MESSAGE = ("There's no question waiting for your answer right now, so there is nothing to hint at. Ask me "
+                   "anything, or try a quick check whenever you like.")
 
 TASKS = {
     "ANSWER": "Answer the student's question directly and teach the idea behind it: explain it, do not just define it. "
@@ -65,9 +70,11 @@ TASKS = {
                "it is not correct, name what is wrong, then give the correct idea in a few sentences citing the context "
                "as [S1], [S2], ... with a counterexample if one helps. End with ONE short question that tests the "
                "corrected idea.",
-    "SIMPLIFY": "The student could not answer or was unsure. Do not repeat your earlier wording: explain the idea more "
-                "simply with one small concrete example, citing the context as [S1], [S2], ... then ask the same check "
-                "again in simpler words as ONE short question.",
+    "SIMPLIFY": "The student could not answer your check question or was unsure. Help them get there themselves; do not "
+                "answer it for them: never state or imply its result, and do not work through its scenario, not even "
+                "inside a question. In one simple sentence, name what to think about, not the conclusion. Cite the "
+                "context as [S1], [S2], ... where it supports that sentence. Then ask ONE easier question that is a first "
+                "step toward the check, not the check itself, and whose wording does not contain the answer.",
     "RESOLVE": "Give the student the complete answer to your check question, concisely, citing the context as [S1], "
                "[S2], ... Do not ask another question.",
 }
@@ -114,7 +121,6 @@ INTENT_RULES = (
                                r"\b(?:explain|say|put) (?:it |that )?(?:differently|again|another way)|\banother way\b|"
                                r"\bre-?explain|\bi'?m lost\b|samajh (?:nahi|nhi)|nahi samajh|nhi samajh)", re.I)),
 )
-DONT_KNOW = _P(r"^\W*(?:i )?(?:don'?t know|dont know|no idea|not sure|idk|pass|skip)\b|^\W*(?:i'?m )?not sure\b", re.I)
 
 
 def detect_intent(text):
@@ -222,10 +228,14 @@ class TutorService:
             return self._check(session, emit)
         if intent in INTENT_REP or intent == "explain_differently":
             return self._reexplain(session, intent, emit)
+        if is_hint_request(text):
+            return self._hint(session, text, emit) if session.pending_check else self._no_hint(session, text)
         if session.pending_check:
-            if is_new_question(text):
+            if is_new_question(text) and not wants_explanation(text):
                 return self._aside(session, text, emit)
             return self._grade(session, text, emit)
+        if is_unsure(text) and session.last_context:  # "I'm not sure" after an answer: the same idea, explained differently
+            return self._reexplain(session, "explain_differently", emit)
         return self._answer(session, text, emit)
 
     # ---------------------------------------------------------------- turns
@@ -316,6 +326,21 @@ class TutorService:
         return self._turn(session, "CHECK", message, sources(session.last_context),
                           actions=[{"id": "explain_differently", "label": "Explain differently"}])
 
+    def _hint(self, session, text, emit=None):
+        """A hint on the pending check: it stays pending, its rounds unchanged, nothing graded."""
+        ctx = session.check_context
+        view = _view(session, session.question, ctx, session.history + [("Student", text)])
+        message = self._generate(build_prompt(view, STAGE_INSTRUCTIONS["HINT"], hint_extra(session.history),
+                                              learner=self._learner_context(session.concepts)), len(ctx), emit)
+        message = ask_again(message, session.history, emit)
+        session.history = view.history + [("Tutor", message)]
+        return self._turn(session, "HINT", message, sources(ctx),
+                          actions=[{"id": "explain_differently", "label": "Explain differently"}])
+
+    def _no_hint(self, session, text):
+        session.history += [("Student", text), ("Tutor", NO_HINT_MESSAGE)]
+        return self._turn(session, "ANSWER", NO_HINT_MESSAGE, [], actions=[{"id": "test_me", "label": "Test my understanding"}])
+
     def _aside(self, session, text, emit=None):
         """A new question while a check is pending: answer it from its own context; the check stays pending."""
         results = self._retrieve(text, emit)
@@ -336,7 +361,7 @@ class TutorService:
         ctx = session.check_context
         view = _view(session, session.question, ctx, session.history + [("Student", text)])
         gives_up = bool(WANTS_ANSWER.search(text))  # "just tell me the answer": reveal it, count it as not knowing
-        if gives_up or DONT_KNOW.search(text):  # no model needed to see that
+        if gives_up or is_unsure(text) or wants_explanation(text):  # no model needed to see that
             analysis = {"level": "unclear", "gap": "the student did not know"}
         else:
             analysis = parse_analysis(self.llm(build_prompt(view, ANALYZE, student_facing=False), json_mode=True))

@@ -1,6 +1,8 @@
 # OS Tutor HTTP API contract (v2)
 
-Owner: backend (`src/`). Consumer: the student frontend (`frontend/` builds to `web/index.html`).
+Owner: backend (`src/`). Consumer: the React student frontend (`frontend/`, built to `frontend/dist`). The legacy page
+`web/index.html` (served at `/`) is kept as is: a prebuilt bundle with no source in the repository, not updated for
+changes after 2026-10-10 (see "Uncertainty and hints").
 Status: **v2 is additive over v1.** Everything the v1 page uses keeps working; new fields and endpoints are marked *(new)*.
 Unknown fields must be ignored by the client. Every endpoint below is implemented (checked against a running server on
 2026-10-10).
@@ -52,7 +54,8 @@ question) -> `token`... -> `turn`.
  *(new)* "mode": "answer_first" | "socratic",
  *(new)* "follow_up": str | null,                  // a short offer / next step the page may render as a hint
  *(new)* "concepts": [{"id","label","topic"}],     // concepts this turn is about
- *(new)* "tutor_state": {"open": bool, "pending_check": bool, "representation": str | null},
+ *(new)* "tutor_state": {"open": bool, "pending_check": bool, "representation": str | null}   // answer_first
+                 | {"rounds": int, "max_rounds": int},                                        // socratic (2026-10-10)
  *(new)* "learner_update": {"concept_id","label","level","confidence","change"} | null,
  *(new)* "actions": [{"id": <intent>, "label": str}],  // suggested buttons for this turn; empty = show none
  *(new)* "sources": [Source]                         // this turn's own provenance, see "Citations and turn sources"
@@ -60,13 +63,41 @@ question) -> `token`... -> `turn`.
 ```
 
 `stage` values.
-- `socratic` mode (**the default**, unchanged): `DIAGNOSE`, `EXPLAIN`, `CHECK`, `DONE`, `ANSWER` (the side answer to a new
-  question keeps `ANSWER`).
+- `socratic` mode (**the default**): `DIAGNOSE`, `EXPLAIN`, `CHECK`, `DONE`, `ANSWER` (the side answer to a new
+  question keeps `ANSWER`), and *(new, 2026-10-10)* `HINT` (see "Uncertainty and hints" below).
 - `answer_first` mode *(new, optional: `TUTOR_MODE=answer_first`)*: `ANSWER` (grounded explanation; the conversation stays open), `CHECK` (the tutor
   asked a comprehension question; `tutor_state.pending_check` is true), `FEEDBACK` (reaction to the student's answer to a
   check; `analysis` is set), `NO_CONTEXT` (nothing relevant retrieved; fixed message, no model call). `DONE` is never sent in
-  this mode and `/api/reply` keeps working after any turn. A client written for v1 / socratic stages must handle
-  `FEEDBACK` and `NO_CONTEXT` before this mode is switched on.
+  this mode and `/api/reply` keeps working after any turn. *(new, 2026-10-10)* `HINT` while a check is pending. A
+  client written for v1 / socratic stages must handle `FEEDBACK` and `NO_CONTEXT` before this mode is switched on.
+
+### Uncertainty and hints *(new, 2026-10-10)*
+
+Replies that answer nothing are recognised by deterministic rules (`is_unsure`, `wants_explanation`,
+`is_hint_request` in `src/tutor/controller.py`), never by the model. Not knowing is not a wrong answer.
+
+- **Uncertainty** (the whole reply only says the student does not know, e.g. "i am not sure", "I don't know what join
+  does", "Sorry, no idea") or **a request for the explanation** ("explain it to me", "Can you explain that again?"):
+  the `analysis` event is `{"level": "unclear", ...}` without a model call.
+  - socratic: `EXPLAIN`, a supportive explanation that never calls the student wrong, which does **not** use an
+    explanation round (`tutor_state.rounds` is unchanged). Still unsure after that, or with the rounds already used,
+    the student gets the full answer (`DONE`).
+  - answer_first: at a pending check, `FEEDBACK` with a nudge and an easier first-step question, prompted not to give
+    the check's answer (the check stays pending; after two misses the full answer, as before); with no check pending, the
+    last answer explained differently (`ANSWER`).
+  - A hedged answer with content ("not sure, but I think it releases the lock") is an answer: the model judges it.
+- **A hint request** ("give me a hint", "Can I get a hint?"): `HINT`, a short nudge toward the answer of the pending
+  question, citing the passages that question is about (`turn.sources`), ending with "Try the question again: <pending
+  question>", which the server adds itself. No `analysis`; the lesson stage, the rounds and
+  the pending question or check are unchanged. In answer_first with nothing pending, a fixed message with
+  `sources: []` and no model call.
+- `tutor_state.rounds` / `max_rounds` (socratic) are the explanation rounds used; after `max_rounds` the tutor gives the
+  full answer. Clients should show this count instead of counting `EXPLAIN` turns.
+- Compatibility: additive. A client that does not know `HINT` shows it as an unknown stage and should not treat it as a
+  lesson stage; a client that ignores `tutor_state` and counts `EXPLAIN` turns overcounts after "I'm not sure".
+  The legacy `web/index.html` is such a client: it shows a hint with no stage label, moves its state track to an
+  unknown stage for that turn, and counts a supportive explanation as a round. It is legacy-only and not maintained
+  (no source in the repository); the React frontend handles all of this.
 
 `representation` is the explanation style used: `definition`, `intuition`, `analogy`, `scenario`, `code`, or `null`.
 

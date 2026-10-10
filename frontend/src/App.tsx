@@ -6,10 +6,9 @@ import { Sidebar } from "./components/Sidebar";
 import { SourcesPanel, type SourceFocus } from "./components/SourcesPanel";
 import { StageRail } from "./components/StageRail";
 import { Welcome } from "./components/Welcome";
-import { turnLabel } from "./lib/tutor";
+import { sourcesLabel, sourceTarget, turnLabel } from "./lib/tutor";
 import { useChat } from "./state/chat";
 import { useSettings } from "./state/settings";
-import type { Conversation, TutorMessage } from "./types";
 
 const XL = "(min-width: 80rem)";
 
@@ -46,11 +45,6 @@ function Drawer({ open, onClose, side, label, children }: { open: boolean; onClo
   );
 }
 
-function sourceTarget(conv: Conversation | null, msgId: string | null): TutorMessage | null {
-  const tutors = (conv?.messages ?? []).filter((m): m is TutorMessage => m.role === "tutor" && m.sources.length > 0);
-  return tutors.find((m) => m.id === msgId) ?? tutors.at(-1) ?? null;
-}
-
 export default function App() {
   const chat = useChat();
   const { active, busy } = chat;
@@ -71,10 +65,6 @@ export default function App() {
   const activeId = active?.id ?? null;
   const replying = !!active?.sessionId && active.stage !== null && active.stage !== "DONE";
   const target = sourceTarget(active, sourceMsg);
-  // answer_first has no side answers: its ANSWER is the main answer and each question brings its own sources
-  const isSide = target && active && target.mode !== "answer_first"
-    ? target.stage === "ANSWER" || target.sources[0]?.chunk_id !== active.topicSources[0]?.chunk_id
-    : false;
 
 
   // Follow the reply as it streams, unless the student scrolled up to reread.
@@ -99,7 +89,7 @@ export default function App() {
     lastText?.role !== "tutor"
       ? ""
       : lastText.status === "done" && lastText.stage
-        ? `Tutor replied. ${turnLabel(lastText.stage, lastText.analysis)}.`
+        ? `Tutor replied. ${turnLabel(lastText.stage, lastText.analysis, lastText.mode)}.`
         : lastText.status === "error"
           ? `Tutor reply failed. ${lastText.error ?? ""}`
           : "";
@@ -143,9 +133,10 @@ export default function App() {
     () => ({
       sources: target?.sources ?? [],
       focused: focus && focus.msgId === target?.id ? focus : null,
-      label: !target ? "Course material for your question" : isSide ? "Retrieved for your side question" : "Retrieved for this lesson's question",
+      label: sourcesLabel(target, active),
+      forReply: !!target,
     }),
-    [target, focus, isSide],
+    [target, focus, active],
   );
   const showInlineSources = xl && sourcesOpen && !!active;
 

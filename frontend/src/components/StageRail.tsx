@@ -62,6 +62,7 @@ export function StageRail({ conv, compact = false }: { conv: Conversation | null
   const visited = conv ? visitedStages(conv) : new Set<LessonStage>();
   const rounds = conv?.explainRounds ?? 0;
   const state = (s: LessonStage) => (s === current ? "current" : visited.has(s) ? "visited" : "idle");
+  const roundsHint = `Explanation round ${rounds} of ${MAX_EXPLAIN_ROUNDS}. After ${MAX_EXPLAIN_ROUNDS}, the tutor gives the full answer.`;
 
   return (
     <nav aria-label="Lesson progress" className={compact ? "pt-3" : "pt-3.5"}>
@@ -80,7 +81,10 @@ export function StageRail({ conv, compact = false }: { conv: Conversation | null
                 >
                   <span className="absolute -bottom-px -left-[4px] size-[7px] rotate-[135deg] border-r border-t border-inherit" />
                   {rounds > 0 && !compact && (
-                    <span className="absolute -top-[7px] left-1/2 -translate-x-1/2 bg-bg px-1 font-mono text-[0.65rem] leading-3 tabular-nums text-accent">
+                    <span
+                      title={roundsHint}
+                      className="pointer-events-auto absolute -top-[7px] left-1/2 -translate-x-1/2 cursor-help bg-bg px-1 font-mono text-[0.65rem] leading-3 tabular-nums text-accent"
+                    >
                       {rounds}/{MAX_EXPLAIN_ROUNDS}
                     </span>
                   )}
@@ -97,14 +101,14 @@ export function StageRail({ conv, compact = false }: { conv: Conversation | null
           </Fragment>
         ))}
         {compact && rounds > 0 && (
-          <li className="ml-1 shrink-0 font-mono text-meta tabular-nums text-accent" aria-hidden>
+          <li title={roundsHint} className="ml-1 shrink-0 cursor-help font-mono text-meta tabular-nums text-accent" aria-hidden>
             {rounds}/{MAX_EXPLAIN_ROUNDS}
           </li>
         )}
       </ol>
       {current === "EXPLAIN" && (
         <p className="sr-only" aria-live="polite">
-          Explanation round {rounds} of {MAX_EXPLAIN_ROUNDS}
+          {rounds > 0 ? roundsHint : "Explaining"}
         </p>
       )}
     </nav>

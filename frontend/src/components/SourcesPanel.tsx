@@ -43,6 +43,10 @@ function SourceCard({ source, focused }: { source: Source; focused: SourceFocus 
             </span>
             {source.section && <span className="break-words text-ink-2">{source.section}</span>}
           </span>
+          {source.text && (
+            // a glimpse of the passage while closed; the full passage is below when opened
+            <span className="mt-1.5 line-clamp-2 text-meta text-ink-2 group-open:hidden">{source.text.replace(/\s+/g, " ")}</span>
+          )}
         </span>
         <ChevronRight
           size={16}
@@ -72,9 +76,11 @@ interface Props {
   onClose?: () => void;
   /** Whether these belong to a side answer rather than the lesson's own question. */
   label: string;
+  /** True when the panel shows a reply (which may have used no passage), false before the first question. */
+  forReply?: boolean;
 }
 
-export function SourcesPanel({ sources, focused, onClose, label }: Props) {
+export function SourcesPanel({ sources, focused, onClose, label, forReply = false }: Props) {
   return (
     <section aria-labelledby="sources-title" className="flex h-full flex-col">
       <header className="flex items-start justify-between gap-3 px-5 pb-3 pt-5">
@@ -104,6 +110,10 @@ export function SourcesPanel({ sources, focused, onClose, label }: Props) {
               </li>
             ))}
           </ul>
+        ) : forReply ? (
+          <p className="rounded-panel border border-dashed border-line px-4 py-5 text-ui text-ink-3">
+            The tutor wrote this reply without course passages, so it cites none.
+          </p>
         ) : (
           <p className="rounded-panel border border-dashed border-line px-4 py-5 text-ui text-ink-3">
             When you ask a question, the slides and textbook pages the tutor reads appear here. Select a citation such as{" "}

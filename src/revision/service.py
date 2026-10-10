@@ -22,8 +22,8 @@ import re
 from dataclasses import dataclass, field
 
 from src.learner import taxonomy
-from src.tutor.controller import ANALYZE, Session, build_prompt, parse_analysis, sources, validated
-from src.tutor.service import DONT_KNOW, TutorInputError, WANTS_ANSWER
+from src.tutor.controller import ANALYZE, Session, build_prompt, is_unsure, parse_analysis, sources, validated
+from src.tutor.service import TutorInputError, WANTS_ANSWER
 
 LEVELS = ("recall", "understanding", "application", "reasoning", "code")
 DIFFICULTY = {"recall": "easy", "understanding": "easy", "application": "medium", "reasoning": "hard", "code": "hard"}
@@ -173,7 +173,7 @@ class RevisionService:
             raise TutorInputError("Type an answer first.")
         history = session.history + [("Student", text)]
         view = Session(taxonomy.label(session.focus), session.context, history=history)
-        gives_up = bool(WANTS_ANSWER.search(text)) or bool(DONT_KNOW.search(text))
+        gives_up = bool(WANTS_ANSWER.search(text)) or is_unsure(text)
         analysis = ({"level": "unclear", "gap": "the student did not know"} if gives_up else
                     parse_analysis(self.llm(build_prompt(view, ANALYZE, student_facing=False,
                                                          learner=self._learner_context(session.focus)), json_mode=True)))

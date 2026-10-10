@@ -1,4 +1,4 @@
-import type { Analysis, Conversation, Level, Source, TurnStage, TutorMode } from "../types";
+import type { Analysis, Conversation, Level, Source, TurnStage, TutorMessage, TutorMode } from "../types";
 
 /** Explanation rounds before the tutor gives the full answer (`max_rounds` in controller.py). */
 export const MAX_EXPLAIN_ROUNDS = 2;
@@ -22,6 +22,7 @@ export function turnLabel(stage: TurnStage, analysis: Analysis | null | undefine
   if (stage === "ANSWER") return mode === "answer_first" ? "Answer" : "Side question";
   if (stage === "DONE") return analysis && analysis.level !== "solid" ? "Full answer" : "Wrap-up";
   if (stage === "FEEDBACK") return "Feedback";
+  if (stage === "HINT") return "Hint";
   if (stage === "NO_CONTEXT") return "Not in the course material";
   return STAGE_INFO[stage as LessonStage]?.name ?? String(stage);
 }
@@ -69,4 +70,21 @@ export function titleFrom(text: string): string {
 export function replySources(conv: Conversation | null, opensTopic: boolean): Source[] {
   if (opensTopic || !conv || conv.mode === "answer_first") return [];
   return conv.topicSources;
+}
+
+/**
+ * The reply whose passages the sources panel shows: the one a citation or "sources" click picked, else the latest
+ * reply, even when it used no passage (it must not inherit an earlier reply's passages).
+ */
+export function sourceTarget(conv: Conversation | null, msgId: string | null): TutorMessage | null {
+  const tutors = (conv?.messages ?? []).filter((m): m is TutorMessage => m.role === "tutor");
+  return tutors.find((m) => m.id === msgId) ?? tutors.at(-1) ?? null;
+}
+
+export function sourcesLabel(target: TutorMessage | null, conv: Conversation | null): string {
+  if (!target) return "Course material for your question";
+  if (!target.sources.length) return "This reply did not use any course passages";
+  if (target.mode === "answer_first" || conv?.mode === "answer_first") return "Passages this reply was based on";
+  const side = target.stage === "ANSWER" || target.sources[0]?.chunk_id !== conv?.topicSources[0]?.chunk_id;
+  return side ? "Retrieved for your side question" : "Retrieved for this lesson's question";
 }

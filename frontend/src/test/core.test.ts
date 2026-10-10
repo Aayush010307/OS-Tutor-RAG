@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createEventParser } from "../lib/api";
-import { formatLocation, linkCitations, replySources, turnLabel } from "../lib/tutor";
+import { formatLocation, linkCitations, replySources, sourcesLabel, sourceTarget, turnLabel } from "../lib/tutor";
 import { reducer, type State } from "../state/reducer";
 import type { Conversation, ServerEvent, Source, TutorMessage } from "../types";
 
@@ -225,5 +225,81 @@ describe("reply placeholders", () => {
     expect(replySources(base(null), false).map((s) => s.chunk_id)).toEqual(["vit::c0036"]); // v1 server: as before
     expect(replySources(base("socratic"), true)).toEqual([]);
     expect(replySources(null, false)).toEqual([]);
+  });
+});
+
+describe("uncertainty, hints and the round count", () => {
+  const empty: State = { conversations: [], activeId: null, streaming: null };
+  const B = [src(1, "sema::c0002"), src(2, "sema::c0003")];
+  const conv = (s: State) => s.conversations[0]!;
+  const tutorMsg = (s: State, id: string) => conv(s).messages.find((m): m is TutorMessage => m.id === id)!;
+  const ask = (s: State, id: string, text: string, opensTopic = false) =>
+    reducer(s, { type: "begin", convId: "c", title: "Q", opensTopic, student: { id: `s-${id}`, role: "student", text, opensTopic },
+      tutor: { id, role: "tutor", text: "", status: "retrieving", sources: opensTopic ? [] : conv(s).topicSources } });
+  const turn = (s: State, msgId: string, data: Extract<ServerEvent, { type: "turn" }>["data"]) =>
+    reducer(s, { type: "event", convId: "c", msgId, studentId: `s-${msgId}`, event: { type: "turn", data } });
+  const lesson = () => {
+    let s = ask(empty, "t1", "Q", true);
+    s = reducer(s, { type: "event", convId: "c", msgId: "t1", studentId: "s-t1",
+      event: { type: "session", data: { id: "sid", model: "m", mode: "socratic" } } });
+    s = reducer(s, { type: "event", convId: "c", msgId: "t1", studentId: "s-t1", event: { type: "sources", data: B } });
+    return turn(s, "t1", { stage: "DIAGNOSE", message: "?", analysis: null, sources: B, tutor_state: { rounds: 0, max_rounds: 2 } });
+  };
+
+  it("the rail shows the server's round count: 'I'm not sure' uses no explanation round", () => {
+    let s = ask(lesson(), "t2", "i am not sure");
+    s = turn(s, "t2", { stage: "EXPLAIN", message: "Here is the idea [S1]. Easier one?", analysis: { level: "unclear", gap: "" },
+      sources: B, tutor_state: { rounds: 0, max_rounds: 2 } });
+    expect(conv(s).stage).toBe("EXPLAIN");
+    expect(conv(s).explainRounds).toBe(0);
+    s = ask(s, "t3", "half an answer");
+    s = turn(s, "t3", { stage: "EXPLAIN", message: "Right so far [S2].", analysis: { level: "partial", gap: "x" },
+      sources: B, tutor_state: { rounds: 1, max_rounds: 2 } });
+    expect(conv(s).explainRounds).toBe(1);
+  });
+
+  it("a hint keeps the lesson stage and rounds, cites the lesson's passages and is labelled Hint", () => {
+    let s = ask(lesson(), "t2", "half an answer");
+    s = turn(s, "t2", { stage: "EXPLAIN", message: "Close [S1].", analysis: null, sources: B, tutor_state: { rounds: 1, max_rounds: 2 } });
+    s = ask(s, "t3", "give me a hint");
+    s = turn(s, "t3", { stage: "HINT", message: "Think about who holds the lock [S1]. Try again?", analysis: null,
+      sources: B, tutor_state: { rounds: 1, max_rounds: 2 } });
+    expect(conv(s).stage).toBe("EXPLAIN");
+    expect(conv(s).explainRounds).toBe(1);
+    expect(tutorMsg(s, "t3").stage).toBe("HINT");
+    expect(tutorMsg(s, "t3").sources.map((x) => x.chunk_id)).toEqual(["sema::c0002", "sema::c0003"]);
+    expect(turnLabel("HINT", null, "socratic")).toBe("Hint");
+    expect(turnLabel("HINT", null, "answer_first")).toBe("Hint");
+  });
+
+  it("a hint does not move an answer-first conversation off its pending check", () => {
+    let s = ask(empty, "t1", "Q", true);
+    s = reducer(s, { type: "event", convId: "c", msgId: "t1", studentId: "s-t1",
+      event: { type: "session", data: { id: "sid", model: "m", mode: "answer_first" } } });
+    s = turn(s, "t1", { stage: "CHECK", message: "What happens at 0? [S1]", analysis: null, sources: B });
+    s = ask(s, "t2", "can you give me a hint");
+    s = turn(s, "t2", { stage: "HINT", message: "Look at the value [S1].", analysis: null, sources: B });
+    expect(conv(s).stage).toBe("CHECK");
+  });
+
+  it("the sources panel follows the latest reply, so a reply that used no passage shows none", () => {
+    let s = ask(lesson(), "t2", "How do I bake bread?");
+    s = turn(s, "t2", { stage: "NO_CONTEXT", message: "Not in the material.", analysis: null, sources: [] });
+    const c = conv(s);
+    expect(sourceTarget(c, null)!.id).toBe("t2");
+    expect(sourceTarget(c, null)!.sources).toEqual([]);
+    expect(sourcesLabel(sourceTarget(c, null), c)).toBe("This reply did not use any course passages");
+    expect(sourceTarget(c, "t1")!.id).toBe("t1"); // a citation click still opens the message it belongs to
+    expect(sourcesLabel(sourceTarget(c, "t1"), c)).toBe("Retrieved for this lesson's question");
+    expect(sourceTarget(null, null)).toBeNull();
+    expect(sourcesLabel(null, null)).toBe("Course material for your question");
+  });
+
+  it("answer-first panels describe the reply's own passages, not a lesson", () => {
+    let s = ask(empty, "t1", "Q", true);
+    s = reducer(s, { type: "event", convId: "c", msgId: "t1", studentId: "s-t1",
+      event: { type: "session", data: { id: "sid", model: "m", mode: "answer_first" } } });
+    s = turn(s, "t1", { stage: "FEEDBACK", message: "Right [S1].", analysis: { level: "solid", gap: "" }, sources: B });
+    expect(sourcesLabel(sourceTarget(conv(s), null), conv(s))).toBe("Passages this reply was based on");
   });
 });

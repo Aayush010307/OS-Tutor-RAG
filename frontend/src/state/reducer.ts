@@ -105,7 +105,7 @@ export function reducer(state: State, action: Action): State {
           case "token":
             return updateTutor(c, msgId, (m) => ({ ...m, status: "streaming", text: m.text + event.data.text }));
           case "turn": {
-            const { stage, message, analysis, sources } = event.data;
+            const { stage, message, analysis, sources, tutor_state } = event.data;
             const next = updateTutor(c, msgId, (m) => ({
               ...m,
               status: "done",
@@ -118,8 +118,10 @@ export function reducer(state: State, action: Action): State {
               error: undefined,
               retryQuestion: undefined,
             }));
-            if (stage === "ANSWER") return next; // side answer: the tutor's question stays pending
-            return { ...next, stage, explainRounds: c.explainRounds + (stage === "EXPLAIN" ? 1 : 0) };
+            if (stage === "ANSWER" || stage === "HINT") return next; // side answer or hint: the tutor's question stays pending
+            // newer servers report the rounds used ("I'm not sure" uses none); older ones: count EXPLAIN turns as before
+            const rounds = typeof tutor_state?.rounds === "number" ? tutor_state.rounds : c.explainRounds + (stage === "EXPLAIN" ? 1 : 0);
+            return { ...next, stage, explainRounds: rounds };
           }
           case "error": {
             const next = updateTutor(c, msgId, (m) => ({

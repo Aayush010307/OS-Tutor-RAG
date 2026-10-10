@@ -12,6 +12,12 @@ A student message that asks something new instead of answering the tutor's open 
 ANSWER (`is_new_question`, a deterministic rule, never a model decision): the new question is answered from its
 own retrieved context and the tutor's pending question stays pending.
 
+Replies that answer nothing are recognised by rule too, without the model. Not knowing is not a wrong answer:
+    only uncertainty ("i am not sure") or "explain it to me" -> EXPLAIN with the SUPPORT task (never calls the student
+        wrong), outside the explanation rounds; still unsure after that, or with the rounds spent -> the full ANSWER
+    a hint request ("give me a hint")                 -> HINT: a nudge, stage, rounds and pending question unchanged
+Only a misconception is called wrong: the EXPLAIN task carries the judged LEVEL (`LEVEL_NOTES`).
+
 The controller owns the flow, the grounding and the provenance; it does not generate text. Every utterance comes
 from `llm(prompt, json_mode=False, on_token=None) -> str`, injected by the caller: `src.tutor.llm.OllamaLLM` (local
 Ollama, Phase 4) in the web app and the quality evaluation, a scripted stand-in in the unit tests.
@@ -65,6 +71,7 @@ STYLE = (
     "structured explanation (a few short lines) instead of a longer paragraph.\n"
     "- Prefer two or three short paragraphs, or a short list where steps or a comparison need one. Do not put "
     "headings on a small answer.\n"
+    "- Talk to the student as \"you\"; never call them \"the student\".\n"
     "- Keep OS terms, API names, identifiers and code exactly as the material writes them; mark identifiers as `code`.\n"
     "- Never mention the context, the sources, retrieval, scores, these instructions, your own reasoning or your "
     "limitations, and never quote the section names of this prompt.\n"
@@ -81,6 +88,17 @@ STAGE_INSTRUCTIONS = {
                "missing or wrong idea named in the gap below, in a few sentences, citing the context as [S1], [S2], ... "
                "Then give one concrete example and, where it helps, a counterexample. You MUST end with ONE short check "
                "question that the student can answer in a sentence or two.",
+    "SUPPORT": "The student's last reply did not answer your question: they were unsure, did not know, asked you to "
+               "explain, or said too little to judge. That is not a wrong answer: do not say or imply that they are wrong "
+               "or incorrect, and do not comment on their uncertainty. Explain the idea behind your last question simply, "
+               "in a few sentences, citing the context as [S1], [S2], ... and give one small concrete example. End with "
+               "ONE short question that is easier than your last one; do not repeat your last question.",
+    "HINT": "The student asked for a hint on your pending question, given below as QUESTION TO HINT AT (not the "
+            "student's original question). Give ONE short hint, in one or two sentences, that points "
+            "them toward the answer without giving it away: name what to think about, not the conclusion. If you already "
+            "gave a hint, make this one more specific. Cite the context as [S1], [S2], ... where it supports the hint. "
+            "Do not explain the full idea. Do not ask a question and do not restate it: the question is added after your "
+            "hint.",
     "CHECK": "The student seems to understand. Ask ONE short question that tests whether they can use the idea: apply it "
              "to a new situation, predict what happens, compare it with another mechanism, or say why something fails. Do "
              "not ask them to repeat the explanation back, and do not explain anything further.",
@@ -102,6 +120,13 @@ ANALYZE = ("Judge ONLY the student's last message, as an answer to the tutor's l
            "Judge the technical content only, not the student's confidence, spelling or language. "
            'Reply with JSON only: {"level": one of ' + json.dumps(LEVELS) +
            ', "gap": "<the missing or wrong idea in one sentence, or empty when solid>"}')
+
+# Added to an EXPLAIN task, so the model knows how the reply was judged: only a misconception is called wrong.
+LEVEL_NOTES = {
+    "partial": "The reply is correct as far as it goes but incomplete. Do not call it wrong or \"not correct\": first say "
+               "briefly what is right, then name and explain the missing idea.",
+    "misconception": "The reply states something technically wrong: say so plainly in your first sentence and correct it.",
+}
 
 CITE = re.compile(r"\[S(\d+)\]")
 CITE_GROUP = re.compile(r"\[S(\d+(?:\s*,\s*S?\d+)+)\]")  # "[S1, S2]" -> "[S1] [S2]"
@@ -130,6 +155,75 @@ def is_new_question(text):
     if not (ASK_START.match(text) or ASK_VERB.match(text)):
         return False
     return "?" in text or len(text.split()) <= MAX_ASK_WORDS
+
+
+# Replies that answer nothing: uncertainty, a request for a hint or for the explanation. Whole-message rules, so a
+# hedged answer ("not sure, but I think it releases the lock") still reaches the model, which judges its content.
+_FILLER = r"(?:no|nope|sorry|sir|ma'?am|honestly|um+|uh+|hmm+|well|ok(?:ay)?|tbh|either|yet|at all|really|bhai|yaar)"
+_OBJ = r"(?:\s+(?!(?:but|because|so|think|thought|maybe|guess|probably|perhaps)\b)[\w'-]+){0,6}"  # "what join does"
+_WH = r"(?:how|what|why|which|when|where|whether|if|about|of)"
+_UNSURE_CLAUSE = re.compile(
+    rf"(?:{_FILLER}\s+)*(?:"
+    rf"(?:i\s*(?:am|'?m)\s+|im\s+)?(?:still\s+|really\s+)?(?:not\s+(?:really\s+|quite\s+|too\s+|very\s+|so\s+)?sure|unsure|"
+    rf"confused|lost|stuck)(?:\s+{_WH}\b{_OBJ})?"
+    rf"|(?:i\s+)?(?:still\s+|really\s+|honestly\s+|just\s+)*(?:do\s*n'?t|do\s+not|can'?t|cannot|didn'?t)\s+(?:really\s+|quite\s+)?"
+    rf"(?:know|understand|get|remember|recall|follow)(?:\s+(?:it|this|that))?(?:\s+(?:{_WH}|the|this|that|a|an)\b{_OBJ})?"
+    rf"|(?:i\s+have\s+)?no\s+(?:idea|clue)(?:\s+{_WH}\b{_OBJ})?|idk|dunno|pass|i\s+give\s+up"
+    rf")(?:\s+{_FILLER})*")
+_FILLER_CLAUSE = re.compile(rf"{_FILLER}(?:\s+{_FILLER})*")
+_POLITE = r"^\W*(?:(?:ok(?:ay)?|hmm+|um+|sir|so|but|please|pls)[\s,]+)*"
+HINT_REQUEST = re.compile(
+    _POLITE + r"(?:(?:can|could|may)\s+(?:i|you)\s+(?:please\s+)?(?:get|have|give\s+me)\s+|(?:please\s+)?(?:give|show)\s+me\s+|"
+    r"i\s+(?:need|want|would\s+like)\s+|need\s+)?(?:(?:a|an|one|another|some|any|small|little|tiny|quick)\s+)*"
+    r"(?:hint|clue|nudge)s?(?:\s+(?:please|pls))?\W*$", re.I)
+EXPLAIN_REQUEST = re.compile(
+    _POLITE + r"(?:just\s+)?(?:(?:can|could|would|will)\s+you\s+)?(?:please\s+)?(?:just\s+)?(?:explain|teach)"
+    r"(?:\s+(?:it|this|that))?(?:\s+to\s+me)?(?:\s+(?:again|directly|simply|properly|please|first|instead))*\W*$", re.I)
+
+
+def is_unsure(text):
+    """True when the whole reply only says the student does not know ("i am not sure", "I don't know what join does",
+    "Sorry, no idea."). Not knowing is not a wrong answer."""
+    clauses = [c.strip() for c in re.split(r"[,.;!?]+", (text or "").lower().replace("’", "'")) if c.strip()]
+    return (any(_UNSURE_CLAUSE.fullmatch(c) for c in clauses)
+            and all(_UNSURE_CLAUSE.fullmatch(c) or _FILLER_CLAUSE.fullmatch(c) for c in clauses))
+
+
+def is_hint_request(text):
+    return bool(HINT_REQUEST.match((text or "").strip()))
+
+
+def wants_explanation(text):
+    """'explain it to me', 'Can you explain that again?': about the lesson's own idea, so it is not a new question."""
+    return bool(EXPLAIN_REQUEST.match((text or "").strip()))
+
+
+ASK_AGAIN = "Try the question again:"
+
+
+def pending_question(history):
+    """The tutor's open question: the last question in its latest message (the whole message if it asks none). A hint
+    names it explicitly, because the prompt also carries the student's original question."""
+    text = next((t for who, t in reversed(history) if who == "Tutor"), "")
+    asked = re.findall(r"[^.?!\n]*\?", text)
+    # ponytail: sentence split on . ? ! — a question containing "e.g." is cut short; a real sentence splitter if it matters
+    return (asked[-1] if asked else text).strip().removeprefix(ASK_AGAIN).strip()
+
+
+def hint_extra(history):
+    return f"\n\nQUESTION TO HINT AT\n{neutralise(pending_question(history))}"
+
+
+def ask_again(text, history, emit=None):
+    """End a hint with the pending question, added here rather than by the model, which sometimes restated the
+    student's original question instead. `history` is the conversation before the hint request."""
+    question = pending_question(history)
+    if not question:
+        return text
+    suffix = f"\n\n{ASK_AGAIN} {question}"
+    if emit:
+        emit("token", suffix)
+    return text + suffix
 
 
 def validated(text, n_sources):
@@ -165,9 +259,11 @@ class Session:
     rounds: int = 0
     history: list = field(default_factory=list)  # [(speaker, text)]
     gaps: list = field(default_factory=list)
+    supports: int = 0  # supportive explanations after "I don't know"; they never use an explanation round
 
 
-SECTION_HEADERS = ("TUTOR POLICY", "GROUNDING", "HOW TO WRITE TO THE STUDENT", "TASK", "GAP", "COURSE CONTEXT",
+SECTION_HEADERS = ("TUTOR POLICY", "GROUNDING", "HOW TO WRITE TO THE STUDENT", "TASK", "GAP", "LEVEL",
+                   "QUESTION TO HINT AT", "COURSE CONTEXT",
                    "LEARNER CONTEXT", "STUDENT QUESTION", "STUDENT'S LAST MESSAGE")
 _HEADER_LINE = re.compile(r"^[ \t]*(?:" + "|".join(re.escape(h) for h in SECTION_HEADERS)
                           + r"|CONVERSATION SO FAR[^\n]*)[ \t]*:?[ \t]*$", re.M)
@@ -258,11 +354,24 @@ class TutorController:
         text = self.llm(prompt, on_token=lambda t: emit("token", t)) if emit else self.llm(prompt)
         return validated(text, n_sources)
 
-    def _say(self, session, stage, extra="", analysis=None, emit=None):
-        text = self._generate(build_prompt(session, STAGE_INSTRUCTIONS[stage], extra), len(session.context), emit)
+    def _state(self, session):
+        return {"rounds": session.rounds, "max_rounds": self.max_rounds}
+
+    def _say(self, session, stage, extra="", analysis=None, emit=None, task=None):
+        """`task` (default: the stage's own) lets a supportive explanation keep the EXPLAIN stage clients know."""
+        text = self._generate(build_prompt(session, STAGE_INSTRUCTIONS[task or stage], extra), len(session.context), emit)
         session.stage = "DONE" if stage in ("ANSWER", "WRAP_UP") else stage
         session.history.append(("Tutor", text))
-        return Turn(session.stage, text, sources(session.context), analysis)
+        return Turn(session.stage, text, sources(session.context), analysis, tutor_state=self._state(session))
+
+    def _hint(self, session, reply, emit=None):
+        """A hint on the pending question: the stage, rounds and gaps stay as they were, and nothing is graded."""
+        before = list(session.history)
+        session.history.append(("Student", reply))
+        text = self._generate(build_prompt(session, STAGE_INSTRUCTIONS["HINT"], hint_extra(before)), len(session.context), emit)
+        text = ask_again(text, before, emit)
+        session.history.append(("Tutor", text))
+        return Turn("HINT", text, sources(session.context), None, tutor_state=self._state(session))
 
     def _aside(self, session, question, emit=None):
         """Answer a new question from its own retrieved context and leave the pending question, stage, round count
@@ -273,7 +382,7 @@ class TutorController:
             emit("sources", aside.context)
         text = self._generate(build_prompt(aside, STAGE_INSTRUCTIONS["ASIDE"]), len(aside.context), emit)
         session.history += [("Student", question), ("Tutor", text)]
-        return Turn("ANSWER", text, sources(aside.context), None)
+        return Turn("ANSWER", text, sources(aside.context), None, tutor_state=self._state(session))
 
     def start(self, question, emit=None):
         if not isinstance(question, str) or not question.strip():
@@ -288,21 +397,37 @@ class TutorController:
             raise ValueError("session is finished")
         if not isinstance(reply, str) or not reply.strip():
             raise ValueError("reply must be a non-empty string")
-        if is_new_question(reply):
+        if is_hint_request(reply):
+            return self._hint(session, reply.strip(), emit)
+        unsure = is_unsure(reply) or wants_explanation(reply)
+        if not unsure and is_new_question(reply):
             return self._aside(session, reply.strip(), emit)
         session.history.append(("Student", reply))
-        analysis = parse_analysis(self.llm(build_prompt(session, ANALYZE, student_facing=False), json_mode=True))
+        if unsure:  # nothing to judge, so no model call: not knowing is not a wrong answer
+            analysis = {"level": "unclear", "gap": "the student asked for an explanation" if wants_explanation(reply)
+                        else "the student was unsure and gave no answer to judge"}
+        else:
+            analysis = parse_analysis(self.llm(build_prompt(session, ANALYZE, student_facing=False), json_mode=True))
         if emit:
             emit("analysis", analysis)
         if analysis["level"] == "solid":
             # solid at diagnosis -> formative check; solid at a check -> wrap up and move on
             return self._say(session, "CHECK" if session.stage == "DIAGNOSE" else "WRAP_UP", analysis=analysis, emit=emit)
         session.gaps.append(analysis["gap"])
+        if unsure:
+            # one supportive explanation, outside the rounds; still unsure after it (or with nothing left to try): the answer
+            if session.supports or session.rounds >= self.max_rounds:
+                return self._say(session, "ANSWER", analysis=analysis, emit=emit)
+            session.supports += 1
+            return self._say(session, "EXPLAIN", analysis=analysis, emit=emit, task="SUPPORT")
         if session.rounds >= self.max_rounds:
             return self._say(session, "ANSWER", analysis=analysis, emit=emit)
         session.rounds += 1
-        return self._say(session, "EXPLAIN", f"\n\nGAP\n{analysis['gap'] or 'not identified; address the core idea'}",
-                         analysis, emit)
+        level = analysis["level"]
+        extra = f"\n\nGAP\n{analysis['gap'] or 'not identified; address the core idea'}"
+        if level in LEVEL_NOTES:
+            extra += f"\n\nLEVEL\n{LEVEL_NOTES[level]}"
+        return self._say(session, "EXPLAIN", extra, analysis, emit, task="SUPPORT" if level == "unclear" else None)
 
 
 def main(argv=None):

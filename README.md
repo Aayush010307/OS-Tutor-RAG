@@ -233,8 +233,10 @@ npm run dev            # http://localhost:5173 (needs the tutor server on :8000)
 npm run typecheck && npm run lint && npm test && npm run build
 ```
 
-Lesson history in the React app is kept in the browser only; tutor sessions live in server memory. The original
-single-file page `web/index.html` is still served by the backend at http://localhost:8000.
+Lesson history in the React app is kept in the browser only; tutor sessions live in server memory. The React app is the
+supported frontend. The legacy single-file page `web/index.html` (a prebuilt bundle from PR #1; its source is not in
+this repository) is still served by the backend at http://localhost:8000 but is not maintained: it does not know the
+`HINT` stage or the server-reported round count (see `API_CONTRACT.md`).
 
 ## HTTP API
 
@@ -282,7 +284,7 @@ has been run.
 | `src/retrieval/` | Dense, BM25, hybrid RRF, cross-encoder reranker, intent order, the product pipeline |
 | `src/tutor/` | LLM providers, answer-first tutor service, Socratic controller, mock LLM, web server |
 | `frontend/` | React chat app (Vite, TypeScript, Tailwind) for the tutor server |
-| `web/index.html` | Original single-file chat page (still served at http://localhost:8000) |
+| `web/index.html` | Legacy single-file chat page, prebuilt, not maintained (still served at http://localhost:8000) |
 | `src/learner/` | Concept taxonomy and the learner model |
 | `src/revision/` | Smart Revision |
 | `src/evaluation/` | Retrieval evaluator, run comparison, tutor quality evaluation |
