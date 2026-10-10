@@ -20,3 +20,5 @@ data/learner/
 node_modules/
 .env.local
 .env.*.local
+# Impeccable design-hook cache: absolute paths and session ids from one machine
+.impeccable/hook.cache.json

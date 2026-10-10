@@ -2821,3 +2821,19 @@ owner's untracked local `PRODUCT.md` is unchanged.
   - Configuration defaults confirmed from code and from a copied `.env.example`: `TUTOR_MODE=socratic`,
     `LLM_PROVIDER=ollama`, `RERANKER_ENABLED=false`.
   - The 57 frozen and evaluation files are byte-identical in both trees.
+
+### 2026-10-10 — React frontend added to the integration branch
+
+- **Decision:** the owner's current React frontend (`frontend/`, OS-Tutor) is the final UI. It is committed on this
+  branch exactly as it exists in the main checkout. That copy already contains the answer-first compatibility
+  changes described in the pre-commit audit above. No older frontend was restored or substituted.
+- **Files:** 26 files under `frontend/`, copied from the main checkout. They are byte-identical to the backup manifest
+  `OS-RAG-backups/2026-10-10-final-integration-1126/manifest.sha256`. The main checkout itself was not modified.
+- **Design docs:** `DESIGN.md`, `.impeccable/design.json` and `.impeccable/surfaces/frontend-src-app-tsx.md` were
+  copied from the main checkout. One correction was applied to `DESIGN.md` and `design.json`: the stage rail
+  (Diagnose, Explain, Check, Done) is documented as Socratic-only, because answer-first hides it.
+- **`.gitignore`:** now ignores `.impeccable/hook.cache.json`. The file holds absolute paths and session ids from one
+  machine.
+- **Not committed:** `node_modules/`, `dist/`, `*.tsbuildinfo`, caches, review screenshots.
+- **Known issue, fixed in the next entry:** in answer-first mode, citations after the first question can point at that
+  question's sources instead of the current answer's.
