@@ -64,7 +64,7 @@ export function reducer(state: State, action: Action): State {
         ...base,
         messages,
         updatedAt: now,
-        ...(action.opensTopic ? { sessionId: null, stage: null, explainRounds: 0, topicSources: [] } : {}),
+        ...(action.opensTopic ? { sessionId: null, stage: null, explainRounds: 0, topicSources: [], awaitingAnswer: undefined } : {}),
       };
       // Most recent conversation first.
       const others = state.conversations.filter((c) => c.id !== conv.id);
@@ -106,7 +106,9 @@ export function reducer(state: State, action: Action): State {
             return updateTutor(c, msgId, (m) => ({ ...m, status: "streaming", text: m.text + event.data.text }));
           case "turn": {
             const { stage, message, analysis, sources, tutor_state } = event.data;
-            const next = updateTutor(c, msgId, (m) => ({
+            // newer servers say whether a question is pending (false after the explanation a lesson opens with)
+            const awaiting = typeof tutor_state?.awaiting_answer === "boolean" ? { awaitingAnswer: tutor_state.awaiting_answer } : {};
+            const next = { ...updateTutor(c, msgId, (m) => ({
               ...m,
               status: "done",
               stage,
@@ -117,7 +119,7 @@ export function reducer(state: State, action: Action): State {
               text: message || m.text, // the server's validated text replaces the raw stream
               error: undefined,
               retryQuestion: undefined,
-            }));
+            })), ...awaiting };
             if (stage === "ANSWER" || stage === "HINT") return next; // side answer or hint: the tutor's question stays pending
             // newer servers report the rounds used ("I'm not sure" uses none); older ones: count EXPLAIN turns as before
             const rounds = typeof tutor_state?.rounds === "number" ? tutor_state.rounds : c.explainRounds + (stage === "EXPLAIN" ? 1 : 0);

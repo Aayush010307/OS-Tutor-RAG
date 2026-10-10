@@ -6,7 +6,7 @@ import { Sidebar } from "./components/Sidebar";
 import { SourcesPanel, type SourceFocus } from "./components/SourcesPanel";
 import { StageRail } from "./components/StageRail";
 import { Welcome } from "./components/Welcome";
-import { sourcesLabel, sourceTarget, turnLabel } from "./lib/tutor";
+import { lessonAwaitsAnswer, sourcesLabel, sourceTarget, turnLabel } from "./lib/tutor";
 import { useChat } from "./state/chat";
 import { useSettings } from "./state/settings";
 
@@ -257,6 +257,7 @@ export default function App() {
               onSend={() => send(draft)}
               busy={busy}
               replying={replying}
+              awaitingAnswer={lessonAwaitsAnswer(active)}
               lessonModel={active?.model ?? null}
             />
             {busy && (

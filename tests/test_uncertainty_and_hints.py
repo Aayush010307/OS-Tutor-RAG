@@ -112,7 +112,7 @@ def test_uncertainty_gets_a_supportive_explanation_without_the_model_and_without
     turn = tutor.respond(session, text, emit=lambda k, d: events.append((k, d)))
     assert llm.json_calls == 0 and len(retriever.queries) == 1  # no analysis call, no side-question retrieval
     assert turn.stage == "EXPLAIN" and turn.analysis["level"] == "unclear" and events[0] == ("analysis", turn.analysis)
-    assert session.rounds == 0 and turn.tutor_state == {"rounds": 0, "max_rounds": 2}
+    assert session.rounds == 0 and turn.tutor_state == {"rounds": 0, "max_rounds": 2, "awaiting_answer": True}
     prompt = task(llm.prompts[-1])
     assert prompt.startswith(STAGE_INSTRUCTIONS["SUPPORT"]) and WRONG_FIRST not in prompt and "not correct" not in prompt
     assert [s["chunk_id"] for s in turn.sources] == ["doc::c0001", "doc::c0002"]  # the lesson's own passages
@@ -150,7 +150,7 @@ def test_a_partial_answer_is_acknowledged_not_called_wrong():
     tutor, llm, _, session = lesson(["partial"])
     turn = tutor.respond(session, "it releases the lock")
     prompt = task(llm.prompts[-1])
-    assert turn.stage == "EXPLAIN" and session.rounds == 1 and turn.tutor_state == {"rounds": 1, "max_rounds": 2}
+    assert turn.stage == "EXPLAIN" and session.rounds == 1 and turn.tutor_state == {"rounds": 1, "max_rounds": 2, "awaiting_answer": True}
     assert "correct as far as it goes" in prompt and "Do not call it wrong" in prompt and "first sentence" not in prompt.split("LEVEL")[1]
 
 
@@ -186,7 +186,7 @@ def test_a_hint_keeps_the_lesson_where_it_was(stage_levels):
     assert (session.stage, session.rounds, session.supports, session.gaps, len(retriever.queries)) == before
     assert task(llm.prompts[-1]).startswith(STAGE_INSTRUCTIONS["HINT"]) and session.history[-2] == ("Student", "Can I get a hint?")
     assert [s["chunk_id"] for s in turn.sources] == ["doc::c0001", "doc::c0002"]
-    assert turn.tutor_state == {"rounds": session.rounds, "max_rounds": 2}
+    assert turn.tutor_state == {"rounds": session.rounds, "max_rounds": 2, "awaiting_answer": True}
 
 
 def test_after_a_hint_the_answer_is_judged_as_usual():
@@ -210,7 +210,7 @@ def test_a_real_new_question_is_still_answered_on_the_side():
 def test_the_turn_payload_reports_the_socratic_rounds():
     tutor, _, _, session = lesson(["partial"])
     payload = server.turn_payload(tutor.respond(session, "half an answer"))
-    assert payload["stage"] == "EXPLAIN" and payload["tutor_state"] == {"rounds": 1, "max_rounds": 2}
+    assert payload["stage"] == "EXPLAIN" and payload["tutor_state"] == {"rounds": 1, "max_rounds": 2, "awaiting_answer": True}
 
 
 # ------------------------------------------------------------------ answer-first

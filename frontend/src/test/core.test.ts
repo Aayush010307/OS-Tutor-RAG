@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createEventParser } from "../lib/api";
-import { formatLocation, linkCitations, replySources, sourcesLabel, sourceTarget, turnLabel } from "../lib/tutor";
+import { formatLocation, lessonAwaitsAnswer, linkCitations, replySources, sourcesLabel, sourceTarget, turnLabel } from "../lib/tutor";
 import { reducer, type State } from "../state/reducer";
 import type { Conversation, ServerEvent, Source, TutorMessage } from "../types";
 
@@ -301,5 +301,61 @@ describe("uncertainty, hints and the round count", () => {
       event: { type: "session", data: { id: "sid", model: "m", mode: "answer_first" } } });
     s = turn(s, "t1", { stage: "FEEDBACK", message: "Right [S1].", analysis: { level: "solid", gap: "" }, sources: B });
     expect(sourcesLabel(sourceTarget(conv(s), null), conv(s))).toBe("Passages this reply was based on");
+  });
+});
+
+describe("a lesson that opens with an explanation", () => {
+  const empty: State = { conversations: [], activeId: null, streaming: null };
+  const B = [src(1, "sema::c0002"), src(2, "sema::c0003")];
+  const conv = (s: State) => s.conversations[0]!;
+  const tutorMsg = (s: State, id: string) => conv(s).messages.find((m): m is TutorMessage => m.id === id)!;
+  const ask = (s: State, id: string, text: string, opensTopic = false) =>
+    reducer(s, { type: "begin", convId: "c", title: "Q", opensTopic, student: { id: `s-${id}`, role: "student", text, opensTopic },
+      tutor: { id, role: "tutor", text: "", status: "retrieving", sources: opensTopic ? [] : conv(s).topicSources } });
+  const ev = (s: State, msgId: string, event: ServerEvent) =>
+    reducer(s, { type: "event", convId: "c", msgId, studentId: `s-${msgId}`, event });
+  const open = () => {
+    let s = ask(empty, "t1", "What are threads?", true);
+    s = ev(s, "t1", { type: "session", data: { id: "sid", model: "m", mode: "socratic" } });
+    s = ev(s, "t1", { type: "sources", data: B });
+    return ev(s, "t1", { type: "turn", data: { stage: "EXPLAIN", message: "Threads share memory [S1] [S2].", analysis: null,
+      sources: B, tutor_state: { rounds: 0, max_rounds: 2, awaiting_answer: false } } });
+  };
+
+  it("labels the first reply Explain, uses no round, waits for no answer and links its own citations", () => {
+    const s = open();
+    expect(conv(s).stage).toBe("EXPLAIN");
+    expect(conv(s).explainRounds).toBe(0);
+    expect(conv(s).awaitingAnswer).toBe(false);
+    expect(lessonAwaitsAnswer(conv(s))).toBe(false);
+    expect(turnLabel("EXPLAIN", null, "socratic")).toBe("Explain");
+    const first = tutorMsg(s, "t1");
+    expect(linkCitations(first.text, first.sources)).toBe("Threads share memory [S1](cite:S1) [S2](cite:S2).");
+    expect(first.sources.map((x) => x.chunk_id)).toEqual(["sema::c0002", "sema::c0003"]);
+  });
+
+  it("waits for an answer again once the tutor asks the check, and a new topic resets it", () => {
+    let s = ask(open(), "t2", "quiz me");
+    s = ev(s, "t2", { type: "turn", data: { stage: "CHECK", message: "What if two threads write at once? [S1]", analysis: null,
+      sources: B, tutor_state: { rounds: 0, max_rounds: 2, awaiting_answer: true } } });
+    expect(conv(s).stage).toBe("CHECK");
+    expect(lessonAwaitsAnswer(conv(s))).toBe(true);
+    s = ask(s, "t3", "Next topic", true);
+    expect(conv(s).awaitingAnswer).toBeUndefined();
+  });
+
+  it("a hint with nothing pending changes nothing", () => {
+    let s = ask(open(), "t2", "give me a hint");
+    s = ev(s, "t2", { type: "turn", data: { stage: "HINT", message: "There's no question waiting…", analysis: null, sources: [],
+      tutor_state: { rounds: 0, max_rounds: 2, awaiting_answer: false } } });
+    expect(conv(s).stage).toBe("EXPLAIN");
+    expect(lessonAwaitsAnswer(conv(s))).toBe(false);
+  });
+
+  it("older servers (no awaiting_answer) keep the previous composer behaviour", () => {
+    const c = { ...conv(open()), awaitingAnswer: undefined };
+    expect(lessonAwaitsAnswer(c)).toBe(true);
+    expect(lessonAwaitsAnswer({ ...c, stage: "DONE" })).toBe(false);
+    expect(lessonAwaitsAnswer(null)).toBe(false);
   });
 });

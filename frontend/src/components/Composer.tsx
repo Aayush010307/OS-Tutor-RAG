@@ -13,12 +13,14 @@ interface Props {
   busy: boolean;
   /** An open lesson: the next message is a reply to the tutor's question. */
   replying: boolean;
+  /** The tutor asked something and waits for the answer; false after an explanation that asked nothing. */
+  awaitingAnswer: boolean;
   /** Model the open lesson runs on, when it differs from the selection. */
   lessonModel: string | null;
 }
 
 export const Composer = forwardRef<ComposerHandle, Props>(function Composer(
-  { draft, setDraft, onSend, busy, replying, lessonModel },
+  { draft, setDraft, onSend, busy, replying, awaitingAnswer, lessonModel },
   handle,
 ) {
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -45,7 +47,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer(
       className="rounded-composer border border-line-strong bg-surface shadow-float transition-colors focus-within:border-accent-line"
     >
       <label htmlFor="composer" className="sr-only">
-        {replying ? "Your answer" : "Your question"}
+        {awaitingAnswer ? "Your answer" : "Your question"}
       </label>
       <textarea
         id="composer"
@@ -59,7 +61,13 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer(
             if (canSend) onSend();
           }
         }}
-        placeholder={replying ? "Your answer, or a new question" : "Ask about threads, locks or deadlock"}
+        placeholder={
+          awaitingAnswer
+            ? "Your answer, or a new question"
+            : replying
+              ? "Ask a follow-up, or say “quiz me” to try a question"
+              : "Ask about threads, locks or deadlock"
+        }
         aria-describedby="composer-hint"
         className="block max-h-[220px] w-full resize-none bg-transparent px-4 pb-2 pt-3.5 text-body text-ink outline-none placeholder:text-ink-3 focus-visible:outline-none"
       />
@@ -96,7 +104,7 @@ export const Composer = forwardRef<ComposerHandle, Props>(function Composer(
         <button
           type="submit"
           disabled={!canSend}
-          aria-label={replying ? "Send answer" : "Ask"}
+          aria-label={awaitingAnswer ? "Send answer" : "Ask"}
           className="grid size-9 shrink-0 place-items-center rounded-control bg-accent-strong text-on-accent transition-[background-color,transform,opacity] hover:brightness-110 active:scale-95 disabled:bg-surface-3 disabled:text-ink-3"
         >
           <ArrowUp size={18} strokeWidth={2.25} aria-hidden />

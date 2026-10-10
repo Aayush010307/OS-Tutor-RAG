@@ -12,6 +12,13 @@ A student message that asks something new instead of answering the tutor's open 
 ANSWER (`is_new_question`, a deterministic rule, never a model decision): the new question is answered from its
 own retrieved context and the tutor's pending question stays pending.
 
+In the web app (`opening="explain"`) the lesson starts by answering the question instead of diagnosing:
+    question -> INTRODUCE (turn stage EXPLAIN): a direct, cited explanation with no question; nothing is pending
+      -> the student's next message: a new question is answered the same way, "I don't know" gets SUPPORT, anything
+         else ("quiz me", "ok") a CHECK question; from there the usual rounds
+    a question that asks to be quizzed ("Quiz me on threads") still starts with DIAGNOSE
+The default (`opening="diagnose"`) is the flow above, which the tutor evaluation's frozen scenarios script.
+
 Replies that answer nothing are recognised by rule too, without the model. Not knowing is not a wrong answer:
     only uncertainty ("i am not sure") or "explain it to me" -> EXPLAIN with the SUPPORT task (never calls the student
         wrong), outside the explanation rounds; still unsure after that, or with the rounds spent -> the full ANSWER
@@ -88,11 +95,16 @@ STAGE_INSTRUCTIONS = {
                "missing or wrong idea named in the gap below, in a few sentences, citing the context as [S1], [S2], ... "
                "Then give one concrete example and, where it helps, a counterexample. You MUST end with ONE short check "
                "question that the student can answer in a sentence or two.",
-    "SUPPORT": "The student's last reply did not answer your question: they were unsure, did not know, asked you to "
-               "explain, or said too little to judge. That is not a wrong answer: do not say or imply that they are wrong "
-               "or incorrect, and do not comment on their uncertainty. Explain the idea behind your last question simply, "
-               "in a few sentences, citing the context as [S1], [S2], ... and give one small concrete example. End with "
-               "ONE short question that is easier than your last one; do not repeat your last question.",
+    "SUPPORT": "The student's last reply did not answer: they were unsure, did not know, asked you to explain, or said "
+               "too little to judge. That is not a wrong answer: do not say or imply that they are wrong or incorrect, "
+               "and do not comment on their uncertainty. Explain the idea simply, in a few sentences, citing the context "
+               "as [S1], [S2], ... and give one small concrete example. End with ONE short, easy question about it; do "
+               "not repeat a question you already asked.",
+    "INTRODUCE": "Answer the student's question directly, for a beginner, and teach the idea behind it: explain it, do "
+                 "not just define it, citing the context as [S1], [S2], ... Give one small concrete example where it "
+                 "helps. If the context does not cover part of what they ask, say plainly that the course material does "
+                 "not specify it and explain only what it does establish. Do not judge or comment on what the student "
+                 "knows. Do not ask the student any question, and do not end with a question.",
     "HINT": "The student asked for a hint on your pending question, given below as QUESTION TO HINT AT (not the "
             "student's original question). Give ONE short hint, in one or two sentences, that points "
             "them toward the answer without giving it away: name what to think about, not the conclusion. If you already "
@@ -179,6 +191,14 @@ HINT_REQUEST = re.compile(
 EXPLAIN_REQUEST = re.compile(
     _POLITE + r"(?:just\s+)?(?:(?:can|could|would|will)\s+you\s+)?(?:please\s+)?(?:just\s+)?(?:explain|teach)"
     r"(?:\s+(?:it|this|that))?(?:\s+to\s+me)?(?:\s+(?:again|directly|simply|properly|please|first|instead))*\W*$", re.I)
+
+
+# A request to be questioned rather than taught ("Quiz me on threads", "Test my understanding of semaphores").
+QUIZ_REQUEST = re.compile(r"\b(?:test (?:my|me)|quiz me|check my understanding|ask me (?:a |some |a few )?(?:questions?|something)|"
+                          r"give me (?:a |an |some )?(?:quiz|problem|question|exercise|practice)(?:zes|s)?|"
+                          r"practice (?:problem|question)s?)\b", re.I)
+NOTHING_PENDING = ("There's no question waiting for your answer, so there is nothing to hint at yet. Ask me anything, "
+                   "or say \"quiz me\" when you'd like a question to try.")
 
 
 def is_unsure(text):
@@ -347,15 +367,20 @@ def parse_analysis(text):
 
 
 class TutorController:
-    def __init__(self, retriever, llm, top_k=5, max_rounds=2):
+    def __init__(self, retriever, llm, top_k=5, max_rounds=2, opening="diagnose"):
+        """`opening`: "diagnose" (default; the evaluated flow) asks first, "explain" (the web app) answers first."""
+        if opening not in ("diagnose", "explain"):
+            raise ValueError(f"unknown opening {opening!r}")
         self.retriever, self.llm, self.top_k, self.max_rounds = retriever, llm, top_k, max_rounds
+        self.opening = opening
 
     def _generate(self, prompt, n_sources, emit=None):
         text = self.llm(prompt, on_token=lambda t: emit("token", t)) if emit else self.llm(prompt)
         return validated(text, n_sources)
 
     def _state(self, session):
-        return {"rounds": session.rounds, "max_rounds": self.max_rounds}
+        return {"rounds": session.rounds, "max_rounds": self.max_rounds,
+                "awaiting_answer": session.stage in ("DIAGNOSE", "EXPLAIN", "CHECK")}
 
     def _say(self, session, stage, extra="", analysis=None, emit=None, task=None):
         """`task` (default: the stage's own) lets a supportive explanation keep the EXPLAIN stage clients know."""
@@ -373,14 +398,15 @@ class TutorController:
         session.history.append(("Tutor", text))
         return Turn("HINT", text, sources(session.context), None, tutor_state=self._state(session))
 
-    def _aside(self, session, question, emit=None):
+    def _aside(self, session, question, emit=None, task="ASIDE"):
         """Answer a new question from its own retrieved context and leave the pending question, stage, round count
-        and gaps untouched, so the tutoring thread survives the detour."""
+        and gaps untouched, so the tutoring thread survives the detour. With nothing pending (`task="INTRODUCE"`) it is
+        answered like the lesson's first question, with nothing to come back to."""
         aside = Session(question, self.retriever.search(question, top_k=self.top_k), stage=session.stage,
                         history=list(session.history))
         if emit:
             emit("sources", aside.context)
-        text = self._generate(build_prompt(aside, STAGE_INSTRUCTIONS["ASIDE"]), len(aside.context), emit)
+        text = self._generate(build_prompt(aside, STAGE_INSTRUCTIONS[task]), len(aside.context), emit)
         session.history += [("Student", question), ("Tutor", text)]
         return Turn("ANSWER", text, sources(aside.context), None, tutor_state=self._state(session))
 
@@ -390,16 +416,35 @@ class TutorController:
         session = Session(question, self.retriever.search(question, top_k=self.top_k))
         if emit:
             emit("sources", session.context)
+        if self.opening == "explain" and not QUIZ_REQUEST.search(question):
+            return session, self._introduce(session, emit)
         return session, self._say(session, "DIAGNOSE", emit=emit)
+
+    def _introduce(self, session, emit=None):
+        """The lesson's first reply answers the question: an explanation with no question, so nothing is pending
+        (internal stage INTRODUCED). Clients see EXPLAIN, with `tutor_state.awaiting_answer` false."""
+        text = self._generate(build_prompt(session, STAGE_INSTRUCTIONS["INTRODUCE"]), len(session.context), emit)
+        session.stage = "INTRODUCED"
+        session.history.append(("Tutor", text))
+        return Turn("EXPLAIN", text, sources(session.context), None, tutor_state=self._state(session))
 
     def respond(self, session, reply, emit=None):
         if session.stage == "DONE":
             raise ValueError("session is finished")
         if not isinstance(reply, str) or not reply.strip():
             raise ValueError("reply must be a non-empty string")
+        introduced = session.stage == "INTRODUCED"  # explained, nothing pending
         if is_hint_request(reply):
+            if introduced:
+                session.history += [("Student", reply.strip()), ("Tutor", NOTHING_PENDING)]
+                return Turn("HINT", NOTHING_PENDING, [], None, tutor_state=self._state(session))
             return self._hint(session, reply.strip(), emit)
         unsure = is_unsure(reply) or wants_explanation(reply)
+        if introduced and not unsure:
+            if not QUIZ_REQUEST.search(reply) and (is_new_question(reply) or "?" in reply):
+                return self._aside(session, reply.strip(), emit, task="INTRODUCE")
+            session.history.append(("Student", reply))  # "quiz me", "ok", ...: the Socratic check comes next
+            return self._say(session, "CHECK", emit=emit)
         if not unsure and is_new_question(reply):
             return self._aside(session, reply.strip(), emit)
         session.history.append(("Student", reply))

@@ -10,8 +10,8 @@ const STARTERS = [
 ];
 
 const HOW: Record<(typeof LESSON_STAGES)[number], string> = {
-  DIAGNOSE: "Asks what you already know",
-  EXPLAIN: "Explains only the missing piece",
+  DIAGNOSE: "Asks what you know, if you ask to be quizzed",
+  EXPLAIN: "Answers your question, then fills any gaps",
   CHECK: "Gives you a question to try",
   DONE: "Sums up the key idea",
 };
@@ -23,8 +23,8 @@ export function Welcome({ onPick, disabled }: { onPick: (q: string) => void; dis
         Ask about threads and synchronization.
       </h1>
       <p className="mt-3 max-w-[60ch] text-lead text-ink-2">
-        The tutor won't hand you the answer straight away. It works through the idea with you, and every explanation
-        links to the lecture slide or textbook page it comes from.
+        The tutor answers your question first, then checks that you can use the idea. Every explanation links to the
+        lecture slide or textbook page it comes from.
       </p>
 
       <ol className="mt-8 grid gap-x-6 gap-y-3 border-y border-line py-5 sm:grid-cols-2" aria-label="How a lesson runs">

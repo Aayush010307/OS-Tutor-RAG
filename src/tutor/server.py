@@ -103,7 +103,7 @@ class App:
     def tutor(self, model):
         llm = make_llm(self.settings, model)
         if self.settings.tutor_mode == "socratic":
-            return TutorController(self.retriever, llm, top_k=self.settings.final_context_k)
+            return TutorController(self.retriever, llm, top_k=self.settings.final_context_k, opening="explain")
         return TutorService(self.retriever, llm, learner=self.learner, top_k=self.settings.final_context_k,
                             is_relevant=self.retriever.is_relevant)
 

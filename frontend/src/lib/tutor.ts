@@ -72,6 +72,13 @@ export function replySources(conv: Conversation | null, opensTopic: boolean): So
   return conv.topicSources;
 }
 
+/** Whether the tutor is waiting for the student's answer (composer wording). Older servers do not say: as before,
+ * an open lesson stage counts as waiting. */
+export function lessonAwaitsAnswer(conv: Conversation | null): boolean {
+  if (!conv?.sessionId || conv.stage === null || conv.stage === "DONE") return false;
+  return conv.awaitingAnswer ?? true;
+}
+
 /**
  * The reply whose passages the sources panel shows: the one a citation or "sources" click picked, else the latest
  * reply, even when it used no passage (it must not inherit an earlier reply's passages).

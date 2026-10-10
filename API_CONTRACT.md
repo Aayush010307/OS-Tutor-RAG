@@ -55,7 +55,7 @@ question) -> `token`... -> `turn`.
  *(new)* "follow_up": str | null,                  // a short offer / next step the page may render as a hint
  *(new)* "concepts": [{"id","label","topic"}],     // concepts this turn is about
  *(new)* "tutor_state": {"open": bool, "pending_check": bool, "representation": str | null}   // answer_first
-                 | {"rounds": int, "max_rounds": int},                                        // socratic (2026-10-10)
+                 | {"rounds": int, "max_rounds": int, "awaiting_answer": bool},               // socratic (2026-10-10)
  *(new)* "learner_update": {"concept_id","label","level","confidence","change"} | null,
  *(new)* "actions": [{"id": <intent>, "label": str}],  // suggested buttons for this turn; empty = show none
  *(new)* "sources": [Source]                         // this turn's own provenance, see "Citations and turn sources"
@@ -64,12 +64,31 @@ question) -> `token`... -> `turn`.
 
 `stage` values.
 - `socratic` mode (**the default**): `DIAGNOSE`, `EXPLAIN`, `CHECK`, `DONE`, `ANSWER` (the side answer to a new
-  question keeps `ANSWER`), and *(new, 2026-10-10)* `HINT` (see "Uncertainty and hints" below).
+  question keeps `ANSWER`), and *(new, 2026-10-10)* `HINT` (see "Uncertainty and hints" below). *(Changed 2026-10-10)*
+  the server's lesson opens with `EXPLAIN`, not `DIAGNOSE`; see "Socratic lesson opening".
 - `answer_first` mode *(new, optional: `TUTOR_MODE=answer_first`)*: `ANSWER` (grounded explanation; the conversation stays open), `CHECK` (the tutor
   asked a comprehension question; `tutor_state.pending_check` is true), `FEEDBACK` (reaction to the student's answer to a
   check; `analysis` is set), `NO_CONTEXT` (nothing relevant retrieved; fixed message, no model call). `DONE` is never sent in
   this mode and `/api/reply` keeps working after any turn. *(new, 2026-10-10)* `HINT` while a check is pending. A
   client written for v1 / socratic stages must handle `FEEDBACK` and `NO_CONTEXT` before this mode is switched on.
+
+### Socratic lesson opening *(changed, 2026-10-10)*
+
+The first reply of a Socratic lesson (`/api/start`) answers the student's question: a direct, cited explanation for a
+beginner, with no question. Its `turn` has `stage: "EXPLAIN"` (no new stage), `analysis: null`,
+`tutor_state: {"rounds": 0, "max_rounds": 2, "awaiting_answer": false}` and its own `sources`.
+
+- Nothing is pending after it. The student's next message: a new question is answered the same way (`ANSWER`, its own
+  `sources`); "I don't know" / "explain it again" gets a simpler explanation ending with an easy question (`EXPLAIN`,
+  no round used); a hint request gets a fixed "nothing to hint at" message (`HINT`, `sources: []`, no model call);
+  anything else ("quiz me", "ok") gets a `CHECK` question. From the check on, the rounds work as before.
+- A question that asks to be quizzed ("Quiz me on threads", "Test my understanding of semaphores", `QUIZ_REQUEST` in
+  `src/tutor/controller.py`) still opens with `DIAGNOSE`.
+- `tutor_state.awaiting_answer` (socratic) says whether the tutor is waiting for an answer to a question it asked.
+- The tutor evaluation (`tutor_eval`) still uses the diagnose-first opening (`TutorController` default): its frozen
+  scenarios script answers to a diagnostic question.
+- Compatibility: no new stage or event. A client that counts `EXPLAIN` turns (the legacy `web/index.html`) counts the
+  opening explanation as a round.
 
 ### Uncertainty and hints *(new, 2026-10-10)*
 

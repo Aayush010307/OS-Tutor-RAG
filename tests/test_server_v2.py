@@ -122,7 +122,9 @@ def test_the_socratic_mode_is_still_available(api):
     url, _ = api(mode="socratic")
     _, events = post(url + "/api/start", {"question": "Why a mutex?"})
     turn = last(events, "turn")
-    assert turn["stage"] == "DIAGNOSE" and turn["mode"] == "socratic" and turn["actions"] == [] and events[0]["data"]["mode"] == "socratic"
+    # the web app opens a Socratic lesson by answering (2026-10-10 product decision); nothing is pending after it
+    assert turn["stage"] == "EXPLAIN" and turn["mode"] == "socratic" and turn["actions"] == [] and events[0]["data"]["mode"] == "socratic"
+    assert turn["tutor_state"]["awaiting_answer"] is False
     sid = events[0]["data"]["id"]
     assert last(post(url + "/api/reply", {"session_id": sid, "text": "it keeps data safe"})[1], "turn")["stage"] in ("CHECK", "EXPLAIN")
 

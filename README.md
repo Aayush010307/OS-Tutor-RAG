@@ -12,8 +12,9 @@ Course project for BCSE303P Operating Systems Lab: Aayush Jaiswal (24BCI0042), S
 
 ## Two experiences
 
-- **Tutor chat.** By default (`TUTOR_MODE=socratic`) the tutor teaches diagnose-first: it asks what you already know,
-  explains only the missing idea with citations, checks, and wraps up. The optional answer-first mode
+- **Tutor chat.** By default (`TUTOR_MODE=socratic`) the tutor first answers your question with citations and no
+  question, then checks that you can use the idea, explains only what is missing, and wraps up ("Quiz me on …" starts
+  with a diagnostic question instead). The optional answer-first mode
   (`TUTOR_MODE=answer_first`) answers first: ask a question, get a cited answer. "Explain differently" walks a ladder
   (definition, intuition, analogy, OS scenario, code) instead of repeating itself. "Test my understanding" asks one
   question; the answer is judged solid / partial / misconception / unclear and answered accordingly. Nothing is quizzed
@@ -108,17 +109,20 @@ built only from that metadata; a missing page is shown as missing, never guessed
 
 ## Tutor flow
 
-**Default: `TUTOR_MODE=socratic`** (diagnose first; the flow the tutor evaluation measures):
+**Default: `TUTOR_MODE=socratic`**. The web app opens by answering (2026-10-10); the tutor evaluation measures the
+diagnose-first opening (`TutorController` default), which a "quiz me" question still gets:
 
 ```
-question -> retrieve -> DIAGNOSE (one probing question, no answer yet)
+question -> retrieve -> EXPLAIN (a direct cited answer, no question; nothing pending)
+   next message: a new question -> answered the same way; "I don't know" -> simpler explanation + easy question;
+                 anything else ("quiz me", "ok") -> CHECK, then as below
+"Quiz me on ..." -> retrieve -> DIAGNOSE (one probing question, no answer yet)
    reply judged solid -> CHECK -> solid -> DONE (wrap-up)
    otherwise          -> EXPLAIN the gap, cited (at most 2 rounds) -> DONE with the full grounded answer
    a new question while the tutor's question is pending -> side ANSWER; the pending question stays pending
 ```
 
-**Optional: `TUTOR_MODE=answer_first`** (conversational; not yet evaluated, and the React frontend does not yet handle its
-`FEEDBACK` / `NO_CONTEXT` stages):
+**Optional: `TUTOR_MODE=answer_first`** (conversational; not yet evaluated; the React frontend handles its stages):
 
 ```
 question -> retrieve -> grounded ANSWER (conversation stays open)

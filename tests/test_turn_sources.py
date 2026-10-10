@@ -166,8 +166,11 @@ def test_socratic_turns_carry_the_lesson_sources_and_side_answers_their_own(api)
     events = post(url + "/api/start", {"question": "What do sem_wait and sem_post do?"})
     assert [e["type"] for e in events][:2] == ["session", "sources"]
     lesson = ids(events[1]["data"])
-    assert turn_of(events)["stage"] == "DIAGNOSE" and ids(turn_of(events)["sources"]) == lesson == ids(B)
+    # the web app opens with an explanation (2026-10-10), then the check question; both cite the lesson's passages
+    assert turn_of(events)["stage"] == "EXPLAIN" and ids(turn_of(events)["sources"]) == lesson == ids(B)
     sid = events[0]["data"]["id"]
+    check = turn_of(post(url + "/api/reply", {"session_id": sid, "text": "quiz me"}))
+    assert check["stage"] == "CHECK" and ids(check["sources"]) == lesson
     explain = turn_of(post(url + "/api/reply", {"session_id": sid, "text": "It frees the lock."}))
     assert explain["stage"] == "EXPLAIN" and ids(explain["sources"]) == lesson
     side = post(url + "/api/reply", {"session_id": sid, "text": "What is a deadlock?"})

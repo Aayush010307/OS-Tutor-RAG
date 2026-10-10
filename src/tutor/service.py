@@ -29,8 +29,8 @@ from dataclasses import dataclass, field
 
 from src.learner import taxonomy
 
-from .controller import (ANALYZE, STAGE_INSTRUCTIONS, WANTS_ANSWER, Session, Turn, ask_again, build_prompt, hint_extra,
-                         is_hint_request, is_new_question, is_unsure, parse_analysis, sources, validated,
+from .controller import (ANALYZE, QUIZ_REQUEST, STAGE_INSTRUCTIONS, WANTS_ANSWER, Session, Turn, ask_again, build_prompt,
+                         hint_extra, is_hint_request, is_new_question, is_unsure, parse_analysis, sources, validated,
                          wants_explanation)
 
 MODE = "answer_first"
@@ -106,8 +106,7 @@ _P = re.compile
 INTENT_RULES = (
     ("got_it", _P(r"^\s*(?:(?:ok(?:ay)?|alright|got it|makes sense|understood|i understand|clear now|thanks?|thank you|"
                   r"cool|great|nice|perfect)\b[\s,.!;:-]*)+$", re.I)),
-    ("test_me", _P(r"\b(?:test (?:my|me)|quiz me|check my understanding|ask me (?:a )?(?:question|something)|"
-                   r"give me (?:a |an )?(?:problem|question|exercise|practice)|practice (?:problem|question)s?)\b", re.I)),
+    ("test_me", QUIZ_REQUEST),
     ("simpler", _P(r"\b(?:simpl(?:er|e|ify)|easier|eli5|in simple (?:words|terms)|layman|dumb it down|"
                    r"(?:too|so) (?:hard|complicated|technical))\b", re.I)),
     ("analogy", _P(r"\banalog(?:y|ies)\b", re.I)),

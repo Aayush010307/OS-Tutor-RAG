@@ -3107,3 +3107,99 @@ Follows the previous entry. Nothing committed, pushed or merged; the base is sti
 3. The Socratic relevance gate is deferred.
 4. A new tutor evaluation run would need a new output folder; its `unclear` agreement is not comparable with
    Phase 4/4.1.
+
+### 2026-10-10 — Socratic lessons open by answering the question
+
+- **Problem:** in the React app, "What are threads?" got a diagnostic question back ("What is the main difference
+  between a process and a thread?") instead of an answer.
+- **Owner decision:** the first reply of a new lesson answers the student's request directly and does not end with a
+  question. After it the Socratic flow continues. A request to be quizzed may still start with a question.
+- **Root cause:** a code path, not the model.
+  - `TutorController.start` always called `_say(session, "DIAGNOSE")`.
+  - The DIAGNOSE task says "Do NOT answer the question yet … Ask the student exactly ONE short question".
+  - No other opening existed in the state machine. The frontend only rendered what it got: stage "Diagnose" and a
+    question.
+  - Answer-first (`TutorService`) already answers first and was not involved.
+- **Why it is not only a prompt change:** after an answer with no question, nothing is pending. The next student
+  message cannot be judged as an answer to anything, so the controller needs a state for that.
+- **Implementation (`src/tutor/controller.py`):**
+  - `TutorController(opening=...)`:
+    - `"diagnose"` is the default: unchanged and evaluated. `tutor_eval` keeps it, because its frozen scenarios script
+      answers to a diagnostic question.
+    - `"explain"` is what the web app uses (`server.App.tutor`).
+  - With `"explain"`, `start` answers with a new `INTRODUCE` task: a direct beginner explanation, citations, an example
+    where it helps, "course material does not specify" for gaps, no judging, and no question.
+  - The turn keeps an existing stage name, `EXPLAIN`. The internal stage is `INTRODUCED` (explained, nothing pending).
+  - The student's next message:
+    - a new question is answered the same way, with its own retrieval (`ANSWER`, no "back to the question" sentence);
+    - uncertainty or "explain again" gets `SUPPORT`, with no round used (the existing rule);
+    - a hint request gets a fixed "nothing to hint at" message (`HINT`, `sources: []`, no model call);
+    - anything else ("quiz me", "ok") gets a `CHECK` question. From the check, the rounds are unchanged.
+  - A first message matching `QUIZ_REQUEST` ("Quiz me on threads", "Test my understanding of …", "Ask me questions …")
+    still opens with `DIAGNOSE`.
+  - `QUIZ_REQUEST` is the answer-first service's old `test_me` rule, moved here and extended to "give me a quiz" and
+    "ask me questions"; `service.py` now uses it.
+  - `SUPPORT` was reworded so it works whether or not a question was pending.
+  - Socratic `tutor_state` gains `awaiting_answer`.
+- **API:**
+  - No new stage or event. `tutor_state.awaiting_answer` is additive.
+  - The server's Socratic `/api/start` now returns `EXPLAIN` instead of `DIAGNOSE` for an ordinary question (documented
+    in `API_CONTRACT.md`, "Socratic lesson opening").
+  - The legacy `web/index.html` counts that opening `EXPLAIN` as a round (documented; the page is not maintained).
+- **Frontend:**
+  - The reducer stores `awaitingAnswer`, and `lessonAwaitsAnswer()` uses it.
+  - The composer says "Your question" and "Ask a follow-up, or say 'quiz me' to try a question" when nothing is pending,
+    and "Your answer" when something is.
+  - The welcome copy no longer says the tutor "won't hand you the answer straight away", and the stage list describes
+    the new opening.
+  - The first reply is labelled "Explain", which describes it accurately, and uses no round.
+- **Docs:** `API_CONTRACT.md`, `README.md` (the tutor-flow section; also removed a stale claim that the React app
+  cannot handle answer-first), `.env.example` and the `src/config.py` docstring.
+- **Mock LLM:** a scripted `INTRODUCE` reply.
+- **Tests:**
+  - New `tests/test_first_turn.py`, with 41 cases:
+    - the quiz rule;
+    - six conceptual openings that must explain with no question, and the task's requirements;
+    - quiz openings still diagnose;
+    - the controller default is still `DIAGNOSE`;
+    - the next message leads to `CHECK`, and the usual rounds and wrap-up follow;
+    - a follow-up question is answered without a question, and a side question during a check keeps it pending;
+    - uncertainty after the opening and during a check;
+    - a hint with nothing pending, and a hint restating the check question;
+    - the opening's own sources, and no course material;
+    - SSE in Socratic mode;
+    - answer-first unchanged (over SSE and in the service).
+  - 4 new frontend tests: the opening is labelled Explain with no round and links its own citations;
+    `awaitingAnswer` across the check and a new topic; a hint with nothing pending; older servers.
+  - **Existing tests updated, stated explicitly:**
+    - `tests/test_server_v2.py::test_the_socratic_mode_is_still_available` and
+      `tests/test_turn_sources.py::test_socratic_turns_carry_the_lesson_sources_and_side_answers_their_own` asserted that
+      the server's Socratic lesson opens with `DIAGNOSE`. They now assert the decided `EXPLAIN` opening. The second also
+      sends "quiz me" before the answer, so it still checks lesson and side-answer provenance.
+    - 4 assertions in `tests/test_uncertainty_and_hints.py` compared Socratic `tutor_state` exactly. They now include
+      `awaiting_answer: true`, which makes them stricter.
+    - No other test was changed.
+- **Results:**
+  - Python (full suite, backend stopped): 506 passed, 0 failed.
+  - Frontend: 23/23 tests; typecheck, lint and build pass.
+  - Frozen files: 57/57 byte-identical.
+- **Live (qwen3:8b, SSE):**
+  - "What are threads?", "Explain process synchronization.", "What is a semaphore?" and "What is the difference between
+    a process and a thread?" each got `EXPLAIN` with `awaiting_answer: false` and 0 question marks. Each was 74–115
+    words with 1–4 distinct citations, an example, and the same sources as the `sources` event.
+  - "Quiz me on threads." got a `DIAGNOSE` question.
+- **Browser (React app, real qwen3:8b), no console errors:**
+  - **Socratic:**
+    - "What are threads?" got an Explain reply that answered directly with no question. There was no round count, and
+      the composer read "Ask a follow-up, or say 'quiz me'…".
+    - `[S1]` opened `threads.pdf` p.3, "What are threads?".
+    - "quiz me" got a Check question, and the composer read "Your answer…".
+    - "Can I get a hint?" got a Hint that restated the check question.
+    - "i am not sure" got a supportive explanation with no round counted.
+    - A new lesson with "Quiz me on threads." got a Diagnose question.
+  - **Answer-first:** "What are threads?" got an Answer, direct and cited, with no rail.
+- **Unresolved:**
+  1. The model's explanation may contain claims to check against the sources ("threads switch without OS intervention"
+     in one live run). Grounding is by prompt, as before.
+  2. The tutor evaluation measures the diagnose-first opening. The new app opening has not been evaluated.
+  3. The legacy page counts the opening as a round.

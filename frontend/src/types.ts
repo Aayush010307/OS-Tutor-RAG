@@ -16,6 +16,8 @@ export type TurnStage = "DIAGNOSE" | "EXPLAIN" | "CHECK" | "DONE" | "ANSWER" | "
 export interface TutorState {
   rounds?: number;
   max_rounds?: number;
+  /** Socratic: whether the tutor is waiting for an answer (false after the explanation a lesson opens with). */
+  awaiting_answer?: boolean;
   pending_check?: boolean;
 }
 
@@ -96,6 +98,8 @@ export interface Conversation {
   model: string | null;
   /** From the `session` event; absent in history saved before the server reported it. */
   mode?: TutorMode | null;
+  /** From `tutor_state.awaiting_answer`; absent when the server did not send it. */
+  awaitingAnswer?: boolean;
   /** Last lesson stage (side answers do not change it). */
   stage: Exclude<TurnStage, "ANSWER" | "HINT"> | null;
   explainRounds: number;

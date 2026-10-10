@@ -8,7 +8,7 @@ value, never source code. `Settings.from_env()` reads the environment at call ti
     OLLAMA_MODEL        qwen3:8b
     OLLAMA_CONNECT_TIMEOUT 5                           seconds to reach the Ollama server (also used by the health check)
     OLLAMA_READ_TIMEOUT 120                            seconds to wait for the model's reply (LLM_TIMEOUT_SECONDS is the old name)
-    TUTOR_MODE          socratic (default: diagnose first, the evaluated flow) | answer_first (optional)
+    TUTOR_MODE          socratic (default: answer first, then check; see API_CONTRACT.md) | answer_first (optional)
     REVISION_STEPS      5      questions in one Smart Revision session
     RETRIEVAL_TOP_K     20     fused hybrid candidates handed to the next stage
     RERANKER_ENABLED    false  rerank the candidates with a cross-encoder (falls back to hybrid if it cannot load)
