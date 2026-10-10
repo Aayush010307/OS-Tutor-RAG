@@ -20,6 +20,9 @@
 - E1 BM25 baseline (Phase 3B): `--retriever bm25 --top-k 20 --deep-k 30` on the evaluator; compare runs with
   `python3 -m src.evaluation.compare <A_results.json> <B_results.json> --output <file.md>`. Outputs in `data/evaluation/e1_bm25/`.
 - Tests: `python3 -m pytest tests -q`
+- Configuration (PR #1): `src/config.py` reads environment variables / `.env` (copy `.env.example`). Defaults: `TUTOR_MODE=socratic`
+  (owner decision 2026-10-10; `answer_first` is optional and unevaluated), `LLM_PROVIDER=ollama` (`mock` only for development and
+  tests), `RERANKER_ENABLED=false` (E3 cross-encoder reranker stays off until it is evaluated beyond pooled-from-dense v1.1).
 - E2 hybrid (Phase 3B): `--retriever hybrid --top-k 20 --deep-k 30` (RRF k=60, 50 candidates per system, untuned; fixed
   before evaluation). Outputs in `data/evaluation/e2_hybrid/`. BM25/hybrid v1.1 metrics are lower bounds (dense-only pooling).
 - Tutor (Phase 4, approved 2026-10-04): `src/tutor/controller.py` + local Ollama (`src/tutor/llm.py`, default qwen3:8b).
@@ -29,6 +32,9 @@
   `tutor_eval report qwen3:8b --output-dir data/evaluation/tutor_eval_v2` (-> `report_qwen3_8b.md`). Name more models on
   `report` only for an explicit comparison (-> `report_<a>_vs_<b>.md`); only named models are read. Scenarios
   `data/evaluation/tutor_scenarios_v1.json` are frozen; Phase 4 results in `data/evaluation/tutor_eval/`, Phase 4.1 in `tutor_eval_v2/`.
+- React frontend (2026-10-10): `frontend/` (React 19, TS, Vite, Tailwind 4). `cd frontend && npm run dev` -> http://localhost:5173,
+  proxies `/api` to the tutor server on :8000 (`TUTOR_BACKEND` to change). Checks: `npm run typecheck`, `npm run lint`, `npm test`,
+  `npm run build`. It consumes the server's SSE contract unchanged; `web/index.html` is kept. Product context: `PRODUCT.md`.
 - Assessment framework: `data/assessment/` (DRAFT objectives and item bank; never report fabricated student results),
   analysis `python3 -m src.assessment.learning_gain responses.json`.
 - Interpreter: plain `python3` may resolve to miniconda without the project's dependencies; use `/usr/local/bin/python3`

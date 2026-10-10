@@ -28,6 +28,11 @@ from . import metrics
 BENCHMARK = Path("data/evaluation/retrieval_queries.json")
 OUTPUT_DIR = Path("data/evaluation")
 TOP_K = 10  # results retrieved per query; the largest K any metric uses
+# E3 product-pipeline stages over the unchanged hybrid retriever: name -> (cross-encoder rerank, intent/identifier reorder)
+# value: (cross-encoder rerank, intent/identifier reorder, intents whose content type is preferred). The first three are the
+# runs measured first (all three intents preferred a content type); the last two are the identifier-only and the product setting.
+PIPELINES = {"rerank": (True, False, ()), "hybrid_intent": (False, True, "all"), "pipeline": (True, True, "all"),
+             "rerank_identifiers": (True, True, ()), "product": (True, True, "default")}
 DIFFICULTIES, TOPICS, QUERY_TYPES = ("easy", "medium", "hard"), ("Threads", "Synchronisation"), \
     ("conceptual", "mechanism", "algorithm", "classical", "code", "scenario", "comparative")
 HEADLINE = ("recall@1", "recall@3", "recall@5", "recall@10", "precision@5", "mrr@5", "ndcg@5", "ndcg@10", "map@5")
@@ -230,16 +235,27 @@ def run(benchmark_path=BENCHMARK, output_dir=OUTPUT_DIR, name="baseline_dense", 
     if retriever == "bm25":
         opened = BM25Retriever.open(chunks_path, documents_path)
         retriever_config = opened.config()
-    elif retriever in ("dense", "hybrid"):
+    elif retriever in ("dense", "hybrid", *PIPELINES):
         manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
         kwargs = {"manifest_path": manifest_path, "chunks_path": chunks_path} | ({"store_dir": store_dir} if store_dir else {})
         opened = Retriever.open(**kwargs)
         retriever_config = {"type": "dense (Phase 2 baseline, unchanged)", "embedding_model": manifest["embedding"]["model"],
                             "model_revision": manifest["embedding"]["revision"], "collection": manifest["vector_store"]["collection"],
                             "distance": manifest["vector_store"]["distance"], "vectors_sha256": manifest["digests"]["vectors_sha256"]}
-        if retriever == "hybrid":
+        if retriever == "hybrid" or retriever in PIPELINES:
             opened = HybridRRFRetriever(opened, BM25Retriever.open(chunks_path, documents_path))
             retriever_config = opened.config() | {"dense": retriever_config}
+        if retriever in PIPELINES:  # product pipeline stages over the unchanged hybrid (E3)
+            from src.retrieval.pipeline import RagRetriever
+            from src.retrieval.reranker import load_reranker
+            from src.retrieval import intent as intent_mod
+            use_rerank, use_intent, prefer = PIPELINES[retriever]
+            prefer = {"all": intent_mod.ALL_TYPES, "default": intent_mod.DEFAULT_PREFER}.get(prefer, prefer)
+            opened = RagRetriever(opened, load_reranker() if use_rerank else None, retrieval_top_k=20, rerank_top_k=20,
+                                  final_k=top_k, intent_aware=use_intent, cache_size=0, prefer=prefer)
+            pipe = opened.config()
+            retriever_config = retriever_config | {"type": pipe["type"],
+                                                   "pipeline": {k: v for k, v in pipe.items() if k not in ("hybrid", "type")}}
     else:
         raise ValueError(f"unknown retriever {retriever!r}")
     retriever_config |= {"filters": None, "top_k": top_k} | ({"deep_k": deep_k} if deep_k else {})
@@ -304,6 +320,15 @@ def build_report(out, bench):
         retriever_line = (f"- Retriever: {r_cfg['type']}; `{r_cfg['embedding_model']}` @ `{r_cfg['model_revision'][:12]}`, "
                           f"collection `{r_cfg['collection']}` ({r_cfg['distance']}), vectors SHA-256 `{r_cfg['vectors_sha256'][:16]}…`, "
                           f"top_k={r_cfg['top_k']}, no filters")
+    if r_cfg.get("pipeline"):
+        pc, stages = r_cfg["pipeline"], []
+        if pc["reranker"]:
+            stages.append(f"cross-encoder rerank of the top {pc['rerank_top_k']} ({pc['reranker']['model']} @ "
+                          f"{pc['reranker']['revision'][:12]})")
+        if pc["intent_aware"]:
+            stages.append(f"intent/identifier reorder (shift {pc['intent_shift']}; content-type preference for "
+                          f"{', '.join(pc['type_preference']) or 'no intent'})")
+        retriever_line += "; then " + " and ".join(stages)
     if r_cfg.get("deep_k"):
         retriever_line += f"; deep-pool queries retrieved to {r_cfg['deep_k']} for inspection (not in metrics)"
     L = [title, "",
@@ -376,7 +401,7 @@ def main(argv=None):
     ap.add_argument("--benchmark", default=BENCHMARK, type=Path)
     ap.add_argument("--output-dir", default=OUTPUT_DIR, type=Path)
     ap.add_argument("--name", default="baseline_dense")
-    ap.add_argument("--retriever", default="dense", choices=("dense", "bm25", "hybrid"))
+    ap.add_argument("--retriever", default="dense", choices=("dense", "bm25", "hybrid", *PIPELINES))
     ap.add_argument("--top-k", default=TOP_K, type=int, help="results scored per query (metrics use cutoffs up to 20)")
     ap.add_argument("--deep-k", type=int, help="also retrieve the benchmark's deep-pool queries to this depth (inspection only)")
     args = ap.parse_args(argv)

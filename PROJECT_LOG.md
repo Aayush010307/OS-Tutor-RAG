@@ -2580,3 +2580,244 @@ Decision from the owner: qwen3:8b is the primary model; llama3.1:8b is an option
   matches the existing `tutor_eval_v2/report.md` table for table, differing only in the two header lines the CLI
   change added. Regression test added; `python3 -m pytest tests -q`: **135 passed**. The 13-file hash snapshot is
   still 13/13 identical.
+
+### 2026-10-10 — React frontend (OS-Tutor) for the tutor server
+
+Requested by the owner: a production-quality React frontend for the existing tutor, built with the installed
+design skills. The Python server stays the backend of record; nothing in `src/`, `tests/`, `Docs/` or `data/`
+was changed. The old page `web/index.html` is kept and still served at http://localhost:8000.
+
+**Backend contract used (from `src/tutor/server.py` and `controller.py`, unchanged)**
+- `GET /api/models` -> `{models, default}` (`models` is `[]` when Ollama cannot be reached).
+- `POST /api/start {question, model}` and `POST /api/reply {session_id, text}` answer with one `data: <json>` line
+  per event: `session`, `sources`, `analysis`, `token`, `turn`, `error`.
+- Turn stages DIAGNOSE / EXPLAIN / CHECK / DONE; `ANSWER` only marks a side answer, which leaves the lesson stage,
+  round count and pending question unchanged. DONE after a solid check is the wrap-up; DONE after a non-solid
+  analysis is the full answer when the explanation rounds ran out. No cancel endpoint, so no stop button.
+
+**Decisions**
+- Stack: React 19, TypeScript 5.9 (strict), Vite 8, Tailwind CSS 4, lucide-react, react-markdown + remark-gfm +
+  rehype-highlight (C, C++, bash, Python only), self-hosted Atkinson Hyperlegible Next / Mono (the old page's
+  legibility-first family). State: `useReducer` + two contexts, no state library. Tests: Vitest. Lint: ESLint 10
+  with typescript-eslint and react-hooks.
+- Serving (owner's choice): Vite dev server on 5173 (and `vite preview` on 4173) proxies `/api` to the Python
+  server on 8000. No backend change. Two processes during development.
+- Every message while a lesson is open goes to `/api/reply`; the server decides whether it is an answer or a new
+  question. Only a finished or expired session starts a new topic (`/api/start`). Each reply resolves citations
+  against its own sources: a side answer's sources come from its `sources` event, a normal reply reuses the
+  topic's sources from `/api/start`.
+- Citations: `[S<n>]` that match a returned source become buttons that open that passage in the sources panel
+  (inline column at >= 1280 px, drawer below). Unknown refs are dropped while streaming; the server's validated
+  `turn.message` replaces the streamed text. Location "slide None" shows "Page or slide not recorded".
+- Model output is rendered as markdown with raw HTML disabled and only `http(s):` and `cite:` URLs allowed.
+- Lesson history is kept in `localStorage` ("Kept in this browser only"); server sessions are in memory, so a
+  lesson continues after a reload only while the server process is still running. An expired session resets
+  the lesson so the next message starts a new topic.
+- Retry ("Ask again") is offered only when starting a topic failed: re-running `/api/start` cannot duplicate
+  server state. A failed reply offers "Put my answer back" instead, because the server may already have recorded
+  the student's message.
+- Evaluator view (same `teacher` localStorage key as the old page) shows only `analysis.level` and `analysis.gap`
+  under the student's message.
+- Design: dark charcoal with one restrained blue accent (owner's pinned direction) plus a light theme; the stage
+  indicator is drawn like the process state diagram (Explain and Check joined by a loop with the round count).
+  Product context in `PRODUCT.md`.
+
+**Design skills**: Anthropic frontend-design, TasteSkill (`design-taste-frontend`) and Impeccable were loaded and
+followed (PRODUCT.md, direction contract, craft floor, detector, critique rounds, finish review). "UI UX Pro Max"
+is not installed on this machine and was not used.
+
+**Files**: new `frontend/` (package.json + lockfile, vite/ts/eslint config, `index.html`, `public/favicon.svg`,
+`src/` with `types.ts`, `lib/api.ts`, `lib/tutor.ts`, `state/{chat.tsx,reducer.ts,settings.tsx}`,
+`components/*`, `test/core.test.ts`), `PRODUCT.md`; README and CLAUDE.md gain the frontend commands.
+
+**Validation**
+- `npm run typecheck`, `npm run lint`: clean. `npm test`: 7 passed. `npm run build`: succeeds; initial JS 83 kB
+  gzip, markdown/highlighting chunk (106 kB gzip) loads with the first reply.
+- Real integration (Ollama running, qwen3:8b, headless Chrome via playwright-core): curl through the proxy shows
+  `session`, `sources`, then tokens arriving incrementally, then `turn`. In the browser: starter question ->
+  DIAGNOSE streamed; a correct answer -> analysis `solid` -> CHECK; "what is a race condition?" during CHECK ->
+  side answer with its own 5 sources, stage stayed CHECK; a separate lesson with a wrong answer -> analysis
+  `misconception` -> EXPLAIN, rail showed round 1/2; reload kept the history and reopened the lesson; light
+  theme; mobile 390 px (nav drawer, sources drawer, no horizontal page overflow); server unreachable (proxy to a
+  closed port) -> banner plus inline error with "Ask again", no endless spinner. No console errors.
+- Markdown fixture (stored conversation): headings, table, blockquote, lists, C highlighting, working code copy,
+  horizontal code scroll on mobile, `[S9]` dropped, injected `<script>` / `<img onerror>` shown as inert text.
+- The model did not write `[S]` citations or code in the live turns that were tested, so live citation clicks
+  were checked on the side answer only; code rendering was checked with the fixture.
+- `/usr/local/bin/python3 -m pytest tests -q`: **135 passed** (with the tutor server stopped; while it runs it
+  holds the Qdrant lock and the retrieval tests error, as before).
+
+**Known limitations**: no stop button (no cancel endpoint); history is per browser; replies that fail after the
+server recorded the student's message are not retried automatically; the expired-session check matches the
+server's error text.
+
+**Addendum, same day: design review and fixes**
+- Impeccable finish reviewer (a fresh subagent), round 1: `fix`. Applied: the stage rail redrawn as a state diagram
+  (hollow, visited and current nodes; transition edges; a Check-to-Explain return arc carrying the round count;
+  the edge into a new state draws itself once) and shown in every header, including before the first turn; the
+  reply action row always visible; source passages rendered as typeset markdown, with long filenames clamped; the
+  server outage stated once (banner with the command, short in-thread note); header blur removed; composer
+  radius 14 px. Also fixed: the welcome no longer scrolls to the bottom on load; switching lessons resets the
+  scroll; the markdown renderers are no longer re-created on every render (code blocks were remounting).
+- Round 2 (verdict pass): 6 fixes resolved and 1 partial. The batch caused 2 regressions, both now fixed and
+  checked with stored lessons: an edge is lit only when the lesson came along it, and the mobile round count no
+  longer clips. Still open for the owner: the rail's form was chosen without Impeccable's direction roll (the
+  owner pinned the palette, not the form).
+- A real lesson was driven to Done (Diagnose, Check, side question, Wrap-up) in headless Chrome.
+- `DESIGN.md` and `.impeccable/design.json` were written from the shipped code by Impeccable's documenter.
+- Final: typecheck, lint, 7 Vitest tests and the build are clean; `pytest tests -q` -> 135 passed (server stopped).
+
+---
+
+## 2026-10-10 — Integration of PR #1 (Satyam Bhalotia): tutor service layer, reranker, learner model, revision
+
+**Status: INTEGRATED ON BRANCH `integration/pr1-tutor-service`, NOT COMMITTED, NOT MERGED** (awaiting the owner's
+review). PR #1 (`feat/tutor-service-learner-revision`, one commit `d6b21cd`, based on `85abbe6`) was reviewed, then
+merged into a branch made from `main` (`bb91644`) in a separate worktree. The owner's checkout, with the in-progress React
+frontend, was never touched.
+
+### What the PR introduces
+
+- `src/config.py`: one place for all settings, from environment variables and an optional `.env`; `.env.example`.
+- `src/tutor/llm.py`: an `LLMProvider` abstraction (`OllamaProvider`, alias `OllamaLLM`; `MockLLMProvider` for
+  development and tests), `LLMError` with student-safe messages, connect probe, `<think>` stripping, health check.
+- `src/tutor/service.py`: an optional answer-first tutor (`TUTOR_MODE=answer_first`) with intents (simpler, analogy,
+  code, test me, ...), stages ANSWER / CHECK / FEEDBACK / NO_CONTEXT.
+- `src/tutor/controller.py`: prompt-injection hardening (retrieved text and student text cannot pose as prompt
+  sections), optional learner context in the prompt, richer source metadata; the Socratic flow is unchanged.
+- `src/tutor/server.py`, `API_CONTRACT.md`: v2 HTTP API, additive over v1 (health, learner profile, Smart Revision,
+  conversations, source lookup; error `code`s).
+- `src/learner/` (28-concept taxonomy, learner model), `src/revision/` (Smart Revision), `src/tutor/conversations.py`.
+- `src/retrieval/pipeline.py` (`RagRetriever`: hybrid -> optional cross-encoder rerank -> intent/identifier reorder ->
+  top 5), `reranker.py`, `intent.py`; `retrieval_evaluator.py` gains the E3 pipeline runs (additive).
+- E3 outputs in `data/evaluation/e3_rerank/` (6 runs, results and reports), `web/index.html` redesign, `PRODUCT.md`.
+
+### Owner decisions applied (2026-10-10)
+
+1. **Default tutoring mode stays Socratic** (diagnose first; the flow the tutor evaluation measures). The PR's default
+   was `answer_first`; changed in `src/config.py` and `.env.example`. `answer_first` is kept as an option.
+2. **Retrieval:** dense, BM25 and hybrid are untouched; the reranker stays optional and **disabled by default**
+   (`RERANKER_ENABLED=false`); E3 results are kept as delivered; no benchmark or rubric is modified.
+3. **The local React frontend** (untracked, in development) is preserved and is not part of this integration.
+4. **`PRODUCT.md`:** both versions preserved; a reconciled version is proposed (see below).
+
+### Conflicts and how they were resolved
+
+- `src/tutor/llm.py`: the PR replaced `OllamaLLM.__call__` with its provider; `main` (`bb91644`) had added a
+  transient-failure retry to the same method. Neither side alone was correct. Resolution: the PR's provider kept whole
+  (probe, `LLMError` translation, `<think>` stripping, empty-reply check), with the retry rebuilt inside it. Up to
+  `RETRIES = 2` retries for HTTP 5xx, dropped connections and timeouts, **never after a token has reached the
+  student**. A missing model (404), a malformed reply and an unreachable server (probe) are not retried.
+- `README.md`: the PR's restructured README kept. `main`'s qwen-only evaluation commands added to "Run it", test count
+  restored (359), and the tutor section corrected. The PR said the Phase 4.1 behaviour "has not been measured"; it has
+  (`tutor_eval_v2`), and those results are now stated, with answer-first marked unevaluated.
+
+### Other changes made during integration
+
+- `.env.example`: `LLM_PROVIDER=ollama` (was `mock`, which made a copied `.env` serve scripted answers to students) and
+  `OLLAMA_BASE_URL=http://localhost:11434` (was a placeholder), matching `src/config.py` and the documented local setup.
+  The remote-Ollama address stays as a comment.
+- `src/retrieval/reranker.py`: the downloaded weights are now checked against the pinned SHA-256 at load (the hash was
+  recorded but never compared). A mismatch raises; `build_retriever` already falls back to hybrid. The pinned hash was
+  confirmed against the real weights (`5d3e70fd…`, revision `233902d2`).
+- `src/evaluation/tutor_eval.py`: evaluation calls keep a 600 s reply timeout (`EVAL_TIMEOUT`). The PR's app default of
+  120 s suits a waiting student, but the slowest measured evaluation call was 88 s (llama3.1:8b), too close.
+- `API_CONTRACT.md`: endpoints marked "planned" are implemented (verified on a running server) and are now marked new.
+  The Socratic default is stated, the env var list matches `src/config.py`, and there is a warning that a v1 or
+  Socratic client must handle `FEEDBACK` / `NO_CONTEXT` before answer-first is switched on.
+- `tests/test_config_llm.py`: the asserted default mode follows the owner's decision (`socratic`); otherwise unchanged.
+- New `tests/test_llm_retry.py` (7 tests): a 500 retried, persistent 5xx gives up after the retries, a 404 not retried,
+  a drop before any token retried with tokens delivered once, no retry after tokens were shown, generation settings
+  still sent, and the reranker refusing unpinned weights.
+
+### Reranker (E3) — configuration and status
+
+- Model `cross-encoder/ms-marco-MiniLM-L-6-v2` (Apache-2.0), ONNX on the CPU through the existing onnxruntime and
+  tokenizers (no new dependency), pinned revision and weights hash. It reranks the fused top 20 (`RERANKER_TOP_K`), reads
+  at most 512 tokens per pair (longer chunks lose their tail), and fails soft to the hybrid order. Optional and **off by
+  default**.
+- Reported on benchmark v1.1 (frozen; corpus `90d1e88e…`, benchmark `bfbbd033…`):
+  - **Hybrid + reranker: nDCG@10 0.744 vs hybrid 0.727** (MRR@5 0.938 vs 0.921, Recall@10 0.657 vs 0.645).
+  - The share of **unjudged top-10 results rises from 11% to 16%**. v1.1 was pooled from the dense system, so the
+    reranker's figures are lower bounds and the comparison is biased against it. The gain is promising, not
+    established.
+  - Hybrid + intent order with all content types preferred: 0.703, a regression, so the conceptual-type preference is
+    off by default.
+  - The PR's hybrid rerun on another machine reproduced E2 at 0.727. Its note that the saved E2 value 0.7274 and the
+    rerun 0.7272 differ in the last digits (ONNX floating-point drift across machines) is recorded.
+- **Default product retrieval** (what the tutor now uses with the reranker off): hybrid + intent/identifier reorder
+  preferring code and practice material. The PR did not evaluate this configuration. Measured during the review with the
+  project's evaluator over the frozen v1.1 benchmark (run in a scratch directory, not saved as a result file):
+  **nDCG@10 0.726 vs hybrid 0.727, MRR@5 0.919 vs 0.921, Recall@10 0.645 vs 0.645**. That is neutral within noise. The
+  dense v1.1 run at the PR head reproduced the committed `baseline_dense_v1.1_results.json` exactly.
+
+### Validation
+
+- `python3 -m pytest tests -q` on the integration tree: **359 passed**. That is 344 from the PR, plus `main`'s 8
+  evaluation-CLI tests, plus the 7 new retry and integrity tests.
+- A live server from the integration tree, default settings (Socratic), was checked with a client that follows the React
+  frontend's own SSE parsing (`frontend/src/lib/api.ts`) and type assumptions (`types.ts`, `tutor.ts`, `reducer.ts`),
+  with the mock LLM and with the real `qwen3:8b`. Everything held: event order (`session`, `sources`), stages within the
+  frontend's set (DIAGNOSE, EXPLAIN, side ANSWER), source fields including `text`, `p.N` / `slide N` locations, the
+  expired-session message matching the frontend's `/expired/i`, and all v2 GET endpoints answering 200.
+- **Not tested:** the React app itself running against this backend (no build or browser run). The frontend is being
+  developed separately and was not touched.
+- **Known incompatibility:** with `TUTOR_MODE=answer_first` the server emits `FEEDBACK` (and can emit `NO_CONTEXT`),
+  which the frontend's `TurnStage` does not include (`turnLabel` would fail). This is fine under the Socratic default and
+  must be handled before answer-first is offered.
+- Frozen artifacts: `Docs/`, chunks, manifests, the vector store, both benchmarks and all earlier evaluation outputs (57
+  tracked files) are byte-identical; the integration only **adds** the 12 E3 files.
+
+### PRODUCT.md
+
+The owner's local file and the PR's file differ. The integration branch carries a reconciled version. It keeps the
+owner's approved frontend direction (name, pinned visual direction, principles, the Socratic purpose). It adds the PR's
+accurate, non-conflicting details: the stack, reviewers as users, positioning, remote Ollama, source metadata, the v2
+API, evidence and accessibility. It corrects what the merged backend contradicts: the default mode, and that the backend
+now keeps a learner model and conversations. The originals are preserved outside the repository in
+`OS-RAG-backups/2026-10-10-pr1-integration/` (`PRODUCT.local.md`, `PRODUCT.pr1.md`, `PRODUCT.reconciled.md`). The
+owner's untracked local `PRODUCT.md` is unchanged.
+
+### Limitations and remaining validation
+
+1. Answer-first mode, Smart Revision and the learner model have **no quality evaluation**: no grounding,
+   misconception-correction or revision-relevance figures exist yet.
+2. The reranker's E3 gain rests on judgments pooled from another system; pooling its top results (a v1.2 benchmark)
+   needs the owner's approval.
+3. The default retrieval check above was run in a scratch directory; saving it as an `e3_rerank` result would make it
+   reproducible from the repository.
+4. The React frontend has not been run against the merged backend, and it does not yet handle the answer-first stages.
+5. The frontend build is not wired into `web/index.html` (output goes to `frontend/dist`).
+
+### 2026-10-10 — Pre-commit audit of the integration (still uncommitted)
+
+- **Documentation:** the frontend session's uncommitted README, CLAUDE.md and PROJECT_LOG changes in the main checkout
+  were ported into this branch. The PROJECT_LOG entry, including its later design-review addendum, and the CLAUDE.md
+  bullet are verbatim; the README additions are placed in the PR's structure. The main checkout's files were not
+  modified. When both land on `main`, the docs will need one more merge; take this branch's text, which contains both.
+- **answer_first in the React frontend:** a 6-file patch (`types.ts`, `lib/tutor.ts`, `state/reducer.ts`,
+  `components/Messages.tsx`, `components/StageRail.tsx`, `test/core.test.ts`; +74/-11) does the following.
+  - Adds `FEEDBACK` and `NO_CONTEXT` to `TurnStage`.
+  - Keeps the session's `mode`, so an answer-first `ANSWER` is labelled "Answer", not "Side question".
+  - Labels `FEEDBACK` ("Feedback") and `NO_CONTEXT` ("Not in the course material").
+  - Shows any unknown stage as sent instead of throwing.
+  - Hides the diagnose-explain-check rail in answer-first.
+  - Adds 3 Vitest tests.
+
+  It was built and tested in a copy of `frontend/`, rebased onto the frontend session's latest `StageRail.tsx`, and
+  dry-runs cleanly against the live frontend. It is **not applied** (the frontend session owns that code); it is kept
+  as `OS-RAG-backups/2026-10-10-pr1-integration/frontend-answer-first-compat.patch`. Frontend checks with the patch:
+  typecheck, lint, 10/10 tests, build all pass.
+- **Runtime:** the patched build (`vite preview`, proxy to this branch's backend, real `qwen3:8b`) was checked in Chrome.
+  - Socratic: DIAGNOSE, analysis "Partly there", EXPLAIN 1/2 with an `[S1]` citation opening its passage, and a side
+    question with its own sources while the rail stayed on Explain.
+  - Answer-first: "Answer", a Check turn, then a "Feedback" turn with analysis "Solid" and citations; no crash, rail
+    hidden.
+  - Backend stopped: banner plus an inline error, no console errors.
+  - One backend process was killed silently by memory pressure on the 16 GB laptop (Ollama, two Python servers and
+    Chrome); a restart worked.
+- **Python:** 359 passed, 0 skipped. No test file that exists on `main` was modified and no skip or xfail markers
+  were added.
+  - Configuration defaults confirmed from code and from a copied `.env.example`: `TUTOR_MODE=socratic`,
+    `LLM_PROVIDER=ollama`, `RERANKER_ENABLED=false`.
+  - The 57 frozen and evaluation files are byte-identical in both trees.

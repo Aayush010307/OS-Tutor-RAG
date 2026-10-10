@@ -43,6 +43,7 @@ from src.tutor.llm import DEFAULT_MODEL, OllamaLLM
 SCENARIOS = Path("data/evaluation/tutor_scenarios_v1.json")
 BENCHMARK = Path("data/evaluation/retrieval_queries_v1.1.json")
 OUT = Path("data/evaluation/tutor_eval")
+EVAL_TIMEOUT = 600  # seconds per model call; the slowest measured call was 88 s (llama3.1:8b, Phase 4.1)
 EXPECTED = {  # per profile: (label of each scripted reply, stage after each reply); None = any level except solid
     "solid": (["solid", "solid"], ["CHECK", "DONE"]),
     "misconception": (["misconception", "solid"], ["EXPLAIN", "DONE"]),
@@ -79,7 +80,8 @@ def run(model, scenarios_path=SCENARIOS, out_dir=OUT, retriever=None):
     try:
         for sc in spec["scenarios"]:
             for profile, replies in sc["replies"].items():
-                rec = Recording(OllamaLLM(model))
+                # evaluation keeps the generous Phase 4 reply timeout; the app's 120 s default is for students waiting
+                rec = Recording(OllamaLLM(model, timeout=EVAL_TIMEOUT))
                 tutor = TutorController(retriever, rec)
                 session, turn = tutor.start(sc["question"])
                 turns = [{"stage": turn.stage, "message": turn.message, "student": None, "analysis": None}]

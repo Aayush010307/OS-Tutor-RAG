@@ -10,3 +10,13 @@ data/tutor_logs/
 # agent tooling installed per machine, not project source
 .agents/
 skills-lock.json
+
+# learner model and saved conversations hold a student's own words
+data/learner/
+# local environment file (never commit)
+.env
+.venv/
+.playwright-mcp/
+node_modules/
+.env.local
+.env.*.local
